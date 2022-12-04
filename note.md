@@ -1,0 +1,1 @@
+When Developing, make sure to either `cd client` or `cd server` to access one of the folders on the side.
