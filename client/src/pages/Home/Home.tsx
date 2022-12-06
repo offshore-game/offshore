@@ -4,31 +4,34 @@ import styles from './Home.module.css'
 
 export default function Home() {
     return (
-        <div className={styles.container}>
+        <div className={styles.background}>
+            
+            <div className={styles.container}>
+                <input type="text" id="usernameInput" className={styles.username} />
 
-            <input type="text" id="usernameInput" className={styles.username} />
+                <div className={styles.buttons}>
 
-            <div className={styles.buttons}>
+                    <Link to="/create" className={styles.link}>
 
-                <Link to="/create" className={styles.link}>
+                        <div className={styles.menuButton}>
+                            Create Game
+                        </div>
 
-                    <div className={styles.menuButton}>
-                        Create Game
-                    </div>
-
-                </Link>
+                    </Link>
 
 
 
-                <Link to="/join" className={styles.link}>
+                    <Link to="/join" className={styles.link}>
 
-                    <div className={styles.menuButton}>
-                        Join Game
-                    </div>
+                        <div className={styles.menuButton}>
+                            Join Game
+                        </div>
 
-                </Link>
+                    </Link>
 
+                </div>
             </div>
+
 
         </div>
     )
