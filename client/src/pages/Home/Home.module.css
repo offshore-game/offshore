@@ -1,3 +1,62 @@
 .container {
-    background-color: green;
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #B87018;
+}
+
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.menuButton {
+    height: 25vh;
+    width: 35vw;
+    margin: 25px;
+    border-radius: 10px;
+
+    background-color: #F79720;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+
+
+    transition: filter 0.25s;
+    user-select: none;
+
+}
+
+.menuButton:hover {
+    filter: brightness(85%);
+    cursor: pointer;
+}
+
+.menuButton:active {
+    filter: brightness(65%);
+}
+
+.link {
+    text-decoration: none;
+}
+
+
+.username {
+    background-color: gray;
+    height: 25px;
+    width: 70vw;
+
+    text-align: center;
 }

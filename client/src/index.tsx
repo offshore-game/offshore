@@ -4,6 +4,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home/Home'
+import JoinGame from './pages/JoinGame/JoinGame';
+import CreateGame from './pages/CreateGame/CreateGame';
 
 
 
@@ -15,6 +17,8 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />}/>
+        <Route path="/join" element = {<JoinGame />}/>
+        <Route path ="/create" element = {<CreateGame />}/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
