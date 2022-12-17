@@ -12,11 +12,9 @@ const io = new Server(8080, {
 
 io.on("connection", (socket) => {
 
-    
+    console.debug("client connected, new token...")
     const token = "abCdETOKEN123"
-    io.emit("fetchToken", token)
-
-    console.debug(socket)
+    socket.emit("fetchToken", token)
 
 })
 

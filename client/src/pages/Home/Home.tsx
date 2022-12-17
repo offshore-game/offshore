@@ -13,6 +13,7 @@ export default function Home() {
     useEffect(() => {
 
         socket.on("connect", () => {
+            console.log("connecting...")
             setIsConnected(true)
         })
     
@@ -20,7 +21,7 @@ export default function Home() {
             setIsConnected(false)
         })
 
-        socket.on("fetchToken", (token) => { // Debug: Firing twice?
+        socket.on("fetchToken", (token) => {
             setToken(token)
             console.log(`Token: ${token}`)
         })
@@ -33,11 +34,11 @@ export default function Home() {
 
     }, []) // Empty array to tell React we only want this to run once.
 
-    const requestToken = async () => {
+    const requestToken = () => {
         console.log('requesting token')
 
         socket.emit('requestToken');
-        socket.on('recieveToken', (token: string) => {
+        socket.on('returnToken', (token: string) => {
             console.log(token)
         });
     }
@@ -52,7 +53,7 @@ export default function Home() {
 
                     <Link to="/create" className={styles.link}>
 
-                        <div className={styles.menuButton} onClick={ async () => { await requestToken } }>
+                        <div className={styles.menuButton} onClick={ requestToken }>
                             Create Game
                         </div>
 
