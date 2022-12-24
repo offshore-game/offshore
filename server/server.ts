@@ -10,18 +10,46 @@ const io = new Server(8080, {
     }
 })
 
-io.on("connection", (socket) => {
+io.sockets.on("connection", function (socket) {
 
-    console.debug("client connected, new token...")
-    const token = "abCdETOKEN123"
-    socket.emit("fetchToken", token)
+    console.debug("client connected")
+
+    socket.on("validateToken", function (data, callback) {
+
+        console.debug(data)
+        if (data != "ABCD1234") return callback(false);
+
+        // DEBUG: Add token validation and return result.
+        callback(true) // validation result
+
+    })
+
+    socket.on("requestToken", function (callback) {
+        // DEBUG: Add token creator
+
+        return callback("ABCD1234") // Send the token to the client.
+    })
 
 })
 
-io.on("requestToken", (socket) => {
+/*io.on("connection", (socket) => {
+
+    
+
+})
+
+io.on("recieveToken", (socket) => {
     console.debug('requested token server side')
-    socket.emit('returnToken', 'your token')
+    const token = "abCdETOKEN123"
+    socket.emit('fetchToken', token)
 })
+
+io.on("validateToken", (socket, token) => {
+    socket
+    console.debug(`Validating Token ${token}`) // DEBUG
+})*/
+
+
 
 
 /*import express from 'express'
