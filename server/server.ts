@@ -57,13 +57,25 @@ io.sockets.on("connection", function (socket) {
 
 
     socket.on("joinLobby", function (data: { username: string, roomCode: string }, callback) {
-
-        const username = data.username
+        const username = data.username // DEBUG: check data to be valid and safe to use.
         const roomCode = data.roomCode
 
-        if (lobbies.has(roomCode)) {
+        const lobby = lobbies.get(roomCode)!
+
+        if (lobby) {
             const token = "ABCD1234" // DEBUG: Generate random token
             const lobby = lobbies.get(roomCode)!
+
+            for (const player of lobby.players) {
+
+                if (player.username == username) {
+                    console.debug("duplicate name!")
+                    return;
+                }
+
+            }
+
+            console.debug("joining lobby");
 
             lobby.players.push({
                 token: token,

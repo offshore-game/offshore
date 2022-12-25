@@ -1,23 +1,33 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AuthProp } from '../../utils/propTypes'
 import styles from './Home.module.css'
 
 export default function Home(props: AuthProp) { // IDEA: Add all the home panels inside the same component, and then a prop that will just switch between them.
+    const navigate = useNavigate();
+    
     useEffect(() => {
 
-        const auth = async () => {
+        const canAuth = async () => {
             const token = localStorage.getItem("token")!
             const roomCode = localStorage.getItem("roomCode")!
     
             if (token && roomCode) {
                 const result = await props.requests.rejoinLobby()
-                if (result) true; // DEBUG: Redirect user to the lobby.
+                if (result) {
+                    
+                    // Redirect user to the lobby.
+                    navigate(`/game/${roomCode}`, { replace: true })
+                    return true;
+                    
+                }
             }
         }
-        auth()
+
+        canAuth()
 
     }, [])
+
     return (
         <div className={styles.background}>
                 

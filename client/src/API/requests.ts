@@ -43,7 +43,7 @@ export default class Requests {
         return new Promise((res, rej) => {
 
             this.socket.emit("joinLobby", { username: username, roomCode: roomCode }, (token: string) => {
-
+                console.log(token)
                 if (token) {
 
                     localStorage.setItem("token", token)

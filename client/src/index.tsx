@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import JoinGame from './pages/JoinGame/JoinGame';
 import CreateGame from './pages/CreateGame/CreateGame';
 import Requests from './API/requests';
+import GameLobby from './pages/GameLobby/GameLobby';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -21,6 +22,8 @@ root.render(
         <Route path="/" element={<Home requests={Connection}/>} /> {/* add page type ({ main, join, create }) prop later */}
         <Route path="/join" element = {<JoinGame requests={Connection}/>} />
         <Route path ="/create" element = {<CreateGame />} />
+
+        <Route path="/game/:id" element={ <GameLobby /> }/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
