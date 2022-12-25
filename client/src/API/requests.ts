@@ -3,54 +3,79 @@ import { io, Socket } from "socket.io-client";
 export default class Requests {
 
     socket: Socket
-    token: string
 
     constructor() {
 
         this.socket = io("http://localhost:8080"); // Establish a connection
-        this.token = localStorage.getItem("token")!
 
     }
 
-    
-     // Check if the token is valid
-    async validateToken() {
+    // Attempt to reauthenticate into a lobby incase of a reload.
+    async rejoinLobby() {
         return new Promise((res, rej) => {
 
-            this.socket.emit("validateToken", this.token, async (valid: boolean) => {
+            const token = localStorage.getItem("token")!
+            const roomCode = localStorage.getItem("roomCode")
 
-                if (valid) {
+            this.socket.emit("rejoinLobby", { token: token, roomCode: roomCode }, (result: boolean) => {
 
-                    // Token is stil valid
-                    return res(true);
+                if (result) {
+
+                    res(true); // Success
 
                 } else {
 
                     localStorage.setItem("token", "") // Wipe the old invalid token
+                    localStorage.setItem("roomCode", "") // Wipe the old room code
 
-                    // Request a new token
-                    const token = await this.requestToken()
-                    localStorage.setItem("token", token ? token : "")
+                    rej(false); // Error occured
 
                 }
-            
+
+            })
+
+
+        })
+    }
+
+    // Attempt to join a lobby on request.
+    async joinLobby(username: string, roomCode: string) {
+        return new Promise((res, rej) => {
+
+            this.socket.emit("joinLobby", { username: username, roomCode: roomCode }, (token: string) => {
+
+                if (token) {
+
+                    localStorage.setItem("token", token)
+                    localStorage.setItem("roomCode", roomCode)
+                    res(true); // Success
+
+                } else {
+
+                    rej(false); // Error occured
+
+                }
+
             })
 
         })
     }
 
-
-    // Ask for a new token
-    async requestToken(): Promise<string | void> {
+    // Attempt to create a new lobby on request.
+    async createLobby(username: string) {
         return new Promise((res, rej) => {
 
-            this.socket.emit("requestToken", (token: string) => {
+            this.socket.emit("createLobby", { username: username }, (result: { token: string, roomCode: string }) => {
 
-                if (token) {
+                if (result) {
 
-                    localStorage.setItem("token", token)
-                    console.log("Token recieved: ", token)
-                    return res(token);
+                    localStorage.setItem("token", result.token)
+                    localStorage.setItem("roomCode", result.roomCode)
+                    res(true); // Success
+
+                } else {
+
+                    rej(false); // Error occured
 
                 }
 

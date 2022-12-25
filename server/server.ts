@@ -1,5 +1,6 @@
-import * as http from 'http'
-import socket, { Server } from 'socket.io' // https://socket.io/docs/v4
+import { Server } from 'socket.io' // https://socket.io/docs/v4
+import { lobbyMapEntry } from './types/lobbyTypes'
+import { lobbyEntry } from './tests/payloads'
 
 // https://socket.io/docs/v4/rooms/
 
@@ -10,58 +11,78 @@ const io = new Server(8080, {
     }
 })
 
+
+const lobbies = new Map<string, lobbyMapEntry>()
+    lobbies.set(lobbyEntry.id, lobbyEntry) // TESTING
+
+
 io.sockets.on("connection", function (socket) {
 
     console.debug("client connected")
 
-    socket.on("validateToken", function (data, callback) {
+    socket.on("rejoinLobby", function (data: { token: string, roomCode: string }, callback) {
 
-        console.debug(data)
-        if (data != "ABCD1234") return callback(false);
+        const lobby = lobbies.get(data.roomCode)
+        if (lobby) {
 
-        // DEBUG: Add token validation and return result.
-        callback(true) // validation result
+            for (const player of lobby.players) {
+
+                if (player.token == data.token) {
+
+                    // On rejoin (page refresh), a new socket is made, so we need to update it.
+                    player.socket = socket
+                    return callback(true);
+
+                }
+
+            }
+
+        }
+
+        return callback(false); // If all fails...
 
     })
 
-    socket.on("requestToken", function (callback) {
-        // DEBUG: Add token creator
 
-        return callback("ABCD1234") // Send the token to the client.
+    socket.on("createLobby", function (callback) {
+
+        // DEBUG: Generate random four-letter ID
+        const roomCode = "AAAA"
+
+        socket.join(roomCode) // Subscribe the player to the lobby events (DEBUG: add the function below into here.)
+
+        return callback(roomCode) // Return the room code
+
     })
 
+
+    socket.on("joinLobby", function (data: { username: string, roomCode: string }, callback) {
+
+        const username = data.username
+        const roomCode = data.roomCode
+
+        if (lobbies.has(roomCode)) {
+            const token = "ABCD1234" // DEBUG: Generate random token
+            const lobby = lobbies.get(roomCode)!
+
+            lobby.players.push({
+                token: token,
+                username: username,
+                role: "READER", // DEBUG: Randomly generate
+                socket: socket,
+            })
+
+            socket.join(roomCode) // Subscribe the player to the lobby events
+            
+            return callback(token) // Return the token
+
+        }
+
+    })
+
+
 })
 
-/*io.on("connection", (socket) => {
-
-    
-
+io.sockets.adapter.on("join-room", (room, id) => {
+    console.log(`Socket of id ${id} joined room ${room}`)
 })
-
-io.on("recieveToken", (socket) => {
-    console.debug('requested token server side')
-    const token = "abCdETOKEN123"
-    socket.emit('fetchToken', token)
-})
-
-io.on("validateToken", (socket, token) => {
-    socket
-    console.debug(`Validating Token ${token}`) // DEBUG
-})*/
-
-
-
-
-/*import express from 'express'
-import getRoutes from './routes/get';
-
-const app = express();
-const port = 8000;
-
-for (const route of getRoutes) {
-    app.get(route.route, route.callback)
-}
-
-app.listen(port, () => {
-    console.warn(`Server listening on port ${port}`)
-})*/
