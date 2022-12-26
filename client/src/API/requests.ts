@@ -1,4 +1,5 @@
 import { io, Socket } from "socket.io-client";
+import { validateTokenEnums } from "./types/enums";
 
 export default class Requests {
 
@@ -78,6 +79,18 @@ export default class Requests {
                     rej(false); // Error occured
 
                 }
+
+            })
+
+        })
+    }
+
+    async validateToken(token: string, roomCode: string): Promise<validateTokenEnums> {
+        return new Promise((res, rej) => {
+
+            this.socket.emit("validateToken", { token: token, roomCode: roomCode }, (result: validateTokenEnums) => {
+
+                res(result);
 
             })
 

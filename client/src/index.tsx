@@ -23,7 +23,7 @@ root.render(
         <Route path="/join" element = {<JoinGame requests={Connection}/>} />
         <Route path ="/create" element = {<CreateGame />} />
 
-        <Route path="/game/:id" element={ <GameLobby /> }/>
+        <Route path="/game/:id" element={ <GameLobby requests={Connection}/> }/>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
