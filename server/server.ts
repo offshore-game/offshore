@@ -69,8 +69,9 @@ io.sockets.on("connection", function (socket) {
         if (lobby) {
             
             const player = await lobby.addPlayer(data.username, socket).catch((err) => { return callback(err) })
-            return callback(player.token) // Return the token
 
+            if (!player) return callback(false); // Return a boolean indicating a failure.
+            return callback(player.token); // Return the token
         }
 
     })
