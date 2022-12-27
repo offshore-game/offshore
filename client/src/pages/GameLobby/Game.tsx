@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { validateTokenEnums } from '../../API/types/enums';
 import { AuthProp } from '../../utils/propTypes';
-import styles from './GameLobby.module.css'
+import Lobby from './Lobby/Lobby';
+import SetUsername from './SetUsername/SetUsername';
 
-enum statusType {
+
+export enum statusType {
     needAuth = 0,
     inLobby = 1,
     inGame = 2,
     waitingGameEnd = 3, // Idle in lobby awaiting game end event.
 }
 
-export default function GameLobby(props: AuthProp) {
+
+// To act as a switch point for different components related to the game.
+export default function Game(props: AuthProp) {
 
     const navigate = useNavigate();
     const { id } = useParams();
@@ -59,56 +63,12 @@ export default function GameLobby(props: AuthProp) {
         // User is authenticated; show them the game lobby.
         if (status == statusType.inLobby) {
 
-            return (
-                <div className={styles.background}>
-                    <div>
-                        User {localStorage.getItem("token")} Authenticated into Lobby {id}
-                    </div>
+            return <Lobby requests={props.requests} />
     
-                    <div className={styles.menuButton} onClick={() => {
-
-                        localStorage.clear()
-                        navigate(`/`, { replace: true })
-                        return true;
-
-                    }}>
-                        LEAVE
-                    </div>
-                </div>
-            )
-    
-            // User is not authenticated; show them a page to enter a username and join the lobby.
+        // User is not authenticated; show them a page to enter a username and join the lobby.
         } else if (status == statusType.needAuth) {
             
-            return (
-                <div className={styles.background}>
-                    <div id="home-container" className={styles.container}>
-
-                        You are attempting to join lobby {id}
-                        <input type="text" id="usernameInput-Join" className={styles.textInput} placeholder="Username" />
-
-                        <div className={styles.buttons}>
-
-                            <div className={styles.menuButton} onClick={async () => {
-                                const username = document.getElementById("usernameInput-Join") as HTMLTextAreaElement
-                                console.log('pressed')
-                                const result = await props.requests.joinLobby(username.value, id!).catch((err) => { throw err; })
-                                if (result) {
-
-                                    // Set status to authentication
-                                    return setStatus(statusType.inLobby)
-
-                                }
-                                console.log("joingame result: ", result)
-                            }}>
-                                Join Game
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            )
+            return <SetUsername requests={props.requests} statusSetter={setStatus} />
     
         }
 

@@ -49,6 +49,8 @@ export default class Requests {
 
                     localStorage.setItem("token", token)
                     localStorage.setItem("roomCode", roomCode)
+                    localStorage.setItem("username", username)
+                    
                     res(true); // Success
 
                 } else {
@@ -62,8 +64,24 @@ export default class Requests {
         })
     }
 
+    // Attempt to leave a lobby on request.
+    async leaveLobby() {
+        return new Promise((res, rej) => {
+            
+            const token = localStorage.getItem("token")
+            const roomCode = localStorage.getItem("roomCode")
+
+            this.socket.emit("leaveLobby", { token: token!, roomCode: roomCode! }, (result: boolean) => {
+
+                return result ? res(result) : rej (result) // Resolve True, Reject False.
+
+            })
+            
+        })
+    }
+
     // Attempt to create a new lobby on request.
-    async createLobby(username: string) {
+    async createLobby(username: string): Promise<string> {
         return new Promise((res, rej) => {
 
             this.socket.emit("createLobby", { username: username }, (result: { token: string, roomCode: string }) => {
@@ -72,7 +90,9 @@ export default class Requests {
 
                     localStorage.setItem("token", result.token)
                     localStorage.setItem("roomCode", result.roomCode)
-                    res(true); // Success
+                    localStorage.setItem("username", username)
+
+                    res(result.roomCode); // Success
 
                 } else {
 

@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import { Socket } from 'socket.io';
+import makeLobbyId from '../../generators/LobbyId';
 import { playerType } from '../../types/lobbyTypes';
 
 export default class GameLobby {
@@ -11,7 +12,7 @@ export default class GameLobby {
 
 
     constructor() {
-        this.id = "AAAA" // FEATURE: create random ID
+        this.id = makeLobbyId(4) // FEATURE: create random ID
         this.events = new EventEmitter() 
         this.state = "LOBBY"
         this.players = []
@@ -54,12 +55,12 @@ export default class GameLobby {
     }
 
 
-    async removePlayer(socketId: string) {
+    async removePlayer(token: string) {
         return new Promise((res, rej) => {
 
             for (const [index, player] of this.players.entries()) {
                 
-                if (player.socketId == socketId) {
+                if (player.token == token) {
 
                     // Remove the player from the array, effectively destroying their token.
                     this.players.splice(index, 1)

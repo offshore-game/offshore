@@ -7,7 +7,7 @@ import Home from './pages/Home/Home'
 import JoinGame from './pages/JoinGame/JoinGame';
 import CreateGame from './pages/CreateGame/CreateGame';
 import Requests from './API/requests';
-import GameLobby from './pages/GameLobby/GameLobby';
+import Game from './pages/GameLobby/Game';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,11 +19,11 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home requests={Connection}/>} /> {/* add page type ({ main, join, create }) prop later */}
-        <Route path="/join" element = {<JoinGame requests={Connection}/>} />
-        <Route path ="/create" element = {<CreateGame />} />
+        <Route path="/" element={<Home requests={Connection} />} /> {/* add page type ({ main, join, create }) prop later */}
+        <Route path="/join" element = {<JoinGame requests={Connection} />} />
+        <Route path ="/create" element = {<CreateGame requests={Connection} />} />
 
-        <Route path="/game/:id" element={ <GameLobby requests={Connection}/> }/>
+        <Route path="/game/:id" element={ <Game requests={Connection} /> } />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

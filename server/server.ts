@@ -54,10 +54,11 @@ io.sockets.on("connection", function (socket) {
 
         const lobby = new GameLobby()
             lobbies.set(lobby.id, lobby) // Add to lobby map
+        console.debug(`New lobby made with ID ${lobby.id}`)
 
         const result = await lobby.addPlayer(data.username, socket).catch((err) => { return callback(err) })
 
-        return callback(result.token) // Return the token
+        return callback({ token: result.token, roomCode: lobby.id }) // Return the payload
 
     })
 
@@ -72,6 +73,21 @@ io.sockets.on("connection", function (socket) {
 
             if (!player) return callback(false); // Return a boolean indicating a failure.
             return callback(player.token); // Return the token
+        }
+
+    })
+
+    socket.on("leaveLobby", async function (data: { token: string, roomCode: string }, callback) {
+
+        const lobby = lobbies.get(data.roomCode)!
+
+        if (lobby) {
+            
+            const player = await lobby.removePlayer(data.token).catch((err) => { return callback(false) })
+
+            if (!player) return callback(false); // Return a boolean indicating a failure.
+            return callback(true); // Return a boolean indicating success.
+            
         }
 
     })
@@ -126,6 +142,12 @@ io.sockets.adapter.on("leave-room", async (roomId, socketId) => {
             // Mark the player as disconnected
             player.connected = false
 
+        }
+
+        // Clear lobby if no connected players remain.
+        const connectedPlayers = lobby.players.filter(player => player.connected == true)
+        if (connectedPlayers.length == 0) {
+            lobbies.delete(roomId)
         }
 
     }

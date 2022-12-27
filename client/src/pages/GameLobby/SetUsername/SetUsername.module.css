@@ -21,13 +21,6 @@
     border-radius: 10px;
 }
 
-.buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
 .menuButton {
     height: 8vh;
     max-height: 100px;
@@ -66,11 +59,6 @@
 
     box-shadow: -1.25px 2.5px  black;
 }
-
-.link {
-    text-decoration: none;
-}
-
 
 .textInput {
     color: black;
