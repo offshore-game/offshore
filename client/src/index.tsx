@@ -16,17 +16,15 @@ const root = ReactDOM.createRoot(
 const Connection = new Requests()
 
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home requests={Connection} />} /> {/* add page type ({ main, join, create }) prop later */}
-        <Route path="/join" element = {<JoinGame requests={Connection} />} />
-        <Route path ="/create" element = {<CreateGame requests={Connection} />} />
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Home requests={Connection} />} /> {/* add page type ({ main, join, create }) prop later */}
+      <Route path="/join" element = {<JoinGame requests={Connection} />} />
+      <Route path ="/create" element = {<CreateGame requests={Connection} />} />
 
-        <Route path="/game/:id" element={ <Game requests={Connection} /> } />
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+      <Route path="/game/:id" element={ <Game requests={Connection} /> } />
+    </Routes>
+  </BrowserRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function
