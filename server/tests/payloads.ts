@@ -11,6 +11,7 @@ lobbyEntry.players = [
         socketId: "socket1",
         socket: undefined,
         connected: true,
+        owner: true,
     },
     {
         token: "to",
@@ -19,6 +20,7 @@ lobbyEntry.players = [
         socketId: "socket1",
         socket: undefined,
         connected: true,
+        owner: false,
     },
     {
         token: "ke",
@@ -27,6 +29,7 @@ lobbyEntry.players = [
         socketId: "socket1",
         socket: undefined,
         connected: false,
+        owner: false,
     },
     {
         token: "nt",
@@ -35,5 +38,6 @@ lobbyEntry.players = [
         socketId: "socket1",
         socket: undefined,
         connected: false,
+        owner: false,
     },
 ]
