@@ -24,7 +24,7 @@ export default function JoinGame(props: AuthProp) {
                         if (result) {
 
                             // Redirect user to game
-                            navigate(`/game/${roomCode.value}`, { replace: true })
+                            navigate(`/game/${roomCode.value}`, { replace: true, state: result })
 
                         }
                         console.log("joingame result: ", result)

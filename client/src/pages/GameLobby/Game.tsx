@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { validateTokenEnums } from '../../API/types/enums';
 import { AuthProp } from '../../utils/propTypes';
 import Lobby from './Lobby/Lobby';
@@ -19,7 +19,10 @@ export default function Game(props: AuthProp) {
 
     const navigate = useNavigate();
     const { id } = useParams();
-
+    
+    const location = useLocation();
+    const otherPlayers = location.state // Passed from JoinGame.tsx
+    
     const [status, setStatus] = useState(statusType.inLobby);
 
     useEffect(() => {
@@ -63,7 +66,7 @@ export default function Game(props: AuthProp) {
         // User is authenticated; show them the game lobby.
         if (status == statusType.inLobby) {
 
-            return <Lobby requests={props.requests} />
+            return <Lobby requests={props.requests} otherPlayers={otherPlayers}/>
     
         // User is not authenticated; show them a page to enter a username and join the lobby.
         } else if (status == statusType.needAuth) {

@@ -22,14 +22,14 @@ export default class Requests {
 
                 if (result) {
 
-                    res(true); // Success
+                    return res(true); // Success
 
                 } else {
 
                     localStorage.setItem("token", "") // Wipe the old invalid token
                     localStorage.setItem("roomCode", "") // Wipe the old room code
 
-                    rej(false); // Error occured
+                    return rej(false); // Error occured
 
                 }
 
@@ -40,22 +40,22 @@ export default class Requests {
     }
 
     // Attempt to join a lobby on request.
-    async joinLobby(username: string, roomCode: string) {
+    async joinLobby(username: string, roomCode: string): Promise<string[]> {
         return new Promise((res, rej) => {
 
-            this.socket.emit("joinLobby", { username: username, roomCode: roomCode }, (token: string) => {
-                console.log(token)
-                if (token) {
+            this.socket.emit("joinLobby", { username: username, roomCode: roomCode }, (data: { token: string, otherPlayers: string[]}) => {
+                console.log(data.token)
+                if (data.token) {
 
-                    localStorage.setItem("token", token)
+                    localStorage.setItem("token", data.token)
                     localStorage.setItem("roomCode", roomCode)
                     localStorage.setItem("username", username)
                     
-                    res(true); // Success
+                    return res(data.otherPlayers); // Success
 
                 } else {
 
-                    rej(false); // Error occured
+                    return rej(false); // Error occured
 
                 }
 
@@ -92,11 +92,11 @@ export default class Requests {
                     localStorage.setItem("roomCode", result.roomCode)
                     localStorage.setItem("username", username)
 
-                    res(result.roomCode); // Success
+                    return res(result.roomCode); // Success
 
                 } else {
 
-                    rej(false); // Error occured
+                    return rej(false); // Error occured
 
                 }
 
@@ -110,7 +110,7 @@ export default class Requests {
 
             this.socket.emit("validateToken", { token: token, roomCode: roomCode }, (result: validateTokenEnums) => {
 
-                res(result);
+                return res(result);
 
             })
 

@@ -70,10 +70,21 @@ io.sockets.on("connection", function (socket) {
 
         if (lobby) {
             
+            // Make an array of all other player usernames (before we add the new player)
+            const otherPlayers: string[] = []
+            for (const player of lobby.players) {
+                otherPlayers.push(player.username)
+            }
+
             const player = await lobby.addPlayer(data.username, socket).catch((err) => { return callback(err) })
             
             if (!player) return callback(false); // Return a boolean indicating a failure.
-            return callback(player.token); // Return the token
+            
+            console.debug("broadcasting that a player has joined")
+            // Broadcast to all players that someone has joined.
+            io.in(data.roomCode).emit("playerJoin", player.username)
+
+            return callback({ token: player.token, otherPlayers: otherPlayers} ); // Return the payload
         }
 
     })
@@ -87,6 +98,12 @@ io.sockets.on("connection", function (socket) {
             const player = await lobby.removePlayer(data.token).catch((err) => { return callback(false) })
 
             if (!player) return callback(false); // Return a boolean indicating a failure.
+            
+            console.debug(`Player ${player.username} has left lobby ${data.roomCode}`)
+
+            // Broadcast to all players that someone has left.
+            io.in(data.roomCode).emit("playerLeave", player.username)
+
             return callback(true); // Return a boolean indicating success.
             
         }

@@ -2,13 +2,14 @@ import EventEmitter from 'events';
 import { Socket } from 'socket.io';
 import makeLobbyId from '../../generators/LobbyId';
 import { playerType } from '../../types/lobbyTypes';
+import Player from '../Player';
 
 export default class GameLobby {
 
     id: string
     events: EventEmitter
     state: "LOBBY" | "INGAME" | "END"
-    players: playerType[]
+    players: Player[]
 
 
     constructor() {
@@ -21,7 +22,7 @@ export default class GameLobby {
 
 
 
-    async addPlayer(username: string, socket: Socket, isOwner?: boolean): Promise<playerType> {
+    async addPlayer(username: string, socket: Socket, isOwner?: boolean): Promise<Player> {
         return new Promise(async (res, rej) => {
 
             // Duplicate name check first
@@ -31,17 +32,7 @@ export default class GameLobby {
 
             }
 
-            const player = {
-
-                token: "ABCD1234",
-                username: username,
-                role: "READER" as "READER" | "SOLVER",
-                socketId: socket.id,
-                socket: socket,
-                connected: true,
-                owner: isOwner ? true : false,
-
-            }
+            const player = new Player(username, socket, isOwner!)
 
             // Add player to the websocket room
             await socket.join(this.id)
@@ -56,7 +47,7 @@ export default class GameLobby {
     }
 
 
-    async removePlayer(token: string) {
+    async removePlayer(token: string): Promise<Player> {
         return new Promise((res, rej) => {
 
             for (const [index, player] of this.players.entries()) {
@@ -65,7 +56,7 @@ export default class GameLobby {
 
                     // Remove the player from the array, effectively destroying their token.
                     this.players.splice(index, 1)
-                    return res(true);
+                    return res(player); // Returns the player that was removed
 
                 }
                 
