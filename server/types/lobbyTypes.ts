@@ -7,6 +7,7 @@ export type playerType = {
     socketId: string,
     socket: Socket | undefined,
     connected: boolean,
+    owner: boolean,
 }
 
 export type lobbyMapEntry = {

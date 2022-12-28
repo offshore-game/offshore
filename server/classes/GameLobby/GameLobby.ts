@@ -21,7 +21,7 @@ export default class GameLobby {
 
 
 
-    async addPlayer(username: string, socket: Socket): Promise<playerType> {
+    async addPlayer(username: string, socket: Socket, isOwner?: boolean): Promise<playerType> {
         return new Promise(async (res, rej) => {
 
             // Duplicate name check first
@@ -39,6 +39,7 @@ export default class GameLobby {
                 socketId: socket.id,
                 socket: socket,
                 connected: true,
+                owner: isOwner ? true : false,
 
             }
 

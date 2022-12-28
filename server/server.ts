@@ -56,9 +56,10 @@ io.sockets.on("connection", function (socket) {
             lobbies.set(lobby.id, lobby) // Add to lobby map
         console.debug(`New lobby made with ID ${lobby.id}`)
 
-        const result = await lobby.addPlayer(data.username, socket).catch((err) => { return callback(err) })
+        const player = await lobby.addPlayer(data.username, socket, true).catch((err) => { return callback(err) })
+        console.debug("is owner?: ", player.owner)
 
-        return callback({ token: result.token, roomCode: lobby.id }) // Return the payload
+        return callback({ token: player.token, roomCode: lobby.id }) // Return the payload
 
     })
 
@@ -70,7 +71,7 @@ io.sockets.on("connection", function (socket) {
         if (lobby) {
             
             const player = await lobby.addPlayer(data.username, socket).catch((err) => { return callback(err) })
-
+            
             if (!player) return callback(false); // Return a boolean indicating a failure.
             return callback(player.token); // Return the token
         }
@@ -141,6 +142,17 @@ io.sockets.adapter.on("leave-room", async (roomId, socketId) => {
 
             // Mark the player as disconnected
             player.connected = false
+
+            // Check if the player is the owner of the lobby
+            if (player.owner == true) {
+
+                // Tell all clients to leave if the owner disconnects
+                io.in(roomId).emit("lobbyClose")
+
+                // Delete the lobby
+                lobbies.delete(roomId)
+
+            }
 
         }
 
