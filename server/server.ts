@@ -1,5 +1,4 @@
 import { Server } from 'socket.io' // https://socket.io/docs/v4
-import { lobbyMapEntry } from './types/lobbyTypes'
 import { lobbyEntry } from './tests/payloads'
 import { validateTokenEnums } from './types/enums'
 import GameLobby from './classes/GameLobby/GameLobby'

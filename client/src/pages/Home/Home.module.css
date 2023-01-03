@@ -1,3 +1,8 @@
+/* 
+https://developer.mozilla.org/en-US/docs/Web/CSS/perspective
+https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
+*/
+
 .background {
     height: 100%;
     width: 100%;
@@ -7,79 +12,132 @@
     justify-content: center;
     align-items: center;
 
-    background-color: rgb(131, 35, 35);
+    position: absolute;
+
+    background-color: white;
+
+    overflow: hidden;
 }
 
-.container {
+.screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    position: absolute;
+    top: 15%;
+
+
+    
+
+    background-color: lightgray;
+    height: 45%;
+    width: 65%;
+
+
+
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+
+    transition: all 2s;
+}
+
+.zoomedScreen {
+    composes: screen;
+
+    transform: translateX(350%) translateY(-250%);
+
+}
+
+.screenButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    height: 45%;
+    width: 65%;
+
+    border-radius: 10px;
+
+    background-color: gray;
+    margin: 10%;
+
+}
+
+.joinItemsContainer {
+
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 
-    height: 25vh;
-    width: 85%;
+    height: 10vw;
+    width: 10vw;
 
-    background-color: rgb(85, 85, 85);
-    padding: 10px;
-    border-radius: 10px;
-}
+    max-height: 200px;
+    max-width: 200px;
 
-.buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
+    bottom: 1%;
+    left: 10%;
 
-.menuButton {
+    position: absolute;
 
-    height: 10vh;
-    max-height: 100px;
-
-    width: 25vw;
-    max-width: 250px;
-    margin: 15px;
-    border-radius: 10px;
-
-    background-color: rgb(201, 25, 25);
-    color: white;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-
-    box-shadow: -5px 10px  black;
-
-    transition: filter 0.25s;
-    transition: box-shadow 0.25s;
-    user-select: none;
-
-}
-
-.menuButton:hover {
-    filter: brightness(85%);
-    cursor: pointer;
-
-    box-shadow: -2.5px 5px  black;
-}
-
-.menuButton:active {
-    filter: brightness(65%);
-
-    box-shadow: -1.25px 2.5px  black;
-}
-
-.link {
-    text-decoration: none;
-}
-
-
-.username {
     background-color: gray;
-    height: 25px;
-    width: 70%;
 
-    text-align: center;
-    margin: 25px;
+    transition: all 2s;
+
+}
+
+.zoomedItemsContainer {
+
+    composes: joinItemsContainer;
+    height: 15vw;
+    width: 15vw;
+
+    max-height: 250px;
+    max-width: 250px;
+
+    transform: translate(220%, -125%);
+    
+}
+
+.table {
+
+    height: 15%;
+    width: 100%;
+    background-color: lightgray;
+
+    bottom: 0;
+
+    position: absolute;
+
+    transition: all 2s;
+}
+
+.zoomedTable {
+
+    composes: table;
+    height: 55%;
+
+}
+
+.textBox {
+
+    width: 90%;
+    margin: 10px;
+
+
+}
+
+.backButton {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    margin: 10px;
+
 }

@@ -1,7 +1,6 @@
 import EventEmitter from 'events';
 import { Socket } from 'socket.io';
 import makeLobbyId from '../../generators/LobbyId';
-import { playerType } from '../../types/lobbyTypes';
 import Player from '../Player';
 
 export default class GameLobby {

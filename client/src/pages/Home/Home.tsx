@@ -1,11 +1,27 @@
-import React, { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { AuthProp } from '../../utils/propTypes'
-import styles from './Home.module.css'
+import React, { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Button from '../../components/Button/Button';
 
-export default function Home(props: AuthProp) { // IDEA: Add all the home panels inside the same component, and then a prop that will just switch between them.
+import { AuthProp } from '../../utils/propTypes'
+import CreateView from './CreateView/CreateView';
+import styles from './Home.module.css'
+import LobbyView from './LobbyView/LobbyView';
+
+type HomeProps = {
+
+    joinMenu?: boolean
+    createMenu?: boolean
+    gameLobby?: boolean
+
+}
+
+export default function Home(props: AuthProp & HomeProps) {
     const navigate = useNavigate();
-    
+    const [joinMenuView, setJoinMenuView] = useState(props.joinMenu ? true : false);
+    const [createMenuView, setCreateMenuView] = useState(props.createMenu ? true : false);
+    const [gameLobbyView, setGameLobbyView] = useState(props.gameLobby ? true : false);
+    const [otherPlayers, setOtherPlayers] = useState(undefined as any)
+
     useEffect(() => {
 
         const canAuth = async () => {
@@ -28,35 +44,107 @@ export default function Home(props: AuthProp) { // IDEA: Add all the home panels
 
     }, [])
 
+
+    const joinGameItems = useRef(null as any) as React.MutableRefObject<HTMLDivElement>;
+    const screen = useRef(null as any) as React.MutableRefObject<HTMLDivElement>;
+    const table = useRef(null as any) as React.MutableRefObject<HTMLDivElement>;
+
+
     return (
         <div className={styles.background}>
-                
-            <div id="home-container" className={styles.container}>
+            <div ref={table} className={joinMenuView ? styles.zoomedTable : styles.table} />
 
-                <div className={styles.buttons}>
 
-                    <Link to="/create" className={styles.link}>
+            <div ref={joinGameItems} className={joinMenuView ? styles.zoomedItemsContainer : styles.joinItemsContainer}>
+                {joinMenuView ?
+                    <React.Fragment>
 
-                        <div className={styles.menuButton}>
-                            Create Game
+                        <div onClick={() => {
+
+                            window.history.replaceState(null, window.document.title, "/")
+                            return setJoinMenuView(false);
+
+                        }}>
+                            <div className={styles.backButton}>Back Button?</div>
                         </div>
 
-                    </Link>
 
+                        <input id="usernameInput-Join" className={styles.textBox} type="text" placeholder="Username" />
+                        <input id="roomCodeInput" className={styles.textBox} type="text" placeholder="Room Code" />
 
+                        <Button text="Join" onClick={async () => {
+                        
+                            // When the player wants to join
+                            const username = document.getElementById("usernameInput-Join") as HTMLTextAreaElement
+                            const roomCode = document.getElementById("roomCodeInput") as HTMLTextAreaElement
+                            
 
-                    <Link to="/join" className={styles.link}>
+                            const result = await props.requests.joinLobby(username.value, roomCode.value).catch((err) => { throw err; })
+                            // Lobby successfully joined
+                            if (result) {
 
-                        <div className={styles.menuButton}>
-                            Join Game
-                        </div>
+                                // Set state and do animations
+                                setJoinMenuView(false);
+                                setCreateMenuView(false);
 
-                    </Link>
+                                setGameLobbyView(true);
+                                
+                                // To pass to the lobby screen
+                                setOtherPlayers(result)
 
-                </div>
+                                navigate(`/game/${roomCode.value}`, { replace: true, state: result })
+    
+                            }
+
+                        }}/>
+
+                    </React.Fragment>
+                : <div/>}
 
             </div>
-    
+
+            {/* Code for the projector screen */}
+            <div ref={screen} className={joinMenuView ? styles.zoomedScreen : styles.screen}>
+
+                {!gameLobbyView && !createMenuView && !joinMenuView ?
+                    // The Buttons on the Projector Screen (JOIN/CREATE)
+                    <React.Fragment>
+                        <div className={styles.screenButton} onClick={() => {
+
+                            // Can't navigate() because we don't want to cause a component reload, we want to show the animation.
+                            window.history.replaceState(null, window.document.title, "/join")
+
+                            return setJoinMenuView(true);
+
+                        }}>
+                            JOIN
+                        </div>
+
+                        
+                        <div className={styles.screenButton} onClick={() => {
+                            // Set state
+                            setJoinMenuView(false);
+                            setGameLobbyView(false);
+
+                            setCreateMenuView(true);
+                            
+                            navigate(`/create`, { replace: true })
+                        }}>
+                            CREATE
+                        </div>
+                    </React.Fragment>
+
+
+                    
+                :
+                    gameLobbyView ? <LobbyView requests={props.requests} otherPlayers={otherPlayers}/> :
+                    
+                    createMenuView ? <CreateView requests={props.requests} setCreateState={setCreateMenuView}/> : <div/>
+                }
+
+
+            </div>
         </div>
     )
+
 }

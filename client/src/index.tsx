@@ -2,10 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route, useParams } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home/Home'
-import JoinGame from './pages/JoinGame/JoinGame';
-import CreateGame from './pages/CreateGame/CreateGame';
 import Requests from './API/requests';
 import Game from './pages/GameLobby/Game';
 
@@ -22,11 +20,12 @@ root.render(
       <div id="sizingContent">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home requests={Connection} />} /> {/* add page type ({ main, join, create }) prop later */}
-            <Route path="/join" element = {<JoinGame requests={Connection} />} />
-            <Route path ="/create" element = {<CreateGame requests={Connection} />} />
+            <Route path="/" element={ <Home requests={Connection} /> } />
+            <Route path="/join" element={ <Home requests={Connection} joinMenu={true}/> } />
+            <Route path ="/create" element={ <Home requests={Connection} createMenu={true}/> } />
 
-            <Route path="/game/:id" element={ <Game requests={Connection} /> } />
+            <Route path="/lobby/:id" element={ <Home requests={Connection} gameLobby={true}/> } />
+            <Route path="/game/:id" element={ <Game requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}
           </Routes>
         </BrowserRouter>
       </div>

@@ -13,7 +13,7 @@ export default class Player {
     username: string
     role: "READER" | "SOLVER" | undefined
     socketId: string
-    socket: Socket
+    socket: Socket | undefined
     connected: boolean
     owner: boolean
 
