@@ -170,6 +170,8 @@ io.sockets.adapter.on("leave-room", async (roomId, socketId) => {
                 // Delete the lobby
                 lobbies.delete(roomId)
 
+                console.debug(`Room of ID ${roomId} destroyed due to inactivity.`)
+
             }
 
         }

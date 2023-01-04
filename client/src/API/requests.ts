@@ -73,7 +73,7 @@ export default class Requests {
 
             this.socket.emit("leaveLobby", { token: token!, roomCode: roomCode! }, (result: boolean) => {
 
-                return result ? res(result) : rej (result) // Resolve True, Reject False.
+                return res(result) // Resolve True OR False.
 
             })
             

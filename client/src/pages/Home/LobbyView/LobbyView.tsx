@@ -5,7 +5,10 @@ import { AuthProp } from '../../../utils/propTypes';
 import styles from './LobbyView.module.css'
 
 type LobbyProp = {
-    otherPlayers: string[] | undefined
+
+    otherPlayers: string[] | undefined,
+    setLobbyState: Function,
+
 }
 
 export default function LobbyView(props: AuthProp & LobbyProp) {
@@ -21,18 +24,28 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
 
 
     useEffect(() => {
+        
+        const auth = async () => {
+            // Attempt to rejoin the lobby if we are not already authenticated in.
+            await props.requests.rejoinLobby().catch((err) => {
+                props.setLobbyState(false);
+                navigate('/', { replace: true });
+            })
+        }
+        auth()
+        
 
         const otherPlayers = props.otherPlayers
         if (otherPlayers) {
 
-            const newEntries: any[] = [] // I REALLY don't want to write types for this lol
             for (const username of otherPlayers) {
                 setUsernameBoardEntries(entries => [...entries, <div key={username}>{username}</div>])
             }
 
         }
 
-        console.log(otherPlayers)
+        // REGISTER LOBBY EVENTS \\
+        
         // The server has closed the lobby.
         props.requests.socket.on("lobbyClose", () => {
 
@@ -75,16 +88,15 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
 
             <div className={styles.menuButton} onClick={async () => {
 
-                const result = await props.requests.leaveLobby()
+                // We don't check for the callback value of "result" because we don't want to hang the client if
+                // their socket was reset and they are trying to leave. This was a tested bug.
+                const result = await props.requests.leaveLobby().catch((err) => { return; })
 
-                if (result) {
+                localStorage.clear() // Clear all variables in storage
+                navigate(`/`, { replace: true }) // Go back home
+                navigate(0) // Reload the page to wipe the socket and establish a new connection.
+                return true;
 
-                    localStorage.clear() // Clear all variables in storage
-                    navigate(`/`, { replace: true }) // Go back home
-                    navigate(0) // Reload the page to wipe the socket and establish a new connection.
-                    return true;
-
-                }
 
             }}>
                 LEAVE
@@ -94,12 +106,14 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
                 
                 <div className={styles.menuButton} style={{ backgroundColor: "green" }} onClick={async () => {
 
-                    const result = await props.requests.leaveLobby()
+                    const result = await props.requests.leaveLobby() // FEATURE/DEBUG: Bad API Call, feature needs to be done.
+
+                    console.log(result);
 
                     if (result) {
 
                         localStorage.clear()
-                        navigate(`/`, { replace: true })
+                        navigate(`/game/${roomCode}`, { replace: true }) // Navigate to the game page
                         return true;
 
                     }

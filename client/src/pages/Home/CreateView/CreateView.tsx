@@ -6,6 +6,7 @@ import styles from './CreateView.module.css'
 type CreateViewProp = {
 
     setCreateState: Function,
+    setLobbyState: Function,
 
 }
 
@@ -34,8 +35,14 @@ export default function CreateView(props: AuthProp & CreateViewProp) {
 
                 if (result) {
                     
-                    // Redirect user to game
-                    navigate(`/game/${result}`, { replace: true })
+                    // Pass state up
+                    props.setCreateState(false);
+
+                    // Pass state up
+                    props.setLobbyState(true);
+
+                    // Redirect user to lobby
+                    navigate(`/lobby/${result}`, { replace: true })
 
                     // Mark user as owner to prompt settings and start game pathways
                     localStorage.setItem("isOwner", "true")

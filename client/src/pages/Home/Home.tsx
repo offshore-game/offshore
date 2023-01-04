@@ -7,6 +7,8 @@ import CreateView from './CreateView/CreateView';
 import styles from './Home.module.css'
 import LobbyView from './LobbyView/LobbyView';
 
+import { ReactComponent as JoinMenuStack } from '../../assets/MainMenu/joinMenuStack.svg'
+
 type HomeProps = {
 
     joinMenu?: boolean
@@ -33,7 +35,7 @@ export default function Home(props: AuthProp & HomeProps) {
                 if (result) {
                     
                     // Redirect user to the lobby.
-                    navigate(`/game/${roomCode}`, { replace: true })
+                    navigate(`/lobby/${roomCode}`, { replace: true })
                     return true;
                     
                 }
@@ -68,6 +70,7 @@ export default function Home(props: AuthProp & HomeProps) {
                             <div className={styles.backButton}>Back Button?</div>
                         </div>
 
+                        
 
                         <input id="usernameInput-Join" className={styles.textBox} type="text" placeholder="Username" />
                         <input id="roomCodeInput" className={styles.textBox} type="text" placeholder="Room Code" />
@@ -92,7 +95,7 @@ export default function Home(props: AuthProp & HomeProps) {
                                 // To pass to the lobby screen
                                 setOtherPlayers(result)
 
-                                navigate(`/game/${roomCode.value}`, { replace: true, state: result })
+                                navigate(`/lobby/${roomCode.value}`, { replace: true, state: result })
     
                             }
 
@@ -137,9 +140,9 @@ export default function Home(props: AuthProp & HomeProps) {
 
                     
                 :
-                    gameLobbyView ? <LobbyView requests={props.requests} otherPlayers={otherPlayers}/> :
+                    gameLobbyView ? <LobbyView requests={props.requests} otherPlayers={otherPlayers} setLobbyState={setGameLobbyView}/> :
                     
-                    createMenuView ? <CreateView requests={props.requests} setCreateState={setCreateMenuView}/> : <div/>
+                    createMenuView ? <CreateView requests={props.requests} setCreateState={setCreateMenuView} setLobbyState={setGameLobbyView}/> : <div/>
                 }
 
 
