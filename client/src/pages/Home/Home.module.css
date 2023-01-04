@@ -85,8 +85,6 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
 
     position: absolute;
 
-    background-color: gray;
-
     transition: all 2s;
 
 }
@@ -94,13 +92,21 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
 .zoomedItemsContainer {
 
     composes: joinItemsContainer;
-    height: 15vw;
-    width: 15vw;
 
-    max-height: 250px;
-    max-width: 250px;
+    left: 37.8%;
+    bottom: 25%;
 
-    transform: translate(220%, -125%);
+    margin: 0;
+
+    height: 30vw;
+    width: 30vw;
+
+    max-height: 500px;
+    max-width: 500px;
+
+    z-index: 1;
+    
+    transition: all 2s;
     
 }
 

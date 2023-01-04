@@ -57,7 +57,8 @@ export default function Home(props: AuthProp & HomeProps) {
             <div ref={table} className={joinMenuView ? styles.zoomedTable : styles.table} />
 
 
-            <div ref={joinGameItems} className={joinMenuView ? styles.zoomedItemsContainer : styles.joinItemsContainer}>
+            <JoinMenuStack className={joinMenuView ? styles.zoomedItemsContainer : styles.joinItemsContainer}>
+
                 {joinMenuView ?
                     <React.Fragment>
 
@@ -102,9 +103,10 @@ export default function Home(props: AuthProp & HomeProps) {
                         }}/>
 
                     </React.Fragment>
+                    
                 : <div/>}
 
-            </div>
+            </JoinMenuStack>
 
             {/* Code for the projector screen */}
             <div ref={screen} className={joinMenuView ? styles.zoomedScreen : styles.screen}>
