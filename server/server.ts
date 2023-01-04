@@ -2,6 +2,7 @@ import { Server } from 'socket.io' // https://socket.io/docs/v4
 import { lobbyEntry } from './tests/payloads'
 import { validateTokenEnums } from './types/enums'
 import GameLobby from './classes/GameLobby/GameLobby'
+import Player from './classes/Player'
 
 // https://socket.io/docs/v4/rooms/
 
@@ -94,9 +95,10 @@ io.sockets.on("connection", function (socket) {
 
         if (lobby) {
             
-            const player = await lobby.removePlayer(data.token).catch((err) => { return callback(false) })
+            const player = await lobby.removePlayer(data.token).catch((err) => { return callback(false) }) as Player
+                if (!player) return callback(false); // Return a boolean indicating a failure.
 
-            if (!player) return callback(false); // Return a boolean indicating a failure.
+            player.socket?.leave(lobby.id) // De-register the player from the room events.
             
             console.debug(`Player ${player.username} has left lobby ${data.roomCode}`)
 
