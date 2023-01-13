@@ -56,8 +56,8 @@ export default function Home(props: AuthProp & HomeProps) {
         <div className={styles.background}>
             <div ref={table} className={joinMenuView ? styles.zoomedTable : styles.table} />
 
-
-            <JoinMenuStack className={joinMenuView ? styles.zoomedItemsContainer : styles.joinItemsContainer}>
+            <div className={joinMenuView ? styles.zoomedItemsContainer : styles.joinItemsContainer}>
+                <JoinMenuStack style={{width: "100%", height: "100%"}}/>
 
                 {joinMenuView ?
                     <React.Fragment>
@@ -72,41 +72,44 @@ export default function Home(props: AuthProp & HomeProps) {
                         </div>
 
                         
-
-                        <input id="usernameInput-Join" className={styles.textBox} type="text" placeholder="Username" />
-                        <input id="roomCodeInput" className={styles.textBox} type="text" placeholder="Room Code" />
-
-                        <Button text="Join" onClick={async () => {
+                        <input id="roomCodeInput" style={{top: "36%", left: "10%", width: "13%", height: "7%"}} className={styles.textBox} type="text" placeholder="Room Code" />
+                        <input id="usernameInput-Join" style={{top: "55.5%", left: "33%", width: "28%", height: "3%"}} className={styles.textBox} type="text" placeholder="Username" />
                         
-                            // When the player wants to join
-                            const username = document.getElementById("usernameInput-Join") as HTMLTextAreaElement
-                            const roomCode = document.getElementById("roomCodeInput") as HTMLTextAreaElement
+                        {/* Join Button */}
+                        <div className={styles.joinHitbox} onClick={async () => {
+                        
+                        // When the player wants to join
+                        const username = document.getElementById("usernameInput-Join") as HTMLTextAreaElement
+                        const roomCode = document.getElementById("roomCodeInput") as HTMLTextAreaElement
+                        
+
+                        const result = await props.requests.joinLobby(username.value, roomCode.value).catch((err) => { throw err; })
+                        // Lobby successfully joined
+                        if (result) {
+
+                            // Set state and do animations
+                            setJoinMenuView(false);
+                            setCreateMenuView(false);
+
+                            setGameLobbyView(true);
                             
+                            // To pass to the lobby screen
+                            setOtherPlayers(result)
 
-                            const result = await props.requests.joinLobby(username.value, roomCode.value).catch((err) => { throw err; })
-                            // Lobby successfully joined
-                            if (result) {
+                            navigate(`/lobby/${roomCode.value}`, { replace: true, state: result })
 
-                                // Set state and do animations
-                                setJoinMenuView(false);
-                                setCreateMenuView(false);
+                        }
 
-                                setGameLobbyView(true);
-                                
-                                // To pass to the lobby screen
-                                setOtherPlayers(result)
+                    }}>
 
-                                navigate(`/lobby/${roomCode.value}`, { replace: true, state: result })
-    
-                            }
-
-                        }}/>
+                        </div>
 
                     </React.Fragment>
                     
                 : <div/>}
 
-            </JoinMenuStack>
+            </div>
+
 
             {/* Code for the projector screen */}
             <div ref={screen} className={joinMenuView ? styles.zoomedScreen : styles.screen}>

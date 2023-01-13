@@ -132,10 +132,8 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
 
 .textBox {
 
-    width: 90%;
-    margin: 10px;
-
-
+    position: absolute;
+    height: 10%;
 }
 
 .backButton {
@@ -145,5 +143,29 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
     left: 0;
 
     margin: 10px;
+
+    z-index: 1;
+
+}
+
+.joinHitbox {
+
+    position: absolute;
+
+    top: 73%;
+    left: 28%;
+
+    rotate: -3.5deg;
+
+    height: 10%;
+    width: 20%;
+
+    z-index: 1;
+
+}
+
+.joinHitbox:hover {
+
+    cursor: pointer;
 
 }
