@@ -1,3 +1,171 @@
-.container {
-    background-color: green;
+/* 
+https://developer.mozilla.org/en-US/docs/Web/CSS/perspective
+https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
+*/
+
+.background {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+
+    background-color: white;
+
+    overflow: hidden;
+}
+
+.screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    position: absolute;
+    top: 15%;
+
+
+    
+
+    background-color: lightgray;
+    height: 45%;
+    width: 65%;
+
+
+
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+
+    transition: all 2s;
+}
+
+.zoomedScreen {
+    composes: screen;
+
+    transform: translateX(350%) translateY(-250%);
+
+}
+
+.screenButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    height: 45%;
+    width: 65%;
+
+    border-radius: 10px;
+
+    background-color: gray;
+    margin: 10%;
+
+}
+
+.joinItemsContainer {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    height: 10vw;
+    width: 10vw;
+
+    max-height: 200px;
+    max-width: 200px;
+
+    bottom: 1%;
+    left: 10%;
+
+    position: absolute;
+
+    transition: all 2s;
+
+}
+
+.zoomedItemsContainer {
+
+    composes: joinItemsContainer;
+
+    left: 37.8%;
+    bottom: 25%;
+
+    margin: 0;
+
+    height: 30vw;
+    width: 30vw;
+
+    max-height: 500px;
+    max-width: 500px;
+
+    z-index: 1;
+    
+    transition: all 2s;
+    
+}
+
+.table {
+
+    height: 15%;
+    width: 100%;
+    background-color: lightgray;
+
+    bottom: 0;
+
+    position: absolute;
+
+    transition: all 2s;
+}
+
+.zoomedTable {
+
+    composes: table;
+    height: 55%;
+
+}
+
+.textBox {
+
+    position: absolute;
+    height: 10%;
+}
+
+.backButton {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    margin: 10px;
+
+    z-index: 1;
+
+}
+
+.joinHitbox {
+
+    position: absolute;
+
+    top: 73%;
+    left: 28%;
+
+    rotate: -3.5deg;
+
+    height: 10%;
+    width: 20%;
+
+    z-index: 1;
+
+}
+
+.joinHitbox:hover {
+
+    cursor: pointer;
+
 }

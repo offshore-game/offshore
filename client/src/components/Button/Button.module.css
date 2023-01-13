@@ -1,0 +1,38 @@
+.button {
+    height: 25%;
+    max-height: 100px;
+
+    width: 90%;
+    max-width: 200px;    
+    
+    
+    border-radius: 10px;
+
+    background-color: rgb(201, 25, 25);
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    box-shadow: -5px 10px  black;
+
+    transition: filter 0.25s;
+    transition: box-shadow 0.25s;
+    user-select: none;
+
+}
+
+.button:hover {
+    filter: brightness(85%);
+    cursor: pointer;
+
+    box-shadow: -2.5px 5px  black;
+}
+
+.button:active {
+    filter: brightness(65%);
+
+    box-shadow: -1.25px 2.5px  black;
+}

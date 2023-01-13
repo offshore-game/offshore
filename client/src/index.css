@@ -1,3 +1,33 @@
+#sizingContainer {
+  height: 100vh;
+  width: 100vw;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: black;
+}
+
+#sizingWindow {
+  
+  /* Aspect Ratio for Game */
+  aspect-ratio: 16 / 9;
+
+  width: calc(100vh * 16 / 9);
+
+}
+
+#sizingContent {
+
+  height: 100%;
+  width: 100%;
+
+  position: relative;
+  
+}
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
