@@ -12,7 +12,7 @@ export default class GameLobby {
 
 
     constructor() {
-        this.id = makeLobbyId(4) // FEATURE: create random ID
+        this.id = makeLobbyId(4) // Create a random 4 letter ID for the lobby.
         this.events = new EventEmitter() 
         this.state = "LOBBY"
         this.players = []

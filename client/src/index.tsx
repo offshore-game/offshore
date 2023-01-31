@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Requests from './API/requests';
-import Game from './pages/GameLobby/Game';
+import Game from './pages/Game/Game';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

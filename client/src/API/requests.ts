@@ -117,4 +117,21 @@ export default class Requests {
         })
     }
 
+    async startGame(): Promise<boolean | number> {
+
+        return new Promise((res, rej) => {
+
+            const token = localStorage.getItem("token")
+            const roomCode = localStorage.getItem("roomCode")
+
+            this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: boolean | number) => {
+
+                return res(result) // Resolve True OR False.
+
+            })
+
+        })
+
+    }
+
 }
