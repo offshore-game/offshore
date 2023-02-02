@@ -7,7 +7,7 @@
 
     border-radius: 10px;
     
-    width: 55%;
+    width: 85%;
 
     background-color: darkslategray;
 }
@@ -29,6 +29,8 @@
     justify-content: center;
     align-items: center;
 
+    flex-direction: column;
+
     border-radius: 15px;
     background-color: gray;
 
@@ -38,9 +40,31 @@
     width: 10%;
     aspect-ratio: 1/1;
 
-    margin: 10px;
+    margin: 2vw;
 
     color: white;
 
     z-index: 1;
+
+    user-select: none;
+}
+
+.arrow {
+    color: black;
+
+    font-size: 5vh;
+}
+
+.arrow:hover {
+
+    color: white;
+
+    transition: 0.1s;
+
+}
+
+.arrow:active {
+
+    filter: brightness(85%);
+
 }
