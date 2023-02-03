@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { validateTokenEnums } from '../../API/types/enums';
-import ButtonCombination from '../../Puzzles/ButtonCombination/ButtonCombination';
+import ButtonCombination from '../../Puzzles/NumberCombination/NumberCombination';
 import { AuthProp } from '../../utils/propTypes';
 import styles from './Game.module.css'
 

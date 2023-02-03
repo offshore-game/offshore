@@ -31,7 +31,7 @@
 
     flex-direction: column;
 
-    border-radius: 100%;
+    border-radius: 15px;
     background-color: gray;
 
     border-color: black;
@@ -48,17 +48,23 @@
     z-index: 1;
 
     user-select: none;
-
-    transition: 0.15s;
 }
 
-.button:hover {
-    
-    filter: brightness(95%);
+.arrow {
+    color: black;
+
+    font-size: 5vh;
+}
+
+.arrow:hover {
+
+    color: white;
+
+    transition: 0.1s;
 
 }
 
-.button:active {
+.arrow:active {
 
     filter: brightness(85%);
 
