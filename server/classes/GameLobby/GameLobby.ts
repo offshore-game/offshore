@@ -31,6 +31,20 @@ export default class GameLobby {
 
             }
 
+            // Check for blank usernames
+            const usernameArray = username.split('');
+            for (const character of usernameArray) {
+                if (character == '') {
+                    
+
+
+                }            
+            }
+
+
+            "   "
+            "HP  Rocket "
+
             const player = new Player(username, socket, isOwner!)
 
             // Add player to the websocket room
