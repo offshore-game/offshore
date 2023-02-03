@@ -62,7 +62,7 @@ export default function ButtonCombination(props: { count: number }) {
                 // (FEATURE) Insert API Call here
                 console.log(combinationPayload)
 
-            }} style={{margin: "15px", minHeight: "45px"}}/>
+            }} style={{margin: "4vh", minHeight: "45px"}}/>
             
         </div>
     )
