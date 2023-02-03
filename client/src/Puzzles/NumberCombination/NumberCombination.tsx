@@ -5,13 +5,13 @@ import styles from './NumberCombination.module.css'
 
 export default function NumberCombination(props: { count: number }) {
 
-    const [buttonElems, setButtonElems] = useState([] as any[])
+    const [numberElems, setNumberElems] = useState([] as any[])
 
     useEffect(() => {
-        setButtonElems([]) // Prevent a duplication bug on component reset.
+        setNumberElems([]) // Prevent a duplication bug on component reset.
 
         for (let i = 0; i <= props.count; i++) {
-            setButtonElems(entries => [...entries, <div key={i} className={styles.button}>
+            setNumberElems(entries => [...entries, <div key={i} className={styles.button}>
                 <RxTriangleUp className={styles.arrow} onClick={() => {
 
                     // Add one to the number (cap 9)
@@ -44,7 +44,7 @@ export default function NumberCombination(props: { count: number }) {
 
             <div className={styles.buttonContainer}>
                 
-                { buttonElems }
+                { numberElems }
 
             </div>
 
@@ -52,7 +52,7 @@ export default function NumberCombination(props: { count: number }) {
 
                 const combinationPayload: { [key: number]: string } = {}
 
-                for (let i = 0; i < buttonElems.length; i++) {
+                for (let i = 0; i < numberElems.length; i++) {
 
                     const element = document.getElementById(`buttonVal${i}`)!
                     combinationPayload[i] = element.innerHTML
