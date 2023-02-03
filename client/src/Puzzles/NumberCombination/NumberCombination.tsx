@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { RxTriangleUp, RxTriangleDown } from 'react-icons/rx'
 import Button from '../../components/Button/Button'
-import styles from './ButtonCombination.module.css'
+import styles from './NumberCombination.module.css'
 
-export default function ButtonCombination(props: { count: number }) {
+export default function NumberCombination(props: { count: number }) {
 
     const [buttonElems, setButtonElems] = useState([] as any[])
 
