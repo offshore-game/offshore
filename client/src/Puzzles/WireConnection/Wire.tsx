@@ -1,0 +1,57 @@
+import React, { useEffect } from 'react';
+import styles from './Wire.module.css'
+
+export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, offset: DOMRect }) {
+
+    useEffect(() => {
+
+        // No End Coordinate Defined, track mouse
+
+        function getParams(pointOne: { x: number, y: number }, pointTwo: { x: number, y: number }) {
+
+            const slope = ((pointTwo.y - props.originCoordinate.y) / (pointTwo.x - props.originCoordinate.x))
+            const distance = Math.sqrt(Math.pow((pointTwo.x - pointOne.x), 2) + Math.pow((pointTwo.y - pointOne.y), 2))
+            let degree = Math.atan(slope) * (180 / Math.PI)
+
+            if (degree < 0) {
+
+                degree = Math.abs(degree + 180)
+
+            }
+    
+            return {
+                distance: distance,
+                degree: degree,
+            }
+
+        }
+
+        if (!props.endCoordinate) {
+            const container = document.getElementById("ctr")!
+            container.addEventListener("mousemove", (mouseEvent) => {
+                
+                const offsetMouseCoords = { x: mouseEvent.x - props.offset.left, y: mouseEvent.y - props.offset.top }
+
+                const params = getParams(props.originCoordinate, offsetMouseCoords)
+
+                const element = document.getElementById("line")! // this reference is bad
+                    element.style.width = `${params.distance}px`
+                    element.style.transform = `rotate(${params.degree}deg)`
+                    element.style.height = "1px"
+    
+            })
+        } else {
+
+            // End Coordinate Defined
+
+        }
+
+
+        
+    }, [])
+
+    return (
+        <div className={styles.wire}/>
+    )
+
+}

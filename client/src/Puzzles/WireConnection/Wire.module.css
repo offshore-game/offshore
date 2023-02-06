@@ -1,0 +1,10 @@
+.wire {
+
+    position: absolute;
+    left: 100px;
+    background-color: black;
+
+    transform-origin: 0;
+
+}
+

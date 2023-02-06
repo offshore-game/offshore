@@ -50,6 +50,7 @@ export default function Game(props: AuthProp) {
         auth()
 
         // FEATURE: Add an event listener in here to see when the game starts, so the frame can switch.
+        //props.requests.onGameStart(())
 
     }, [])
     
