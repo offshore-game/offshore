@@ -56,10 +56,14 @@ io.sockets.on("connection", function (socket) {
             lobbies.set(lobby.id, lobby) // Add to lobby map
         console.debug(`New lobby made with ID ${lobby.id}`)
 
-        const player = await lobby.addPlayer(data.username, socket, true).catch((err) => { return callback(err) })
-        console.debug("is owner?: ", player.owner)
+        const player = await lobby.addPlayer(data.username, socket, true).catch((err) => { 
+            lobbies.delete(lobby.id) // Destroy the lobby; bad player.
+            console.debug(`Deleted lobby with ID ${lobby.id}`)
+            return callback(err);
+        })
 
-        return callback({ token: player.token, roomCode: lobby.id }) // Return the payload
+
+        return player ? callback({ username: player.username, token: player.token, roomCode: lobby.id }) : callback("BAD_USERNAME") // Return the payload
 
     })
 

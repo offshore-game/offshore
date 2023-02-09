@@ -31,21 +31,56 @@ export default class GameLobby {
 
             }
 
-            // Check for blank usernames
+            // Clean up usernames with hanging spaces
             const usernameArray = username.split('');
-            for (const character of usernameArray) {
-                if (character == '') {
-                    
+            let tempArray = [] as string[]
 
+            for (const [index, character] of usernameArray.entries()) {
 
-                }            
+                /* 
+                
+                A couple of cases to account for:
+
+                " Name"
+                "Name "
+                " Name "
+
+                */
+                
+
+                const previousEntry = usernameArray[index - 1]
+                const nextEntry = usernameArray[index + 1]
+
+                // Character IS a space
+                if (character == " ") {
+                    console.debug("character is a space")
+                    if (!previousEntry || previousEntry == " ") {
+                        
+                        // // Character lacks a valid previous character; skip
+                        continue;
+
+                    }
+
+                    if (!nextEntry || nextEntry == " ") {
+                        
+                        // Character lacks a valid next character; skip
+                        continue;
+
+                    }
+
+                    // Both checks above are meant to see if there are actual characters around the space
+
+                }
+                // Add the character to the username array
+                tempArray.push(character)
+
             }
 
-
-            "   "
-            "HP  Rocket "
-
-            const player = new Player(username, socket, isOwner!)
+            const finalUsername = tempArray.join('')
+                // Reject blank usernames
+                if (finalUsername.length == 0) rej(false);
+            
+            const player = new Player(finalUsername, socket, isOwner!)
 
             // Add player to the websocket room
             await socket.join(this.id)
