@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styles from './Wire.module.css'
 
-export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, offset: DOMRect }) {
+export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, testInput?: {x: any, y: any}, offset: DOMRect }) {
 
     useEffect(() => {
 
@@ -30,6 +30,9 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
             const params = getParams(props.originCoordinate, offsetMouseCoords)
     
             const element = document.getElementById("line")! // DEBUG: this reference is bad
+                element.style.left = `${props.testInput!.x}px`
+                element.style.top = `${props.testInput!.y}px`
+
                 element.style.width = `${params.distance}px`
                 element.style.transform = `rotate(${params.degree}deg)`
                 element.style.height = "1px"

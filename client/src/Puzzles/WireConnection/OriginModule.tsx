@@ -21,12 +21,15 @@ export default function OriginModule(props: { count: number }) {
             const leftOffset = originPoint.current.offsetLeft
             const topOffset = originPoint.current.offsetTop
 
+            const wireBase = document.getElementById(`wireBase${props.count}`)!.getBoundingClientRect()
+
             //const parentElem = document.getElementById("WireGame-Container")! // DEBUG: this has to be the whole screen bud
             const parentElem = document.getElementById("sizingWindow")!
             
+            // setActiveWireElements(<Wire originCoordinate={{ x: (leftOffset + 20), y: (topOffset) }} offset={parentElem.getBoundingClientRect()}  testInput={20}/>)
+            // MODEL POSITIONING BASED OFF OF THIS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-
-            setActiveWireElements(<Wire originCoordinate={{ x: (leftOffset), y: (topOffset) }} offset={parentElem.getBoundingClientRect()}/>) // aight bruh WHAAAAAAAAAAAAAAAAT
+            setActiveWireElements(<Wire originCoordinate={{ x: (leftOffset + (wireBase.width / 4)), y: (topOffset + (wireBase.height / 4)) }} offset={parentElem.getBoundingClientRect()}  testInput={{x: wireBase.width / 4, y: wireBase.height / 4}}/>) // Don't ask why dividing by four works, I don't know.
 
             document.addEventListener("mouseup", (event) => { setActiveWireElements(undefined) })
 

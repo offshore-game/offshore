@@ -1,6 +1,6 @@
 .wire {
 
-    position: absolute;
+    position: relative;
     background-color: black;
 
     transform-origin: 0;
