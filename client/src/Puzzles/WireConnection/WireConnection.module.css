@@ -13,50 +13,9 @@
     background-color: darkslategray;
 }
 
-.wireOriginContainer {
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-}
-
-.wireBase {
-
-    display: flex;
-    justify-content: flex-end;
-    flex-direction: column;
-
-    height: 10%;
-    width: 10%;
-    
-    /* PLEASE WORK wHY */
-    min-height: 10vh;
-    min-width: 10vw;
 
 
-    aspect-ratio: 1/1.05;
 
-    background-color: gray;
-
-    margin: 10px;
-
-    user-select: none;
-    
-}
-
-.wireOrigin {
-
-    position: relative;
-
-    height: 1vh;
-    aspect-ratio: 1/1;
-
-    border-radius: 100%;
-    background-color: white;
-
-}
 
 .targetDisplayContainer {
 

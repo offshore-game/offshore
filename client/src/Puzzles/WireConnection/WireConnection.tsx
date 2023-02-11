@@ -1,34 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react'
+import OriginModule from './OriginModule'
 import styles from './WireConnection.module.css'
 
 export default function WireConnection(props: { count: number }) {
 
-    const [wireElems, setwireElems] = useState([] as any[])
-    const [targetElems, setTargetElems] = useState([] as any[])
+    const [wireSourceElems, setWireSourceElems] = useState([] as any[])
+    const [wireTargetElems, setWireTargetElems] = useState([] as any[])
 
     useEffect(() => {
-        setwireElems([]) // Prevent a duplication bug on component reset.
-        setTargetElems([])
+        setWireSourceElems([]) // Prevent a duplication bug on component reset.
+        setWireTargetElems([])
 
         for (let i = 0; i < props.count; i++) {
 
-            setwireElems(entries => [...entries, 
+            setWireSourceElems(entries => [...entries, 
                 
-                <div className={styles.wireOriginContainer}>
-
-                    <div id={`wireBase${i}`} className={styles.wireBase}> 
-                    
-                        <div className={styles.wireOrigin}/>
-
-                    </div>
-
-                    
-
-                </div>
+                <OriginModule count={i}/>
 
             ])
 
-            setTargetElems(entries => [...entries, <div className={styles.wireBase}>
+            setWireTargetElems(entries => [...entries, <div className={styles.wireBase}>
 
                 { /* This is where the wires are connected */}
 
@@ -39,11 +30,11 @@ export default function WireConnection(props: { count: number }) {
     }, [])
 
     return (
-        <div className={styles.container}>
+        <div id="WireGame-Container" className={styles.container}>
 
-            <div className={styles.targetDisplayContainer}>{ wireElems }</div>
+            <div className={styles.targetDisplayContainer}>{ wireSourceElems }</div>
 
-            <div style={{marginTop: "20%"}} className={styles.targetDisplayContainer}>{targetElems}</div>
+            <div style={{marginTop: "20%"}} className={styles.targetDisplayContainer}>{ wireTargetElems }</div>
             
         </div>
     )

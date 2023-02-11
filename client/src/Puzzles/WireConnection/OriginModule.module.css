@@ -1,0 +1,41 @@
+.wireOriginContainer {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    height: 10vh;
+    width: 10vh;
+
+}
+
+.wireBase {
+
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+
+    height: 100%;
+    width: 100%;
+
+    aspect-ratio: 1/1.05;
+
+    background-color: gray;
+
+    margin: 10px;
+
+    user-select: none;
+    
+}
+
+.wireOrigin {
+
+    width: 50%;
+
+    aspect-ratio: 1/1;
+
+    border-radius: 100%;
+    background-color: white;
+
+}

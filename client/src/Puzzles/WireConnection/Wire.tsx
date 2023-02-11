@@ -5,8 +5,6 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
 
     useEffect(() => {
 
-        // No End Coordinate Defined, track mouse
-
         function getParams(pointOne: { x: number, y: number }, pointTwo: { x: number, y: number }) {
 
             const slope = ((pointTwo.y - props.originCoordinate.y) / (pointTwo.x - props.originCoordinate.x))
@@ -26,32 +24,42 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
 
         }
 
-        if (!props.endCoordinate) {
-            const container = document.getElementById("ctr")!
-            container.addEventListener("mousemove", (mouseEvent) => {
-                
-                const offsetMouseCoords = { x: mouseEvent.x - props.offset.left, y: mouseEvent.y - props.offset.top }
-
-                const params = getParams(props.originCoordinate, offsetMouseCoords)
-
-                const element = document.getElementById("line")! // this reference is bad
-                    element.style.width = `${params.distance}px`
-                    element.style.transform = `rotate(${params.degree}deg)`
-                    element.style.height = "1px"
+        function mouseMoveListener(mouseEvent: MouseEvent) {
+            const offsetMouseCoords = { x: mouseEvent.x - props.offset.left, y: mouseEvent.y - props.offset.top }
     
-            })
+            const params = getParams(props.originCoordinate, offsetMouseCoords)
+    
+            const element = document.getElementById("line")! // DEBUG: this reference is bad
+                element.style.width = `${params.distance}px`
+                element.style.transform = `rotate(${params.degree}deg)`
+                element.style.height = "1px"
+        }
+
+        // No End Coordinate Defined, track mouse
+
+        if (!props.endCoordinate) {
+            const container = document.getElementById("WireGame-Container")!
+            //const container = document.getElementById("sizingWindow")! // idk
+            
+            container.addEventListener("mousemove", mouseMoveListener)
         } else {
 
             // End Coordinate Defined
 
         }
 
+        // On unmount
+        return () => {
 
+            const container = document.getElementById("WireGame-Container")!
+            container.removeEventListener("mousemove", mouseMoveListener)
+
+        }
         
     }, [])
 
     return (
-        <div className={styles.wire}/>
+        <div id="line" className={styles.wire}/>
     )
 
 }
