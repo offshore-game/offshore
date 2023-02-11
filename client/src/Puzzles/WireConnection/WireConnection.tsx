@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import OriginModule from './OriginModule'
+import TargetModule from './TargetModule'
 import styles from './WireConnection.module.css'
 
 export default function WireConnection(props: { count: number }) {
 
     const [wireSourceElems, setWireSourceElems] = useState([] as any[])
     const [wireTargetElems, setWireTargetElems] = useState([] as any[])
+
+    const [activeWire, setActiveWire] = useState(undefined as any)
 
     useEffect(() => {
         setWireSourceElems([]) // Prevent a duplication bug on component reset.
@@ -15,17 +18,17 @@ export default function WireConnection(props: { count: number }) {
 
             setWireSourceElems(entries => [...entries, 
                 
-                <OriginModule count={i}/>
+                <OriginModule count={i} setActiveWire={setActiveWire}/>
 
             ])
 
-            setWireTargetElems(entries => [...entries, <div className={styles.wireBase}>
+            setWireTargetElems(entries => [...entries, 
+                
+                /* this is where the wires are connected*/
+                
+                <TargetModule count={i} activeWire={activeWire}/>
 
-                { /* This is where the wires are connected */}
-
-                1
-
-            </div>])
+            ])
         }
     }, [])
 

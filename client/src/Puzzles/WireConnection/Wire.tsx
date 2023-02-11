@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './Wire.module.css'
 
 export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, testInput?: {x: any, y: any}, offset: DOMRect }) {
+
+    const wire = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
     useEffect(() => {
 
@@ -28,8 +30,8 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
             const offsetMouseCoords = { x: mouseEvent.x - props.offset.left, y: mouseEvent.y - props.offset.top }
     
             const params = getParams(props.originCoordinate, offsetMouseCoords)
-    
-            const element = document.getElementById("line")! // DEBUG: this reference is bad
+
+            const element = wire.current
                 element.style.left = `${props.testInput!.x}px`
                 element.style.top = `${props.testInput!.y}px`
 
@@ -62,7 +64,7 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
     }, [])
 
     return (
-        <div id="line" className={styles.wire}/>
+        <div ref={wire} className={styles.wire}/>
     )
 
 }

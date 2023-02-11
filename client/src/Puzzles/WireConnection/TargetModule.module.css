@@ -1,0 +1,42 @@
+.container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    height: 10vh;
+    width: 10vh;
+
+}
+
+.targetBase {
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+
+    height: 100%;
+    width: 100%;
+
+    aspect-ratio: 1/1.05;
+
+    background-color: gray;
+
+    margin: 10px;
+
+    user-select: none;
+    
+}
+
+.wireTarget {
+
+    width: 50%;
+
+    aspect-ratio: 1/1;
+
+    border-radius: 100%;
+    background-color: white;
+
+}
