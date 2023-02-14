@@ -1,16 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import styles from './OriginModule.module.css'
 import Wire from './Wire';
+import { activeWireInfoType } from './WireConnection';
 
-export default function OriginModule(props: { count: number, setActiveWire: React.Dispatch<any> }) {
+export default function OriginModule(props: { count: number, setActiveWireInfo: React.Dispatch<activeWireInfoType> }) {
 
     const [activeWireElement, setActiveWireElement] = useState(undefined as any);
     const originPoint = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
     useEffect(() => {
 
-        console.log(activeWireElement)
-        props.setActiveWire(activeWireElement!)
+        if (activeWireElement) {
+
+            // DEBUG: bad info
+            props.setActiveWireInfo({ color: "FFFFF", origin: { x: 100, y: 0 } })
+
+        }
+        
         
     }, [activeWireElement])
 
@@ -25,7 +31,7 @@ export default function OriginModule(props: { count: number, setActiveWire: Reac
             const wireBase = document.getElementById(`wireBase${props.count}`)!.getBoundingClientRect()
             const parentElem = document.getElementById("sizingWindow")!
 
-            setActiveWireElement(<Wire originCoordinate={{ x: (leftOffset + (wireBase.width / 4)), y: (topOffset + (wireBase.height / 4)) }} offset={parentElem.getBoundingClientRect()}  testInput={{x: wireBase.width / 4, y: wireBase.height / 4}}/>) // Don't ask why dividing by four works, I don't know.
+            setActiveWireElement(<Wire originCoordinate={{ x: (leftOffset + (wireBase.width / 4)), y: (topOffset + (wireBase.height / 4)) }} offset={parentElem.getBoundingClientRect()} positioning={{x: wireBase.width / 4, y: wireBase.height / 4}} setActiveWireInfo={props.setActiveWireInfo}/>) // Don't ask why dividing by four works, I don't know.
 
             document.addEventListener("mouseup", (event) => { setActiveWireElement(undefined) }) // Destroy the wire elements when the mouse is released.
 

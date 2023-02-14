@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './Wire.module.css'
+import { activeWireInfoType } from './WireConnection';
 
-export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, testInput?: {x: any, y: any}, offset: DOMRect }) {
+export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWireInfo: React.Dispatch<activeWireInfoType> }) {
 
     const wire = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
@@ -32,8 +33,8 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
             const params = getParams(props.originCoordinate, offsetMouseCoords)
 
             const element = wire.current
-                element.style.left = `${props.testInput!.x}px`
-                element.style.top = `${props.testInput!.y}px`
+                element.style.left = `${props.positioning!.x}px`
+                element.style.top = `${props.positioning!.y}px`
 
                 element.style.width = `${params.distance}px`
                 element.style.transform = `rotate(${params.degree}deg)`
@@ -47,6 +48,13 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
             //const container = document.getElementById("sizingWindow")! // idk
             
             container.addEventListener("mousemove", mouseMoveListener)
+
+            // Share information with the rest of the module
+            props.setActiveWireInfo({
+                color: "00000",
+                origin: props.originCoordinate,
+            })
+
         } else {
 
             // End Coordinate Defined
