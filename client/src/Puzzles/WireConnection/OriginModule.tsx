@@ -12,20 +12,9 @@ export default function OriginModule(props: { count: number, setActiveWireInfo: 
     const originPoint = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
     useEffect(() => {
-        console.log("origin has change")
-        if (activeWireElement) {
+    
+        props.setActiveWireInfo(activeWirePayload)
 
-            // DEBUG: bad info
-            /*props.setActiveWireInfo({
-                color: "FFFFFFF",
-                origin: {x: 1, y: 1},
-            })*/
-
-            props.setActiveWireInfo(activeWirePayload)
-
-        }
-        
-        
     }, [activeWirePayload])
 
     return (
@@ -41,7 +30,7 @@ export default function OriginModule(props: { count: number, setActiveWireInfo: 
 
             setActiveWireElement(<Wire originCoordinate={{ x: (leftOffset + (wireBase.width / 4)), y: (topOffset + (wireBase.height / 4)) }} offset={parentElem.getBoundingClientRect()} positioning={{x: wireBase.width / 4, y: wireBase.height / 4}} setActiveWirePayload={setActiveWirePayload}/>) // Don't ask why dividing by four works, I don't know.
 
-            document.addEventListener("mouseup", (event) => { setActiveWireElement(undefined) }) // Destroy the wire elements when the mouse is released.
+            document.addEventListener("mouseup", (event) => { setActiveWireElement(undefined); setActiveWirePayload(undefined) }) // Destroy the wire elements when the mouse is released.
 
         }}>
 
