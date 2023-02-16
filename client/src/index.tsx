@@ -16,6 +16,7 @@ const root = ReactDOM.createRoot(
 const Connection = new Requests()
 
 root.render(
+  <React.StrictMode>
   <div id="sizingContainer">
     {/* Insert here any graphic to act as the "black side bars" */}
     <div id="sizingWindow">
@@ -34,6 +35,7 @@ root.render(
       </div>
     </div>
   </div>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

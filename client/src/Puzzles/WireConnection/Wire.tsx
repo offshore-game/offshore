@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from './Wire.module.css'
 import { activeWireInfoType } from './WireConnection';
 
-export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWireInfo: React.Dispatch<activeWireInfoType> }) {
+export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWirePayload: React.Dispatch<activeWireInfoType> }) {
 
     const wire = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
@@ -50,8 +50,8 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
             container.addEventListener("mousemove", mouseMoveListener)
 
             // Share information with the rest of the module
-            props.setActiveWireInfo({
-                color: "00000",
+            props.setActiveWirePayload({
+                color: wire.current.style.backgroundColor,
                 origin: props.originCoordinate,
             })
 

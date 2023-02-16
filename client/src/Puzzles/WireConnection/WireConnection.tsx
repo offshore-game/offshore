@@ -4,6 +4,7 @@ import TargetModule from './TargetModule'
 import styles from './WireConnection.module.css'
 
 export type activeWireInfoType = { color: string, origin: { x: number, y: number } } | undefined
+type connectedWiresType = Array<activeWireInfoType>
 
 
 export default function WireConnection(props: { count: number }) {
@@ -12,36 +13,44 @@ export default function WireConnection(props: { count: number }) {
     const [wireTargetElems, setWireTargetElems] = useState([] as any[])
 
     const [activeWireInfo, setActiveWireInfo] = useState(undefined as activeWireInfoType)
+    const [connectedWires, setConnectedWires] = useState([] as connectedWiresType);
 
     useEffect(() => {
         setWireSourceElems([]) // Prevent a duplication bug on component reset.
         setWireTargetElems([])
 
-        for (let i = 0; i < props.count; i++) {
+        if (activeWireInfo) {
+            console.log('active wire info changed:', activeWireInfo) // state change firing here just fine
+        }
 
+        for (let i = 0; i < props.count; i++) {
+            console.log('new elements being made')
+            
             setWireSourceElems(entries => [...entries, 
                 
                 <OriginModule count={i} setActiveWireInfo={setActiveWireInfo}/>
 
             ])
 
+            const connectedWire = connectedWires[i] // Prevent any previously set wires from being reset
+
             setWireTargetElems(entries => [...entries, 
                 
                 /* this is where the wires are connected*/
                 
-                <TargetModule key={`TargetModule${i}`} count={i} activeWireInfo={activeWireInfo} /> // goofball react is making this the default value on start and not changing it
+                <TargetModule key={`TargetModule${i}`} count={i} activeWireInfo={activeWireInfo} connectedWireInfo={connectedWire}/>
 
             ])
         }
-    }, [])
+    }, [activeWireInfo])
 
-    useEffect(() => {
+    /*useEffect(() => {
 
         if (activeWireInfo) {
             console.log('active wire info changed:', activeWireInfo) // state change firing here just fine
         }
 
-    }, [activeWireInfo])
+    }, [activeWireInfo])*/
 
     return (
         <div id="WireGame-Container" className={styles.container}>
