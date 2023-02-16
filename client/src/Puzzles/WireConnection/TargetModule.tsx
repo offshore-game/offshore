@@ -7,29 +7,40 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
     const container = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
     const connectionPoint = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
-    useEffect(() => {console.log("hi")}, [props.activeWireInfo])
+
+
+    const hoverEvent = () => {
+
+        console.log(props.activeWireInfo)
+
+        
+
+        /* 
+        On mouse over:
+        - Access the active wire
+            - Get the color
+            - Get the origin
+        - Create a new wire
+            - Share origin
+            - Share Color
+            - Set Endpoint
+        */
+
+    }
 
     useEffect(() => {
 
-        container.current.addEventListener("mouseover", () => {
+        if (!props.activeWireInfo) {
+
+            container.current.removeEventListener("mouseover", hoverEvent) // Destroy the event listener when there is no active wire (bug issues)
+        
+        } else {
             
-            /* 
-            On mouse over:
-            - Access the active wire
-                - Get the color
-                - Get the origin
-            - Create a new wire
-                - Share origin
-                - Share Color
-                - Set Endpoint
-            */
-
-            // https://jsramblings.com/are-you-logging-the-state-immediately-after-updating-it-heres-why-that-doesnt-work/
-            console.log(props.activeWireInfo) // doesn't update because setState() is asynchronous
- 
-        })
-
-    }, [])
+            container.current.addEventListener("mouseover", hoverEvent)
+        
+        }
+        
+    }, [props.activeWireInfo]) // This is going to cause a lot of problems down the line, creating new listeners every new wire without destroying it (ok we destroy it)
 
     return (
 
