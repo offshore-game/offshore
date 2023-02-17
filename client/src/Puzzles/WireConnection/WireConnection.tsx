@@ -3,7 +3,8 @@ import OriginModule from './OriginModule'
 import TargetModule from './TargetModule'
 import styles from './WireConnection.module.css'
 
-export type activeWireInfoType = { color: string, origin: { x: number, y: number } } | undefined
+type coordinate = { x: number, y: number }
+export type activeWireInfoType = { color: string, origin: coordinate } | undefined
 type connectedWiresType = Array<activeWireInfoType>
 
 
@@ -14,6 +15,12 @@ export default function WireConnection(props: { count: number }) {
 
     const [activeWireInfo, setActiveWireInfo] = useState(undefined as activeWireInfoType)
     const [connectedWires, setConnectedWires] = useState([] as connectedWiresType);
+
+    function createActiveWire(origin: coordinate, offset: DOMRect, ) {
+
+
+        
+    }
 
     useEffect(() => {
         setWireSourceElems([]) // Prevent a duplication bug on component reset.
@@ -43,6 +50,13 @@ export default function WireConnection(props: { count: number }) {
             ])
         }
     }, [activeWireInfo])
+
+    // Event Listener
+    useEffect(() => {
+
+
+
+    }, [])
 
     /*useEffect(() => {
 

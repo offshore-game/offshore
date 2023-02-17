@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './TargetModule.module.css'
+import Wire from './Wire';
 import { activeWireInfoType } from './WireConnection';
 
 export default function TargetModule(props: { count: number, activeWireInfo: activeWireInfoType, connectedWireInfo: activeWireInfoType }) {
@@ -7,13 +8,20 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
     const container = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
     const connectionPoint = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
+    const [connectedWire, setConnectedWire] = useState(undefined as any)
 
+
+    useEffect(() => { console.log(connectedWire) }, [ connectedWire ])
 
     const hoverEvent = () => {
 
-        console.log(props.activeWireInfo)
+        console.log(connectedWire)
 
-        
+        const endTarget = connectionPoint.current.getBoundingClientRect()
+
+        const parentElem = document.getElementById("sizingWindow")!
+
+        setConnectedWire(<Wire originCoordinate={props.activeWireInfo!.origin} endCoordinate={{ x: endTarget.x, y: endTarget.y }} offset={parentElem.getBoundingClientRect()}/>)
 
         /* 
         On mouse over:
@@ -29,7 +37,7 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
     }
 
     useEffect(() => {
-
+        console.log("AWI:", props.activeWireInfo)
         if (!props.activeWireInfo) {
 
             container.current.removeEventListener("mouseover", hoverEvent) // Destroy the event listener when there is no active wire (bug issues)
@@ -49,6 +57,7 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
 
                 <div ref={connectionPoint} className={styles.wireTarget}/>
                 { JSON.stringify(props.activeWireInfo) }
+                { connectedWire }
 
             </div>
         </div>

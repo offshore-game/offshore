@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styles from './Wire.module.css'
 import { activeWireInfoType } from './WireConnection';
 
-export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWirePayload: React.Dispatch<activeWireInfoType> }) {
+export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWirePayload?: React.Dispatch<activeWireInfoType> }) {
 
     const wire = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
@@ -43,7 +43,7 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
 
         // No End Coordinate Defined, track mouse
 
-        if (!props.endCoordinate) {
+        if (!props.endCoordinate && props.setActiveWirePayload) {
             const container = document.getElementById("WireGame-Container")!
             //const container = document.getElementById("sizingWindow")! // idk
             
