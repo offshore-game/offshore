@@ -14,7 +14,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
         },
 
         timing: {
-            0: number[]
+            [key: string]: number[]
         }
 
     }
@@ -24,7 +24,8 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
         layout: props.layout,
 
         timing: {
-            0: [ 2, 5, 10 ] // At 2, 5, and 10 seconds after start
+            0: [ 2, 5, 10 ], // At 2, 5, and 10 seconds after start
+            1: [ 3, 6, 11 ]
         }
 
     }
@@ -38,6 +39,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
     */
 
 
+    // Render all the buttons
     useEffect(() => {
 
         const buttonCount = props.layout.rows * props.layout.columns
@@ -78,7 +80,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
                         // Return to gray after x amount of time
                         element?.style.setProperty('background-color', 'gray')
 
-                    }, 10000 /* 10 seconds */)
+                    }, 2000 /* 2 seconds */)
 
                 }, time * 1000 /* In milliseconds */)
 
