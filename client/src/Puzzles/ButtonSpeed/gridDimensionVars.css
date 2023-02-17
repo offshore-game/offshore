@@ -1,0 +1,8 @@
+/* Container to store css variables */
+
+:root {
+
+    --buttonSpeed-Rows: 2;
+    --buttonSpeed-Columns: 2;
+
+}
