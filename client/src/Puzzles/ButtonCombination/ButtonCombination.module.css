@@ -54,12 +54,13 @@
 
 .button:hover {
     
-    filter: brightness(95%);
+    filter: brightness(75%);
+    cursor: pointer;
 
 }
 
 .button:active {
 
-    filter: brightness(85%);
+    filter: brightness(65%);
 
 }
