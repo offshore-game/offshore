@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import styles from './ButtonSpeed.module.css'
 import SpeedButton from './SpeedButton'
 
@@ -19,18 +19,18 @@ type buttonSpeedPayloadType = {
 
 }
 
-// https://stackoverflow.com/questions/66431691/dynamically-rendering-an-array-of-components
-
-/*
-- Async the data object
-- Set as state and re-render
-- Use https://www.youtube.com/watch?v=f640Z6QZawc to create components based off said data object
-*/
 
 export default function ButtonSpeed(props: { layout: { rows: number, columns: number } }) {
 
     const [ buttonsInfo, setButtonsInfo ] = useState([] as any[])
+
+    const [ buttonsPayload, setButtonsPayload ] = useState(undefined as any)
+    
     const [ resetTrigger, setResetTrigger ] = useState(false)
+    const reset = new Event('onBtnSpeedReset')
+
+    const [ timeouts, setTimeouts ] = useState([] as any[])
+
     const buttonGrid = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
 
     /*
@@ -77,16 +77,66 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
         }
         
+
+        // Wait for the game to end, then send a true response to the server
+        const gameEndTimeout = setTimeout(() => {
+
+            console.warn("Game Finished!")
+
+        }, buttonSpeedPayload.gameDuration + 1 * 10000)
+
         setButtonsInfo(tempInfo) // Reset the state
+        setButtonsPayload(buttonSpeedPayload) // Share the payload
+        setTimeouts((entries: any[]) => [...entries, gameEndTimeout]) // Add the timeout to the list
 
     }, []) // you get the payload once
+
+
+    // Game needs to reset/setup
+    useEffect(() => {
+
+        /* 
+            1) Destroy all timers
+            2) Remake all buttons
+                - Remakes timers too
+        */
+
+        if (resetTrigger) { // Don't double fire
+
+            for (const timeout of timeouts) {
+
+                // Destroy each timer
+                clearTimeout(timeout)
+    
+            }
+    
+            // Tell the buttons to reset
+    
+            document.dispatchEvent(reset)
+    
+    
+            // Wait for the game to finish (again)
+            const gameEndTimeout = setTimeout(() => {
+    
+                console.warn("Game Finished (remake!")
+    
+            }, buttonsPayload.gameDuration + 1 * 10000)
+    
+            console.log('change')
+            setResetTrigger(false) // Toggle the trigger
+            setTimeouts((entries: any[]) => [...entries, gameEndTimeout]) // Add the timeout to the list
+
+        }
+
+        
+    }, [resetTrigger])
 
     return (
         <div className={styles.container}>
 
             <div ref={buttonGrid} className={styles.buttonContainer}>
                 
-                {buttonsInfo.map((info) => <SpeedButton index={info.index} timings={ info.timings }/>)}
+                {buttonsInfo.map((info) => <SpeedButton index={info.index} timings={ info.timings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} setTimeouts={setTimeouts} />)}
 
             </div>
             
