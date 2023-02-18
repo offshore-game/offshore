@@ -55,7 +55,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
     
             timing: {
                 0: [ 2, 5, 10 ], // At 2, 5, and 10 seconds after start
-                1: [ 3, 6, 11 ]
+                1: [ 3, 6, 11 ],
             },
     
             gameDuration: 13, // The time the game goes on
@@ -71,7 +71,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
             tempInfo.push({
                 index: i,
-                timings: buttonSpeedPayload.timing[i],
+                timings: buttonSpeedPayload.timing[i] ? buttonSpeedPayload.timing[i] : [],
                 timeToHit: buttonSpeedPayload.timeToHit
             })
 

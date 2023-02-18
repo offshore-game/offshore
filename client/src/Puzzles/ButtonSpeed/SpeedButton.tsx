@@ -8,10 +8,36 @@ export default function SpeedButton(props: { index: number, timings: number[], t
     useEffect(() => {
 
         // Decide if the button was pressed properly or not
-        let pass = false;
-
+        
         // Initialize the timers
         function initialize() {
+            
+            let pass = false;
+
+            const onClick = () => {
+
+                console.log("user pressed button of color", button.current.style.backgroundColor)
+
+                if (button.current.style.backgroundColor == "blue") {
+
+                    // Button should actually be pressed
+                    pass = true
+                    console.log('user pressed right')
+
+                    button.current.style.backgroundColor = "gray" // Reset color
+
+                } else {
+
+                    button.current.style.backgroundColor = "red" // Indicate mistake
+                    return props.reset(true);
+
+                }
+
+
+            }
+
+            button.current.removeEventListener("mousedown", onClick) // Remove in case of relaod
+            button.current.addEventListener("mousedown", onClick) // Add the event listener
 
             console.log('timers re-initialized')
             for (const timing of props.timings) {
@@ -55,7 +81,7 @@ export default function SpeedButton(props: { index: number, timings: number[], t
         }
 
 
-
+        // "Do we even need timers for this button?"
         if (props.timings) {
             
             initialize() // Run the init
@@ -66,6 +92,7 @@ export default function SpeedButton(props: { index: number, timings: number[], t
                 // The game has to reset
                 button.current.style.backgroundColor = "gray" // Reset the colors
 
+                // Init the timers again
                 initialize()
 
             })
