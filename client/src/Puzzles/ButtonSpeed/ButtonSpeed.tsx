@@ -110,21 +110,25 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
     
             }
     
-            // Tell the buttons to reset
-    
-            document.dispatchEvent(reset)
-    
-    
-            // Wait for the game to finish (again)
-            const gameEndTimeout = setTimeout(() => {
-    
-                console.warn("Game Finished (remake!")
-    
-            }, buttonsPayload.gameDuration + 1 * 10000)
-    
-            console.log('change')
-            setResetTrigger(false) // Toggle the trigger
-            setTimeouts((entries: any[]) => [...entries, gameEndTimeout]) // Add the timeout to the list
+            setTimeout(() => {
+                
+                // Tell the buttons to reset
+        
+                document.dispatchEvent(reset)
+
+                // Wait for the game to finish (again)
+                const gameEndTimeout = setTimeout(() => {
+
+                    console.warn("Game Finished (remake!")
+
+                }, buttonsPayload.gameDuration + 1 * 10000)
+
+                console.log('change')
+                setResetTrigger(false) // Toggle the trigger
+                setTimeouts((entries: any[]) => [...entries, gameEndTimeout]) // Add the timeout to the list
+
+
+            }, 1000) // Wait one second before resetting
 
         }
 
