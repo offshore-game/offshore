@@ -29,7 +29,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
     const [ resetTrigger, setResetTrigger ] = useState(false)
     const reset = new Event('onBtnSpeedReset')
 
-    const [ timeouts, setTimeouts ] = useState([] as any[])
+    const timeouts = useRef([] as any[])
 
     const buttonGrid = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
 
@@ -87,7 +87,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
         setButtonsInfo(tempInfo) // Reset the state
         setButtonsPayload(buttonSpeedPayload) // Share the payload
-        setTimeouts((entries: any[]) => [...entries, gameEndTimeout]) // Add the timeout to the list
+        timeouts.current = [...timeouts.current, gameEndTimeout]
 
     }, []) // you get the payload once
 
@@ -103,7 +103,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
         if (resetTrigger) { // Don't double fire
 
-            for (const timeout of timeouts) {
+            for (const timeout of timeouts.current) {
 
                 // Destroy each timer
                 clearTimeout(timeout)
@@ -123,9 +123,9 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
                 }, buttonsPayload.gameDuration + 1 * 10000)
 
-                console.log('change')
+                console.log('trigger change')
                 setResetTrigger(false) // Toggle the trigger
-                setTimeouts((entries: any[]) => [...entries, gameEndTimeout]) // Add the timeout to the list
+                timeouts.current = [...timeouts.current, gameEndTimeout]
 
 
             }, 1000) // Wait one second before resetting
@@ -140,7 +140,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
             <div ref={buttonGrid} className={styles.buttonContainer}>
                 
-                {buttonsInfo.map((info) => <SpeedButton index={info.index} timings={ info.timings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} setTimeouts={setTimeouts} />)}
+                {buttonsInfo.map((info) => <SpeedButton index={info.index} timings={ info.timings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} timeouts={timeouts} />)}
 
             </div>
             

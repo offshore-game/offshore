@@ -1,89 +1,69 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import styles from './ButtonSpeed.module.css'
 
-export default function SpeedButton(props: { index: number, timings: number[], timeToHit: number, reset: React.Dispatch<boolean>, setTimeouts: React.Dispatch<any>, resetEvent: Event }) {
+export default function SpeedButton(props: { index: number, timings: number[], timeToHit: number, reset: React.Dispatch<boolean>, timeouts: React.MutableRefObject<any[]>, resetEvent: Event }) {
     
     const button = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
 
-    
-    // https://felixgerschau.com/react-hooks-settimeout/
-    // What about throwing the timeouts into a ref?
+    useEffect(() => {
 
+        let timeouts: any[] = []
+        for (const timing of props.timings) {
+
+            const changeAtTime = setTimeout(() => {
+
+                // Change color time
+                button.current.style.backgroundColor = "blue"
+
+                const expiration = setTimeout(() => {
+
+                    if (button.current.style.backgroundColor == "gray") {
+
+                        // Pressed, all good
+
+                    }
+
+                    if (button.current.style.backgroundColor == "blue") {
+
+                        // Not pressed, missed
+                        button.current.style.backgroundColor = "red"
+
+                        // Reset the game
+                        return props.reset(true);
+
+                    }
+
+                }, props.timeToHit * 1000)
+
+                timeouts.push(expiration)
+
+            }, timing * 1000 /* S --> MS */)
+
+            timeouts.push(changeAtTime)
+
+        }
+
+        props.timeouts.current = [...props.timeouts.current, ...timeouts]
+
+    }) /* 
+        This is fine because we already reset all timeouts when 
+        the buttons request a reset, which is the only time the button reloads anyways.
+    */
 
     useEffect(() => {
 
-        // Decide if the button was pressed properly or not
-        
-        // Initialize the timers
-        function initialize() {
-            
-            const btnColor = button.current.style.backgroundColor // ERROR: this isn't updating bruh
-            const pass = (btnColor == "gray")
+        document.addEventListener('onBtnSpeedReset', () => {
 
-            console.log('timers re-initialized')
-            for (const timing of props.timings) {
+            // Reset color on a reset request
+            button.current.style.backgroundColor = "gray"
 
-                const delay = setTimeout(() => {
-    
-                    // Trigger the color change of the button
-                    button.current.style.backgroundColor = "blue"
-
-                    // Now we wait... (Button Expiration Timer)
-                    const expirationTimer = setTimeout(() => {
-
-                        console.log('resulting color....', btnColor)
-
-                        if (pass) {
-    
-                            // Player pressed the button in time
-                            button.current.style.backgroundColor = "gray"
-    
-                            return;
-    
-                        } else if (!pass) {
-    
-                            // Player did not press the button in time
-                            button.current.style.backgroundColor = "red"
-    
-                            return props.reset(true);
-    
-                        }
-    
-                    }, props.timeToHit * 1000 /* S --> MS */)
-
-                    props.setTimeouts((entries: any) => [...entries, expirationTimer])
-    
-                }, timing * 1000 /* S --> MS */)
-    
-                props.setTimeouts((entries: any) => [...entries, delay])
-                
-            }
-
-        }
-
-
-        // "Do we even need timers for this button?"
-        if (props.timings) {
-            
-            initialize() // Run the init
-
-            // Listen for future init requests
-            document.addEventListener('onBtnSpeedReset', () => {
-
-                // The game has to reset
-                button.current.style.backgroundColor = "gray" // Reset the colors
-
-                // Init the timers again
-                initialize()
-
-            })
-
-        }
+        })
 
     }, [])
 
+
     return (
-        <div ref={button} className={styles.button} onClick={() => {
+        <div id={`speedBtn${props.index}`} ref={button} className={styles.button} onClick={() => {
 
             const color = button.current.style.backgroundColor
             console.log("button's self color:", color)
