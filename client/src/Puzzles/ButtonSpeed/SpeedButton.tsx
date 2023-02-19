@@ -5,6 +5,11 @@ export default function SpeedButton(props: { index: number, timings: number[], t
     
     const button = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
 
+    
+    // https://felixgerschau.com/react-hooks-settimeout/
+    // What about throwing the timeouts into a ref?
+
+
     useEffect(() => {
 
         // Decide if the button was pressed properly or not
@@ -12,46 +17,22 @@ export default function SpeedButton(props: { index: number, timings: number[], t
         // Initialize the timers
         function initialize() {
             
-            let pass = false;
-
-            const onClick = () => {
-
-                console.log("user pressed button of color", button.current.style.backgroundColor)
-
-                if (button.current.style.backgroundColor == "blue") {
-
-                    // Button should actually be pressed
-                    pass = true
-                    console.log('user pressed right')
-
-                    button.current.style.backgroundColor = "gray" // Reset color
-
-                } else {
-
-                    button.current.style.backgroundColor = "red" // Indicate mistake
-                    return props.reset(true);
-
-                }
-
-
-            }
-
-            button.current.removeEventListener("mousedown", onClick) // Remove in case of relaod
-            button.current.addEventListener("mousedown", onClick) // Add the event listener
+            const btnColor = button.current.style.backgroundColor // ERROR: this isn't updating bruh
+            const pass = (btnColor == "gray")
 
             console.log('timers re-initialized')
             for (const timing of props.timings) {
 
-                const name = setTimeout(() => {
-    
+                const delay = setTimeout(() => {
     
                     // Trigger the color change of the button
                     button.current.style.backgroundColor = "blue"
-    
-    
+
                     // Now we wait... (Button Expiration Timer)
                     const expirationTimer = setTimeout(() => {
-    
+
+                        console.log('resulting color....', btnColor)
+
                         if (pass) {
     
                             // Player pressed the button in time
@@ -74,7 +55,7 @@ export default function SpeedButton(props: { index: number, timings: number[], t
     
                 }, timing * 1000 /* S --> MS */)
     
-                props.setTimeouts((entries: any) => [...entries, name])
+                props.setTimeouts((entries: any) => [...entries, delay])
                 
             }
 
@@ -102,7 +83,31 @@ export default function SpeedButton(props: { index: number, timings: number[], t
     }, [])
 
     return (
-        <div ref={button} className={styles.button}>
+        <div ref={button} className={styles.button} onClick={() => {
+
+            const color = button.current.style.backgroundColor
+            console.log("button's self color:", color)
+
+            if (color == "gray" || color == "") { // default value is ""
+
+                // Inactive button; invalid
+                button.current.style.backgroundColor = "red"
+                return props.reset(true);
+
+            }
+
+            
+            // Don't care if it's Red
+
+
+            if (color == "blue") {
+
+                // return gray
+                button.current.style.backgroundColor = "gray"
+
+            }
+
+        }}>
             {props.index}
         </div>
     )
