@@ -90,7 +90,7 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
 
                 // We don't check for the callback value of "result" because we don't want to hang the client if
                 // their socket was reset and they are trying to leave. This was a tested bug.
-                const result = await props.requests.leaveLobby().catch((err) => { return; })
+                const result = await props.requests.leaveLobby().catch((err) => {})
 
                 localStorage.clear() // Clear all variables in storage
                 navigate(`/`, { replace: true }) // Go back home
@@ -106,13 +106,13 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
                 
                 <div className={styles.menuButton} style={{ backgroundColor: "green" }} onClick={async () => {
 
-                    const result = await props.requests.leaveLobby() // FEATURE/DEBUG: Bad API Call, feature needs to be done.
+                    // Request to the server to start the game.
+                    const result = await props.requests.startGame()
 
-                    console.log(result);
+                    console.log(`Game start server response: ${result}`);
 
                     if (result) {
 
-                        localStorage.clear()
                         navigate(`/game/${roomCode}`, { replace: true }) // Navigate to the game page
                         return true;
 

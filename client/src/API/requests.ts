@@ -84,13 +84,13 @@ export default class Requests {
     async createLobby(username: string): Promise<string> {
         return new Promise((res, rej) => {
 
-            this.socket.emit("createLobby", { username: username }, (result: { token: string, roomCode: string }) => {
+            this.socket.emit("createLobby", { username: username }, (result: { username: string, token: string, roomCode: string }) => {
 
                 if (result) {
 
                     localStorage.setItem("token", result.token)
                     localStorage.setItem("roomCode", result.roomCode)
-                    localStorage.setItem("username", username)
+                    localStorage.setItem("username", result.username) // This is the username the server corrected, if any corrections were made.
 
                     return res(result.roomCode); // Success
 
@@ -115,6 +115,23 @@ export default class Requests {
             })
 
         })
+    }
+
+    async startGame(): Promise<boolean | number> {
+
+        return new Promise((res, rej) => {
+
+            const token = localStorage.getItem("token")
+            const roomCode = localStorage.getItem("roomCode")
+
+            this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: boolean | number) => {
+
+                return res(result) // Resolve True OR False.
+
+            })
+
+        })
+
     }
 
 }

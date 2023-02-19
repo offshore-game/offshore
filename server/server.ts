@@ -1,6 +1,6 @@
 import { Server } from 'socket.io' // https://socket.io/docs/v4
 import { lobbyEntry } from './tests/payloads'
-import { validateTokenEnums } from './types/enums'
+import { globalErrors } from './types/enums'
 import GameLobby from './classes/GameLobby/GameLobby'
 import Player from './classes/Player'
 
@@ -56,10 +56,14 @@ io.sockets.on("connection", function (socket) {
             lobbies.set(lobby.id, lobby) // Add to lobby map
         console.debug(`New lobby made with ID ${lobby.id}`)
 
-        const player = await lobby.addPlayer(data.username, socket, true).catch((err) => { return callback(err) })
-        console.debug("is owner?: ", player.owner)
+        const player = await lobby.addPlayer(data.username, socket, true).catch((err) => { 
+            lobbies.delete(lobby.id) // Destroy the lobby; bad player.
+            console.debug(`Deleted lobby with ID ${lobby.id}`)
+            return callback(err);
+        })
 
-        return callback({ token: player.token, roomCode: lobby.id }) // Return the payload
+
+        return player ? callback({ username: player.username, token: player.token, roomCode: lobby.id }) : callback("BAD_USERNAME") // Return the payload
 
     })
 
@@ -122,19 +126,63 @@ io.sockets.on("connection", function (socket) {
                 if (player.token == data.token) {
 
                     // A user was found within this lobby.
-                    return callback(validateTokenEnums.VALID)
+                    return callback(globalErrors.VALID)
 
                 }
 
             }
             
             // User with that token was not found inside the given lobby.
-            return callback(validateTokenEnums.TOKEN_INVALID) // DEBUG: not sure if this causes problems?
+            return callback(globalErrors.TOKEN_INVALID) // DEBUG: not sure if this causes problems?
 
         } else {
 
             // Lobby doesn't exist.
-            return callback(validateTokenEnums.ROOM_INVALID)
+            return callback(globalErrors.ROOM_INVALID)
+
+        }
+
+    })
+
+    socket.on("startGame", function (data: { token: string, roomCode: string, ruleset?: { lengthSec: number, difficulty: "EASY" | "NORMAL" | "HARD" } }, callback ) {
+
+        const lobby = lobbies.get(data.roomCode)
+
+        if (lobby) {
+
+            const player = lobby.players.find(player => player.token == data.token)
+
+            // Player is the owner of the lobby
+            if (player?.owner) {
+                
+                // Set lobby state to started
+                lobby.state = "INGAME"
+
+
+                // Communicate to all clients that the game has started
+                io.in(lobby.id).emit("gameStart", {
+                    // Send to the client the ruleset of the match.
+
+                    lengthSec: 300, // 5 Minutes = 300 Seconds
+
+                })
+
+
+                // Return a success
+                return callback(true);
+
+            // Player is not the owner of the lobby
+            } else {
+
+                // Player is not allowed to perform this action.
+                return callback(globalErrors.INSUFFICIENT_PERMS)
+
+            }
+
+        } else {
+
+            // Lobby doesn't exist.
+            return callback(globalErrors.ROOM_INVALID)
 
         }
 

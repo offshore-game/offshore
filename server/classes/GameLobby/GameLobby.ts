@@ -12,7 +12,7 @@ export default class GameLobby {
 
 
     constructor() {
-        this.id = makeLobbyId(4) // FEATURE: create random ID
+        this.id = makeLobbyId(4) // Create a random 4 letter ID for the lobby.
         this.events = new EventEmitter() 
         this.state = "LOBBY"
         this.players = []
@@ -31,7 +31,56 @@ export default class GameLobby {
 
             }
 
-            const player = new Player(username, socket, isOwner!)
+            // Clean up usernames with hanging spaces
+            const usernameArray = username.split('');
+            let tempArray = [] as string[]
+
+            for (const [index, character] of usernameArray.entries()) {
+
+                /* 
+                
+                A couple of cases to account for:
+
+                " Name"
+                "Name "
+                " Name "
+
+                */
+                
+
+                const previousEntry = usernameArray[index - 1]
+                const nextEntry = usernameArray[index + 1]
+
+                // Character IS a space
+                if (character == " ") {
+                    console.debug("character is a space")
+                    if (!previousEntry || previousEntry == " ") {
+                        
+                        // // Character lacks a valid previous character; skip
+                        continue;
+
+                    }
+
+                    if (!nextEntry || nextEntry == " ") {
+                        
+                        // Character lacks a valid next character; skip
+                        continue;
+
+                    }
+
+                    // Both checks above are meant to see if there are actual characters around the space
+
+                }
+                // Add the character to the username array
+                tempArray.push(character)
+
+            }
+
+            const finalUsername = tempArray.join('')
+                // Reject blank usernames
+                if (finalUsername.length == 0) rej(false);
+            
+            const player = new Player(finalUsername, socket, isOwner!)
 
             // Add player to the websocket room
             await socket.join(this.id)
