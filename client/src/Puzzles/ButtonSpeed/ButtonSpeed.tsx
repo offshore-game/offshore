@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './ButtonSpeed.module.css'
 import SpeedButton from './SpeedButton'
 
@@ -56,11 +56,15 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
             timing: {
                 0: [ 2, 5, 10 ], // At 2, 5, and 10 seconds after start
                 1: [ 3, 6, 11 ],
+                2: [ 3, 5, 7 ],
+                3: [ 6, 8, 11 ],
+                4: [ 8, 6, 11 ],
+                10: [ 2, 4, 15 ],
             },
     
-            gameDuration: 13, // The time the game goes on
+            gameDuration: 15, // The time the game goes on
     
-            timeToHit: 2,
+            timeToHit: 1, // NOTE: At minimum there must be a 1 second buffer + timeToHit between buttons lighting up
     
         }
 
