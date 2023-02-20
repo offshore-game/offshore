@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Wire.module.css'
 import { activeWireInfoType } from './WireConnection';
 
-export default function Wire(props: { originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWirePayload: React.Dispatch<activeWireInfoType>, selfContainer: React.Dispatch<any> }) {
+export default function Wire(props: { originIndex: number, originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWirePayload: React.Dispatch<activeWireInfoType>, selfContainer: React.Dispatch<any> }) {
 
     const wire = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
     const [ endCoordinate, setEndCoordinate ] = useState(props.endCoordinate ? props.endCoordinate : undefined)
@@ -99,6 +99,7 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
             props.setActiveWirePayload({
                 color: wire.current.style.backgroundColor,
                 origin: props.originCoordinate,
+                originIndex: props.originIndex
             })
 
         } else if (endCoordinate) {

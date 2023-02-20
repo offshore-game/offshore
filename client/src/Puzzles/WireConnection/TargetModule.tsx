@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './TargetModule.module.css'
 import Wire from './Wire';
-import { activeWireInfoType } from './WireConnection';
+import { activeWireInfoType, connectedWireOrderType } from './WireConnection';
 
-export default function TargetModule(props: { count: number, activeWireInfo: activeWireInfoType }) {
+export default function TargetModule(props: { count: number, activeWireInfo: activeWireInfoType, connectedWireOrder: connectedWireOrderType, setConnectedWireOrder: React.Dispatch<React.SetStateAction<connectedWireOrderType>> }) {
 
     const container = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
     const connectionPoint = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
@@ -33,6 +33,10 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
             document.dispatchEvent(connectWireEvent)
             setConnectedWireOriginPoint(props.activeWireInfo?.origin)
 
+            const newConnectedWireOrder = props.connectedWireOrder
+                newConnectedWireOrder[props.activeWireInfo?.originIndex!] = props.count
+            props.setConnectedWireOrder(newConnectedWireOrder)
+
         }
 
     }, [props.activeWireInfo])
@@ -53,6 +57,10 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
         })
 
         document.dispatchEvent(disconnectWireEvent)
+
+        const newConnectedWireOrder = props.connectedWireOrder
+            delete newConnectedWireOrder[props.activeWireInfo?.originIndex!]
+        props.setConnectedWireOrder(newConnectedWireOrder)
 
     }, [connectedWireOriginPoint])
 
