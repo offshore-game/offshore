@@ -9,9 +9,15 @@ export default function Wire(props: { originIndex: number, originCoordinate: { x
 
     const onConnectActiveWire = useCallback((event: CustomEvent) => {
 
-        const origin = props.originCoordinate
+        const originIndex = props.originIndex
+
+        /*console.log('origin index:', originIndex)
+        console.log('requested origin index:', event.detail.originIndex)*/
         
-        if (origin == event.detail.origin) {
+        if (originIndex == event.detail.originIndex) {
+
+            console.log("connecting active wire") // DEBUG: this is firing twice
+            // this module is very confused on what an "active wire" is
 
             setEndCoordinate(event.detail.target);
 
@@ -21,11 +27,11 @@ export default function Wire(props: { originIndex: number, originCoordinate: { x
 
     const disconnectWire = useCallback((event: CustomEvent) => {
 
-        const origin = props.originCoordinate
+        const originIndex = props.originCoordinate
 
         console.log(event.detail.origin)
         
-        if (origin == event.detail.origin) {
+        if (originIndex == event.detail.originIndex) {
 
             console.log("setting undefined")
             setEndCoordinate(undefined);
@@ -117,6 +123,9 @@ export default function Wire(props: { originIndex: number, originCoordinate: { x
 
             // Don't destroy the wire when the mouse is released
             document.removeEventListener("mouseup", destroySelf)
+
+            // No longer active wire
+            props.setActiveWirePayload(undefined)
         }
 
         // Event listener for connecting the wire on hover

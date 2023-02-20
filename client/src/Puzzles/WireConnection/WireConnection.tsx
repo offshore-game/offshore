@@ -23,6 +23,8 @@ export default function WireConnection(props: { count: number }) {
     // Send this payload to the server when ALL wires are connected (when there are props.count entries i guess)
     console.log(connectedWireOrder)
 
+    useEffect(() => { console.log(activeWireInfo) }, [activeWireInfo])
+
     const wireSourceElements = []
     const wireTargetElements = []
     for (let i = 0; i < props.count; i++) {
