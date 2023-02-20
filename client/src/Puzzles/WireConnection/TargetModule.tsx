@@ -1,50 +1,58 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './TargetModule.module.css'
 import Wire from './Wire';
 import { activeWireInfoType } from './WireConnection';
 
-export default function TargetModule(props: { count: number, activeWireInfo: activeWireInfoType, connectedWireInfo: activeWireInfoType }) {
+export default function TargetModule(props: { count: number, activeWireInfo: activeWireInfoType }) {
 
     const container = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
     const connectionPoint = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
 
-    const [connectedWire, setConnectedWire] = useState(undefined as any)
+    console.log("REMOUNT: ", props.activeWireInfo!)
+
+    const hoverEvent = useCallback(() => {
+
+        if (connectionPoint.current) {
+
+            const leftOffset = connectionPoint.current.offsetLeft
+            const topOffset = connectionPoint.current.offsetTop
+            const targetBase = document.getElementById(`wireTarget${props.count}`)!.getBoundingClientRect()
+
+            const connectWireEvent = new CustomEvent('connectActiveWire', {
+                detail: {
+                    origin: props.activeWireInfo?.origin,
+                    target: { x: (leftOffset + (targetBase.width / 4)), y: (topOffset + (targetBase.height / 4)) }, // DEBUG: bad data yk
+                }
+            })
+    
+            document.dispatchEvent(connectWireEvent)
+
+        }
 
 
-    useEffect(() => { console.log(connectedWire) }, [ connectedWire ])
-
-    const hoverEvent = () => {
-
-        console.log(connectedWire)
-
-        const endTarget = connectionPoint.current.getBoundingClientRect()
-
-        const parentElem = document.getElementById("sizingWindow")!
-
-        setConnectedWire(<Wire originCoordinate={props.activeWireInfo!.origin} endCoordinate={{ x: endTarget.x, y: endTarget.y }} offset={parentElem.getBoundingClientRect()}/>)
 
         /* 
-        On mouse over:
-        - Access the active wire
-            - Get the color
-            - Get the origin
-        - Create a new wire
-            - Share origin
-            - Share Color
-            - Set Endpoint
+            On mouse over:
+            - Signal the active wire to connect
+
+            On mouse DRAG out:
+            - Signal to any wire that is
+                1) Active
+                2) Connected to THIS target
+            to disconnect and follow the mouse
         */
 
-    }
+    }, [props.activeWireInfo])
 
     useEffect(() => {
         console.log("AWI:", props.activeWireInfo)
         if (!props.activeWireInfo) {
 
-            container.current.removeEventListener("mouseover", hoverEvent) // Destroy the event listener when there is no active wire (bug issues)
+            connectionPoint.current.removeEventListener("mouseover", hoverEvent) // Destroy the event listener when there is no active wire (bug issues)
         
         } else {
             
-            container.current.addEventListener("mouseover", hoverEvent)
+            connectionPoint.current.addEventListener("mouseover", hoverEvent)
         
         }
         
@@ -56,8 +64,6 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
             <div className={styles.targetBase} id={`wireTarget${props.count}`}>
 
                 <div ref={connectionPoint} className={styles.wireTarget}/>
-                { JSON.stringify(props.activeWireInfo) }
-                { connectedWire }
 
             </div>
         </div>

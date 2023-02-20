@@ -28,9 +28,7 @@ export default function OriginModule(props: { count: number, setActiveWireInfo: 
             const wireBase = document.getElementById(`wireBase${props.count}`)!.getBoundingClientRect()
             const parentElem = document.getElementById("sizingWindow")!
 
-            setActiveWireElement(<Wire originCoordinate={{ x: (leftOffset + (wireBase.width / 4)), y: (topOffset + (wireBase.height / 4)) }} offset={parentElem.getBoundingClientRect()} positioning={{x: wireBase.width / 4, y: wireBase.height / 4}} setActiveWirePayload={setActiveWirePayload}/>) // Don't ask why dividing by four works, I don't know.
-
-            document.addEventListener("mouseup", (event) => { setActiveWireElement(undefined); setActiveWirePayload(undefined) }) // Destroy the wire elements when the mouse is released.
+            setActiveWireElement(<Wire originCoordinate={{ x: (leftOffset + (wireBase.width / 4)), y: (topOffset + (wireBase.height / 4)) }} offset={parentElem.getBoundingClientRect()} positioning={{x: wireBase.width / 4, y: wireBase.height / 4}} setActiveWirePayload={setActiveWirePayload} selfContainer={setActiveWireElement} /> ) // Don't ask why dividing by four works, I don't know.
 
         }}>
 

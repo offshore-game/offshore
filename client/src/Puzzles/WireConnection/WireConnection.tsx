@@ -10,68 +10,25 @@ type connectedWiresType = Array<activeWireInfoType>
 
 export default function WireConnection(props: { count: number }) {
 
-    const [wireSourceElems, setWireSourceElems] = useState([] as any[])
-    const [wireTargetElems, setWireTargetElems] = useState([] as any[])
-
     const [activeWireInfo, setActiveWireInfo] = useState(undefined as activeWireInfoType)
-    const [connectedWires, setConnectedWires] = useState([] as connectedWiresType);
-
-    function createActiveWire(origin: coordinate, offset: DOMRect, ) {
 
 
-        
+    const wireSourceElements = []
+    const wireTargetElements = []
+    for (let i = 0; i < props.count; i++) {
+
+        wireSourceElements.push(<OriginModule count={i} setActiveWireInfo={setActiveWireInfo}/>)
+
+        wireTargetElements.push(<TargetModule key={`TargetModule${i}`} count={i} activeWireInfo={activeWireInfo}/>)
+
     }
-
-    useEffect(() => {
-        setWireSourceElems([]) // Prevent a duplication bug on component reset.
-        setWireTargetElems([])
-
-        if (activeWireInfo) {
-            console.log('active wire info changed:', activeWireInfo) // state change firing here just fine
-        }
-
-        for (let i = 0; i < props.count; i++) {
-            console.log('new elements being made')
-            
-            setWireSourceElems(entries => [...entries, 
-                
-                <OriginModule count={i} setActiveWireInfo={setActiveWireInfo}/>
-
-            ])
-
-            const connectedWire = connectedWires[i] // Prevent any previously set wires from being reset
-
-            setWireTargetElems(entries => [...entries, 
-                
-                /* this is where the wires are connected*/
-                
-                <TargetModule key={`TargetModule${i}`} count={i} activeWireInfo={activeWireInfo} connectedWireInfo={connectedWire}/>
-
-            ])
-        }
-    }, [activeWireInfo])
-
-    // Event Listener
-    useEffect(() => {
-
-
-
-    }, [])
-
-    /*useEffect(() => {
-
-        if (activeWireInfo) {
-            console.log('active wire info changed:', activeWireInfo) // state change firing here just fine
-        }
-
-    }, [activeWireInfo])*/
 
     return (
         <div id="WireGame-Container" className={styles.container}>
 
-            <div className={styles.targetDisplayContainer}>{ wireSourceElems }</div>
+            <div className={styles.targetDisplayContainer}>{ wireSourceElements }</div>
 
-            <div style={{marginTop: "20%"}} className={styles.targetDisplayContainer}>{ wireTargetElems }</div>
+            <div style={{marginTop: "20%"}} className={styles.targetDisplayContainer}>{ wireTargetElements }</div>
             
         </div>
     )
