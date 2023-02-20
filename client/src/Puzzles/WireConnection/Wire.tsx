@@ -9,8 +9,6 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
 
     const onConnectActiveWire = useCallback((event: CustomEvent) => {
 
-        console.log(event.detail)
-
         const origin = props.originCoordinate
         
         if (origin == event.detail.origin) {
@@ -20,6 +18,27 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
         }
 
     }, [])
+
+    const disconnectWire = useCallback((event: CustomEvent) => {
+
+        const origin = props.originCoordinate
+
+        console.log(event.detail.origin)
+        
+        if (origin == event.detail.origin) {
+
+            console.log("setting undefined")
+            setEndCoordinate(undefined);
+
+        }
+
+    }, [])
+
+
+    useEffect(() => {console.log("endCoordinate:", endCoordinate)}, [endCoordinate])
+
+
+
 
     const destroySelf = useCallback(() => {
 
@@ -66,8 +85,10 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
         // No End Coordinate Defined, track mouse
 
         if (!endCoordinate && props.setActiveWirePayload) {
+
+            console.log("tracking mouse, no end coordinate defined") // DEBUG: why is this not firing?
+
             const container = document.getElementById("WireGame-Container")!
-            //const container = document.getElementById("sizingWindow")! // idk
             
             container.addEventListener("mousemove", mouseMoveListener)
 
@@ -100,6 +121,9 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
         // Event listener for connecting the wire on hover
         document.addEventListener("connectActiveWire", onConnectActiveWire as any)
 
+        // Event listener for disconnecting the wire
+        document.addEventListener("disconnectWire", disconnectWire as any)
+        
         // On unmount
         return () => {
 
@@ -110,6 +134,7 @@ export default function Wire(props: { originCoordinate: { x: number, y: number }
             container.removeEventListener("mousemove", mouseMoveListener)
             document.removeEventListener("connectActiveWire", onConnectActiveWire as any)
             document.removeEventListener("mouseup", destroySelf)
+            document.removeEventListener("disconnectWire", disconnectWire as any)
 
         }
         
