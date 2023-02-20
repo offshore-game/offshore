@@ -5,5 +5,7 @@
 
     transform-origin: 0;
 
+    /* Prevents a bug where clicking the wire would not move it (QOL) */
+    pointer-events: none;
 }
 

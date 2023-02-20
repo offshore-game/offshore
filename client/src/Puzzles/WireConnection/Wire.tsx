@@ -2,22 +2,18 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Wire.module.css'
 import { activeWireInfoType } from './WireConnection';
 
-export default function Wire(props: { originIndex: number, originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWirePayload: React.Dispatch<activeWireInfoType>, selfContainer: React.Dispatch<any> }) {
+export default function Wire(props: { originIndex: number, originCoordinate: { x: number, y: number }, endCoordinate?: { x: number, y: number }, positioning?: {x: any, y: any}, offset: DOMRect, setActiveWireInfo: React.Dispatch<activeWireInfoType>, selfContainer: React.Dispatch<any> }) {
 
     const wire = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
     const [ endCoordinate, setEndCoordinate ] = useState(props.endCoordinate ? props.endCoordinate : undefined)
 
     const onConnectActiveWire = useCallback((event: CustomEvent) => {
 
+        console.log('connecting active wire')
+
         const originIndex = props.originIndex
 
-        /*console.log('origin index:', originIndex)
-        console.log('requested origin index:', event.detail.originIndex)*/
-        
         if (originIndex == event.detail.originIndex) {
-
-            console.log("connecting active wire") // DEBUG: this is firing twice
-            // this module is very confused on what an "active wire" is
 
             setEndCoordinate(event.detail.target);
 
@@ -28,32 +24,28 @@ export default function Wire(props: { originIndex: number, originCoordinate: { x
     const disconnectWire = useCallback((event: CustomEvent) => {
 
         const originIndex = props.originCoordinate
-
-        console.log(event.detail.origin)
-        
+ 
         if (originIndex == event.detail.originIndex) {
 
-            console.log("setting undefined")
             setEndCoordinate(undefined);
 
         }
 
     }, [])
 
-
-    useEffect(() => {console.log("endCoordinate:", endCoordinate)}, [endCoordinate])
-
-
-
-
     const destroySelf = useCallback(() => {
 
+        // Remove the div element
         props.selfContainer(undefined)
-        props.setActiveWirePayload(undefined)
+
+        // Remove the "active wire" information
+        props.setActiveWireInfo(undefined)
 
     }, [])
 
     useEffect(() => {
+
+        console.log('end coordinate changed')
 
         function getParams(pointOne: { x: number, y: number }, pointTwo: { x: number, y: number }) {
 
@@ -89,20 +81,17 @@ export default function Wire(props: { originIndex: number, originCoordinate: { x
         }
 
         // No End Coordinate Defined, track mouse
+        const container = document.getElementById("WireGame-Container")!
+        
+        if (!endCoordinate) {
 
-        if (!endCoordinate && props.setActiveWirePayload) {
-
-            console.log("tracking mouse, no end coordinate defined") // DEBUG: why is this not firing?
-
-            const container = document.getElementById("WireGame-Container")!
-            
             container.addEventListener("mousemove", mouseMoveListener)
 
             // Destroy the wire elements when the mouse is released.
             document.addEventListener("mouseup", destroySelf) 
 
             // Share information with the rest of the module
-            props.setActiveWirePayload({
+            props.setActiveWireInfo({
                 color: wire.current.style.backgroundColor,
                 origin: props.originCoordinate,
                 originIndex: props.originIndex
@@ -124,8 +113,11 @@ export default function Wire(props: { originIndex: number, originCoordinate: { x
             // Don't destroy the wire when the mouse is released
             document.removeEventListener("mouseup", destroySelf)
 
+            // Don't listen when the mouse moves
+            container.removeEventListener("mousemove", mouseMoveListener)
+
             // No longer active wire
-            props.setActiveWirePayload(undefined)
+            props.setActiveWireInfo(undefined)
         }
 
         // Event listener for connecting the wire on hover

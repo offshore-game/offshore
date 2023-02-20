@@ -7,15 +7,7 @@ export default function OriginModule(props: { count: number, setActiveWireInfo: 
 
     const [activeWireElement, setActiveWireElement] = useState(undefined as any);
 
-    const [activeWirePayload, setActiveWirePayload] = useState(undefined as any);
-
     const originPoint = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
-
-    useEffect(() => {
-    
-        props.setActiveWireInfo(activeWirePayload)
-
-    }, [activeWirePayload])
 
     return (
         <div className={styles.wireOriginContainer} onMouseDown={() => {
@@ -28,7 +20,7 @@ export default function OriginModule(props: { count: number, setActiveWireInfo: 
             const wireBase = document.getElementById(`wireBase${props.count}`)!.getBoundingClientRect()
             const parentElem = document.getElementById("sizingWindow")!
 
-            setActiveWireElement(<Wire originIndex={props.count} originCoordinate={{ x: (leftOffset + (wireBase.width / 4)), y: (topOffset + (wireBase.height / 4)) }} offset={parentElem.getBoundingClientRect()} positioning={{x: wireBase.width / 4, y: wireBase.height / 4}} setActiveWirePayload={setActiveWirePayload} selfContainer={setActiveWireElement} /> ) // Don't ask why dividing by four works, I don't know.
+            setActiveWireElement(<Wire originIndex={props.count} originCoordinate={{ x: (leftOffset + (wireBase.width / 4)), y: (topOffset + (wireBase.height / 4)) }} offset={parentElem.getBoundingClientRect()} positioning={{x: wireBase.width / 4, y: wireBase.height / 4}} setActiveWireInfo={props.setActiveWireInfo} selfContainer={setActiveWireElement} /> ) // Don't ask why dividing by four works, I don't know.
 
         }}>
 

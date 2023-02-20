@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useState } from 'react'
+import React, { useEffect, createContext, useState, useCallback } from 'react'
 import OriginModule from './OriginModule'
 import TargetModule from './TargetModule'
 import styles from './WireConnection.module.css'
@@ -21,17 +21,36 @@ export default function WireConnection(props: { count: number }) {
     const [ connectedWireOrder, setConnectedWireOrder ] = useState({} as connectedWireOrderType)
 
     // Send this payload to the server when ALL wires are connected (when there are props.count entries i guess)
-    console.log(connectedWireOrder)
+    //console.log(connectedWireOrder)
 
     useEffect(() => { console.log(activeWireInfo) }, [activeWireInfo])
+
+    /*const onMouseUp = useCallback(() => {
+
+        setActiveWireInfo(undefined)
+
+    }, [])
+
+    useEffect(() => {
+
+        document.addEventListener("mouseup", onMouseUp)
+
+        return document.removeEventListener("mouseup", onMouseUp)
+
+    }, [])*/
 
     const wireSourceElements = []
     const wireTargetElements = []
     for (let i = 0; i < props.count; i++) {
+        //console.log('elems remade with activeWireInfo', activeWireInfo)
 
+        const time = new Date().getTime() // (im lazy)
+        
         wireSourceElements.push(<OriginModule count={i} setActiveWireInfo={setActiveWireInfo}/>)
 
-        wireTargetElements.push(<TargetModule key={`TargetModule${i}`} count={i} activeWireInfo={activeWireInfo} connectedWireOrder={connectedWireOrder} setConnectedWireOrder={setConnectedWireOrder} />)
+        // NOTE: Keys help React know what changed and how to reload the element.
+        wireTargetElements.push(<TargetModule key={`TargetModule${i}-${time}`} count={i} activeWireInfo={activeWireInfo} connectedWireOrder={connectedWireOrder} setConnectedWireOrder={setConnectedWireOrder} />)
+
 
     }
 
