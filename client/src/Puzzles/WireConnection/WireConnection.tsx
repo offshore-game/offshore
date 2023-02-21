@@ -14,30 +14,70 @@ export type connectedWireOrderType = {
 
 }
 
+export type connectedIndexesType = {
+
+    // Target Index: Wire's Origin Index
+    [key: number]: number
+
+}
+
 export default function WireConnection(props: { count: number }) {
 
     const [activeWireInfo, setActiveWireInfo] = useState(undefined as activeWireInfoType)
 
     const [ connectedWireOrder, setConnectedWireOrder ] = useState({} as connectedWireOrderType)
 
+    const [ connectedIndexes, setConnectedIndexes ] = useState({} as connectedIndexesType)
+
+
+
+    function handleConnectedIndexes(targetIndex: number, wireOriginIndex: number | undefined) {
+
+        if (!wireOriginIndex) {
+
+            const payload = connectedIndexes
+                delete payload[targetIndex]
+        
+            return setConnectedIndexes(payload);
+
+        }
+
+        
+        const payload = connectedIndexes
+            payload[targetIndex] = wireOriginIndex
+        
+        setConnectedIndexes(payload)
+
+    }
+
+
+
+
+
+
+
+    // DEBUG: not changing
+    useEffect(() => { console.log("connectedIndexes:", connectedIndexes) }, [ connectedIndexes ])
+
+    useEffect(() => { console.log('payload val', connectedWireOrder) }, [ connectedWireOrder ])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Send this payload to the server when ALL wires are connected (when there are props.count entries i guess)
     //console.log(connectedWireOrder)
 
     useEffect(() => { console.log(activeWireInfo) }, [activeWireInfo])
-
-    /*const onMouseUp = useCallback(() => {
-
-        setActiveWireInfo(undefined)
-
-    }, [])
-
-    useEffect(() => {
-
-        document.addEventListener("mouseup", onMouseUp)
-
-        return document.removeEventListener("mouseup", onMouseUp)
-
-    }, [])*/
 
     const wireSourceElements = []
     const wireTargetElements = []
@@ -49,7 +89,8 @@ export default function WireConnection(props: { count: number }) {
         wireSourceElements.push(<OriginModule count={i} setActiveWireInfo={setActiveWireInfo}/>)
 
         // NOTE: Keys help React know what changed and how to reload the element.
-        wireTargetElements.push(<TargetModule key={`TargetModule${i}-${time}`} count={i} activeWireInfo={activeWireInfo} connectedWireOrder={connectedWireOrder} setConnectedWireOrder={setConnectedWireOrder} />)
+
+        wireTargetElements.push(<TargetModule key={`TargetModule${i}-${time}`} count={i} activeWireInfo={activeWireInfo} connectedWireOrder={connectedWireOrder} connectedWireIndex={connectedIndexes[i]} setConnectedWireOrder={setConnectedWireOrder} setConnectedWireIndexes={handleConnectedIndexes}/>)
 
 
     }

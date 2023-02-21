@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './TargetModule.module.css'
 import Wire from './Wire';
-import { activeWireInfoType, connectedWireOrderType } from './WireConnection';
+import { activeWireInfoType, connectedIndexesType, connectedWireOrderType } from './WireConnection';
 
-export default function TargetModule(props: { count: number, activeWireInfo: activeWireInfoType, connectedWireOrder: connectedWireOrderType, setConnectedWireOrder: React.Dispatch<React.SetStateAction<connectedWireOrderType>> }) {
+export default function TargetModule(props: { count: number, activeWireInfo: activeWireInfoType, connectedWireOrder: connectedWireOrderType, setConnectedWireOrder: React.Dispatch<React.SetStateAction<connectedWireOrderType>>, connectedWireIndex: number | undefined, setConnectedWireIndexes: any}) {
 
     const container = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
     const connectionPoint = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>;
-
-    const [ connectedWireOriginIndex, setConnectedWireOriginIndex ] = useState(undefined as any)
 
     const hoverEvent = useCallback(() => {
         
@@ -25,7 +23,7 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
             const targetBase = document.getElementById(`wireTarget${props.count}`)!.getBoundingClientRect()
 
             // If no wire is currently connected
-            if (!connectedWireOriginIndex) {
+            if (!props.connectedWireIndex) {
 
                 console.log('firing event to connect the active wire from', props.activeWireInfo.originIndex)
 
@@ -37,7 +35,7 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
                 })
         
                 document.dispatchEvent(connectWireEvent)
-                setConnectedWireOriginIndex(props.activeWireInfo?.originIndex)
+                props.setConnectedWireIndexes(props.count, props.activeWireInfo?.originIndex)
     
                 const newConnectedWireOrder = props.connectedWireOrder
                     newConnectedWireOrder[props.activeWireInfo?.originIndex!] = props.count
@@ -51,7 +49,7 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
 
 
     const clickEvent = useCallback(() => {
-        console.log("clicked with connected wire from", connectedWireOriginIndex) // not updating
+        console.log("clicked with connected wire from", props.connectedWireIndex) // not updating
         /*
             On mouse click on:
                 - Signal to any wire that is
@@ -61,18 +59,18 @@ export default function TargetModule(props: { count: number, activeWireInfo: act
         */
         const disconnectWireEvent = new CustomEvent('disconnectWire', { // Send to Wire.tsx
             detail: {
-                originIndex: connectedWireOriginIndex,
+                originIndex: props.connectedWireIndex,
             }
         })
 
         document.dispatchEvent(disconnectWireEvent)
-        setConnectedWireOriginIndex(undefined)
+        props.setConnectedWireIndexes(props.count, undefined)
 
         const newConnectedWireOrder = props.connectedWireOrder
             delete newConnectedWireOrder[props.activeWireInfo?.originIndex!]
         props.setConnectedWireOrder(newConnectedWireOrder)
 
-    }, [connectedWireOriginIndex, connectionPoint])
+    }, [props.connectedWireIndex, connectionPoint])
 
 
     // Event Listeners
