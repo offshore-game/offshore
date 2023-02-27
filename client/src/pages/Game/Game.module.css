@@ -4,3 +4,15 @@
     
     background-color: white;
 }
+
+.topBar {
+
+    display: flex;
+
+    align-items: center;
+
+    height: 10%;
+    width: 100%;
+    background-color: darkblue;
+
+}

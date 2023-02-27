@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { validateTokenEnums } from '../../API/types/enums';
+import HealthBar from '../../components/HealthBar/HealthBar';
 import ButtonCombination from '../../Puzzles/NumberCombination/NumberCombination';
 import { AuthProp } from '../../utils/propTypes';
 import styles from './Game.module.css'
@@ -60,8 +61,27 @@ export default function Game(props: AuthProp) {
         return (
 
             <div className={styles.background}>
-                Game goes here!
-                <ButtonCombination count={4}/>
+                
+                {/* My test cube :) */}
+                <div style={{height: "25px", width: "25px", backgroundColor: "black", position: "absolute", right: "10px", margin: "10px"}} onClick={() => {
+
+                    // Fire Event
+                    const newHealth = new CustomEvent("healthChange", {
+                        detail: {
+                            newHealth: 75
+                        }
+                    })
+
+                    document.dispatchEvent(newHealth)
+
+                }}/>
+
+                <div className={styles.topBar}>
+
+                    <HealthBar percentage={100}/>
+
+                </div>
+
             </div>
 
         )
