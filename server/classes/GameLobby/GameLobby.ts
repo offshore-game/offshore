@@ -1,6 +1,8 @@
 import EventEmitter from 'events';
 import { Socket } from 'socket.io';
 import makeLobbyId from '../../generators/LobbyId';
+import NumberCombination from '../../puzzles/NumberCombination';
+import Puzzle from '../../puzzles/Puzzle';
 import Player from '../Player';
 
 export default class GameLobby {
@@ -9,6 +11,7 @@ export default class GameLobby {
     events: EventEmitter
     state: "LOBBY" | "INGAME" | "END"
     players: Player[]
+    puzzles: (NumberCombination & Puzzle)[]
 
 
     constructor() {
@@ -16,6 +19,7 @@ export default class GameLobby {
         this.events = new EventEmitter() 
         this.state = "LOBBY"
         this.players = []
+        this.puzzles = []
     }
 
 

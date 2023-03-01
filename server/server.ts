@@ -188,6 +188,18 @@ io.sockets.on("connection", function (socket) {
 
     })
 
+    type puzzleTypes = "NUMBERCOMBINATION"
+
+    socket.on("answerPuzzle", function(data: { token: string, roomCode: string, puzzleType: puzzleTypes, answer: any }) {
+
+        if (data.puzzleType == "NUMBERCOMBINATION") {
+
+            
+
+        }
+
+    })
+
 })
 
 
