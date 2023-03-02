@@ -1,5 +1,6 @@
 import Puzzle from "./Puzzle";
 import randomNumber from "../generators/randomNumber";
+import { zoneNames } from "../classes/GameLobby/GameLobby";
 
 interface NumberCombinationAnswer {
 
@@ -13,9 +14,9 @@ export default class NumberCombination extends Puzzle {
     solution: NumberCombinationAnswer
     fragmentedSolution: NumberCombinationAnswer[][]
 
-    constructor(digitCount: number) {
+    constructor(zoneName: zoneNames, digitCount: number) {
         
-        super()
+        super(zoneName, "numberCombination")
 
         // Generate the solution
         const solution = {}
