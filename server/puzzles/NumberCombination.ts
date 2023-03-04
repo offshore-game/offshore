@@ -1,6 +1,6 @@
 import Puzzle from "./Puzzle";
 import randomNumber from "../generators/randomNumber";
-import { zoneNames } from "../classes/GameLobby/GameLobby";
+import GameLobby, { zoneNames } from "../classes/GameLobby/GameLobby";
 
 interface NumberCombinationAnswer {
 
@@ -14,9 +14,9 @@ export default class NumberCombination extends Puzzle {
     solution: NumberCombinationAnswer
     fragmentedSolution: NumberCombinationAnswer[][]
 
-    constructor(zoneName: zoneNames, digitCount: number) {
+    constructor(lobby: GameLobby, zoneName: zoneNames, digitCount: number, puzzleDurationSec: number) {
         
-        super(zoneName, "numberCombination")
+        super(lobby, zoneName, "numberCombination", puzzleDurationSec)
 
         // Generate the solution
         const solution = {}
@@ -67,6 +67,13 @@ export default class NumberCombination extends Puzzle {
         this.fragmentedSolution = fragments
 
         return fragments;
+
+    }
+
+    validate(answer: any): boolean {
+        
+        // FEATURE: need to validate answers
+        return true;
 
     }
 

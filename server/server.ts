@@ -1,8 +1,9 @@
 import { Server } from 'socket.io' // https://socket.io/docs/v4
 import { lobbyEntry } from './tests/payloads'
 import { globalErrors } from './types/enums'
-import GameLobby from './classes/GameLobby/GameLobby'
+import GameLobby, { zoneNames } from './classes/GameLobby/GameLobby'
 import Player from './classes/Player'
+import { puzzleTypes } from './puzzles/Puzzle'
 
 // https://socket.io/docs/v4/rooms/
 
@@ -52,7 +53,7 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("createLobby", async function (data: { username: string }, callback) {
 
-        const lobby = new GameLobby()
+        const lobby = new GameLobby(io)
             lobbies.set(lobby.id, lobby) // Add to lobby map
         console.debug(`New lobby made with ID ${lobby.id}`)
 
@@ -188,13 +189,41 @@ io.sockets.on("connection", function (socket) {
 
     })
 
-    type puzzleTypes = "NUMBERCOMBINATION"
+    socket.on("answerPuzzle", function(data: { token: string, roomCode: string, zoneName: zoneNames, puzzleType: puzzleTypes, answer: any }, callback) {
 
-    socket.on("answerPuzzle", function(data: { token: string, roomCode: string, puzzleType: puzzleTypes, answer: any }) {
+        if (data.puzzleType == "numberCombination") {
 
-        if (data.puzzleType == "NUMBERCOMBINATION") {
+            const lobby = lobbies.get(data.roomCode)
 
-            
+            if (lobby) {
+
+                const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
+
+                // Puzzle doesn't exist
+                if (puzzleIndex == -1) return callback(false)
+
+                const puzzle = lobby.puzzles.active[puzzleIndex]
+
+                const validated = puzzle.validate(data.answer)
+                if (validated) { // Answer is Right
+
+                    // Tell the lobby class the puzzle is correct and completed
+                    lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle })
+                    return callback(true)
+
+                } else { // Answer is Wrong
+
+                    // Do nothing?
+                    return callback(false)
+
+                }
+
+            } else {
+
+                // Lobby doesn't exist.
+                return callback(globalErrors.ROOM_INVALID)
+
+            }
 
         }
 
