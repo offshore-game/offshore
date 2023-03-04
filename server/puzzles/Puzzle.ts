@@ -24,7 +24,7 @@ export default class Puzzle {
 
     }
 
-    makeSolution(solutionCount: number) {
+    makeSolutions(solutionCount: number) {
 
         // Should return an array of different linked answer keys
 
@@ -33,6 +33,7 @@ export default class Puzzle {
     validate(answer: any) {
 
         // Placeholder function for validating answers
+        return true;
 
     }
 

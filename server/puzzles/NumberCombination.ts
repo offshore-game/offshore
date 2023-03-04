@@ -33,7 +33,7 @@ export default class NumberCombination extends Puzzle {
 
     }
 
-    makeSolution(solutionCount: number) {
+    makeSolutions(solutionCount: number) {
 
         /*
             1) Randomly cut up the base solution
@@ -70,10 +70,13 @@ export default class NumberCombination extends Puzzle {
 
     }
 
-    validate(answer: any): boolean {
-        
-        // FEATURE: need to validate answers
-        return true;
+    validate(answer: NumberCombinationAnswer): boolean {
+
+        if (answer == this.solution) {
+            return true;
+        } else {
+            return false
+        }
 
     }
 
