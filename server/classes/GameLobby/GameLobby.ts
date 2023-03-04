@@ -11,7 +11,7 @@ export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j
 export default class GameLobby {
 
     id: string
-    events: EventEmitter
+    events: { emitter: EventEmitter, names: string[] }
     state: "LOBBY" | "INGAME" | "END"
     players: Player[]
     puzzles: { active: (NumberCombination & Puzzle)[], awaiting: (NumberCombination & Puzzle)[], solved: (NumberCombination & Puzzle)[] }
@@ -20,7 +20,10 @@ export default class GameLobby {
 
     constructor() {
         this.id = makeLobbyId(4) // Create a random 4 letter ID for the lobby.
-        this.events = new EventEmitter() 
+        this.events = {
+            emitter: new EventEmitter(),
+            names: ["puzzleComplete"]
+        }
         this.state = "LOBBY"
         this.players = []
         this.puzzles = {
@@ -152,7 +155,7 @@ export default class GameLobby {
             */
 
 
-            const zoneCount = 10 // Assume ten different zones
+            const zoneCount = this.zones.length // Get the number of puzzle zones
             const percentageKeepActive = 0.6 // 60%
 
             
