@@ -1,5 +1,4 @@
 import { Server } from 'socket.io' // https://socket.io/docs/v4
-import { lobbyEntry } from './tests/payloads'
 import { globalErrors } from './types/enums'
 import GameLobby, { zoneNames } from './classes/GameLobby/GameLobby'
 import Player from './classes/Player'
@@ -16,8 +15,6 @@ const io = new Server(8080, {
 
 
 const lobbies = new Map<string, GameLobby>()
-    lobbies.set(lobbyEntry.id, lobbyEntry) // TESTING
-
 
 io.sockets.on("connection", function (socket) {
 
@@ -155,10 +152,9 @@ io.sockets.on("connection", function (socket) {
 
             // Player is the owner of the lobby
             if (player?.owner) {
-                
-                // Set lobby state to started
-                lobby.state = "INGAME"
-
+            
+                // Run the startGame() function
+                lobby.startGame()
 
                 // Communicate to all clients that the game has started
                 io.in(lobby.id).emit("gameStart", {
@@ -190,9 +186,9 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("answerPuzzle", function(data: { token: string, roomCode: string, zoneName: zoneNames, puzzleType: puzzleTypes, answer: any }, callback) {
-
+     
         if (data.puzzleType == "numberCombination") {
-
+    
             const lobby = lobbies.get(data.roomCode)
 
             if (lobby) {
@@ -200,7 +196,7 @@ io.sockets.on("connection", function (socket) {
                 const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
 
                 // Puzzle doesn't exist
-                if (puzzleIndex == -1) return callback(false)
+                if (puzzleIndex == -1)  { console.warn("puzzle not found"); return callback(false) }
 
                 const puzzle = lobby.puzzles.active[puzzleIndex]
 

@@ -1,5 +1,5 @@
 import { Socket } from "socket.io"
-import crypto from 'node:crypto'
+import * as crypto from 'node:crypto'
 
 
 function generateToken() {

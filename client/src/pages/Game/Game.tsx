@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { validateTokenEnums } from '../../API/types/enums';
 import HealthBar from '../../components/HealthBar/HealthBar';
+import NumberCombination from '../../Puzzles/NumberCombination/NumberCombination';
 import ButtonCombination from '../../Puzzles/NumberCombination/NumberCombination';
 import { AuthProp } from '../../utils/propTypes';
 import styles from './Game.module.css'
@@ -81,6 +82,8 @@ export default function Game(props: AuthProp) {
                     <HealthBar percentage={100}/>
 
                 </div>
+
+                <NumberCombination count={4} requests={props.requests}/>
 
             </div>
 

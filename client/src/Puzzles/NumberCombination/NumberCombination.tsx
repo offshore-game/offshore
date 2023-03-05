@@ -49,19 +49,22 @@ export default function NumberCombination(props: { count: number } & AuthProp) {
 
             </div>
 
-            <Button text={"Submit"} onClick={() => {
+            <Button text={"Submit"} onClick={async () => {
 
-                const combinationPayload: { [key: number]: string } = {}
+                const combinationPayload: { [key: string]: number } = {}
 
                 for (let i = 0; i < numberElems.length; i++) {
 
                     const element = document.getElementById(`buttonVal${i}`)!
-                    combinationPayload[i] = element.innerHTML
+                    combinationPayload[i] = +element.innerHTML
 
                 }
 
-                // (FEATURE) Insert API Call here
+                // API Call
                 console.log(combinationPayload)
+                const result = await props.requests.sendAnswer("a", "numberCombination", combinationPayload)
+                console.log("result:", result)
+                
 
             }} style={{margin: "4vh", minHeight: "45px"}}/>
             

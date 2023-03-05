@@ -1,4 +1,4 @@
-import EventEmitter from 'events';
+import { EventEmitter } from 'events';
 import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import makeLobbyId from '../../generators/LobbyId';
@@ -39,6 +39,9 @@ export default class GameLobby {
 
         // Set the io to make requests from within the lobby
         this.io = io
+
+        this.healthPoints = 100
+        this.durationSec = 300
     }
 
 
@@ -160,8 +163,16 @@ export default class GameLobby {
 
         return new Promise((res, rej) => {
 
+            console.log("game started")
+
+            // TESTING
+            this.puzzles.active.push(new NumberCombination(this, "a", 5, 100))
+
             // Set the game time
             this.durationSec = 300 // 300 Seconds = 5 Minutes
+
+            // Set the state
+            this.state = "INGAME"
 
             /*
                 FEATURE: A timeout is needed for each "stage" the lobby
@@ -266,7 +277,7 @@ export default class GameLobby {
                 // Select a random zone
                 const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
 
-                let generatedPuzzle
+                let generatedPuzzle: Puzzles
 
                 // Make the puzzle using the random type
                 if (randomlySelectedPuzzleType == "numberCombination") {

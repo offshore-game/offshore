@@ -1,6 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { validateTokenEnums } from "./types/enums";
 
+type puzzleTypes = "numberCombination" | "buttonCombination" | "buttonSpeed" | "wireConnect" | "wireCut"
+
 export default class Requests {
 
     socket: Socket
@@ -127,6 +129,23 @@ export default class Requests {
             this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: boolean | number) => {
 
                 return res(result) // Resolve True OR False.
+
+            })
+
+        })
+
+    }
+
+    async sendAnswer(zoneName: string, puzzleType: puzzleTypes, answer: any): Promise<boolean> {
+
+        return new Promise((res, rej) => {
+
+            const token = localStorage.getItem("token")
+            const roomCode = localStorage.getItem("roomCode")
+
+            this.socket.emit("answerPuzzle", { token: token!, roomCode: roomCode!, zoneName: zoneName, puzzleType: puzzleType, answer: answer }, (result: boolean) => {
+
+                return res(result) // Resolves with if the answer is right or wrong
 
             })
 
