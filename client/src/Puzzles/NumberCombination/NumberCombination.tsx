@@ -12,7 +12,7 @@ export default function NumberCombination(props: { count: number, zoneName: zone
     useEffect(() => {
         setNumberElems([]) // Prevent a duplication bug on component reset.
 
-        for (let i = 0; i <= props.count; i++) {
+        for (let i = 0; i < props.count; i++) {
             setNumberElems(entries => [...entries, <div key={i} className={styles.button}>
                 <RxTriangleUp className={styles.arrow} onClick={() => {
 
@@ -50,7 +50,7 @@ export default function NumberCombination(props: { count: number, zoneName: zone
 
             </div>
 
-            <Button text={"Submit"} onClick={async () => {
+            <Button text={`Submit as zone ${props.zoneName}`} onClick={async () => {
 
                 const combinationPayload: { [key: string]: number } = {}
 
@@ -63,7 +63,7 @@ export default function NumberCombination(props: { count: number, zoneName: zone
 
                 // API Call
                 console.log(combinationPayload)
-                const result = await props.requests.sendAnswer("a", "numberCombination", combinationPayload)
+                const result = await props.requests.sendAnswer(props.zoneName, "numberCombination", combinationPayload)
                 console.log("result:", result)
                 
 

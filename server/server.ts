@@ -158,13 +158,7 @@ io.sockets.on("connection", function (socket) {
                     if (!result) return callback(globalErrors.TOKEN_INVALID);
 
                 // Signal to the clients the game started, with all the puzzles
-                io.in(lobby.id).emit("gameStart", {
-                    // Send to the client the ruleset of the match.
-
-                    lengthSec: result.lengthSec, // 5 Minutes = 300 Seconds
-                    puzzles: result
-
-                })
+                io.in(lobby.id).emit("gameStart", result)
 
                 console.debug('sending owner:', result)
 

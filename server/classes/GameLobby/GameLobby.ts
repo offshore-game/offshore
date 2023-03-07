@@ -139,6 +139,7 @@ export default class GameLobby {
         } else {
 
             // FEATURE: add more puzzle types!
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 60)
 
         }
 
@@ -273,7 +274,7 @@ export default class GameLobby {
 
     }
 
-    async startGame(): Promise<false | { lengthSec: number, puzzlePayload: { zoneName: zoneNames, puzzles: puzzleTypes[] }[] }> {
+    async startGame(): Promise<false | { lengthSec: number, puzzles: { zoneName: zoneNames, puzzles: puzzleTypes[] }[] }> {
 
         /*
             FEATURE: A timeout is needed for each "stage" the lobby
@@ -368,7 +369,7 @@ export default class GameLobby {
 
             const ruleset = {
                 lengthSec: 300,
-                puzzlePayload: [],
+                puzzles: [],
             }
 
             // Continually generate puzzles to meet the required amount
@@ -377,11 +378,9 @@ export default class GameLobby {
                 // Generate a puzzle (without a timeout)
                 const generated = this.generatePuzzle(false)
 
-                console.log('gen:', generated)
-
                 if (generated) {
 
-                    ruleset.puzzlePayload.push({
+                    ruleset.puzzles.push({
                         zoneName: generated.zoneName,
                         type: generated.type,
                     })
@@ -391,7 +390,7 @@ export default class GameLobby {
             }
 
                         // TESTING
-                        this.puzzles.active.push(new NumberCombination(this, "a", 5, 100))
+                        //this.puzzles.active.push(new NumberCombination(this, "a", 5, 100))
 
 
             // Resolve with the ruleset payload

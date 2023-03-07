@@ -31,6 +31,7 @@ export default class NumberCombination extends Puzzle {
         // Save the generated solution as a whole
         this.solution = generatedSolution
 
+        console.debug(`Solution for zone ${zoneName}`)
         console.debug(this.solution)
 
         this.fragmentedSolution = []
@@ -80,20 +81,20 @@ export default class NumberCombination extends Puzzle {
 
         console.debug('start validate')
         console.debug(this.solution)
-        console.debug('provided answer: ', answer)
-        console.debug(answer == this.solution)
 
         let pass = true
         for (const [key, value] of Object.entries(answer)) {
 
             if (value != this.solution[key]) {
-                
+                console.debug('incorrect solution at', key)
                 pass = false
                 return;
 
             }
 
         }
+
+        console.debug("pass: ", pass)
 
         return pass;
 

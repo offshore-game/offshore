@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+    import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { startGamePayload } from '../../API/requests';
 import { validateTokenEnums } from '../../API/types/enums';
@@ -23,9 +23,7 @@ export default function Game(props: AuthProp) {
     const { state } = useLocation()
 
     const [status, setStatus] = useState(statusType.inGame);
-    const [ gameInfo, setGameInfo ] = useState({} as startGamePayload);
-
-    console.log(gameInfo)
+    const [ gameInfo, setGameInfo ] = useState(undefined as any as startGamePayload);
 
     useEffect(() => {
 
@@ -66,36 +64,42 @@ export default function Game(props: AuthProp) {
     // The game has started; show the game window.
     if (status == statusType.inGame) {
 
-        return (
+        if (!gameInfo) {console.log('no game info'); return (<div/>)}
 
-            <div className={styles.background}>
-                SECONDS LENGTH: { gameInfo.lengthSec }
-                {/* My test cube :) */}
-                <div style={{height: "25px", width: "25px", backgroundColor: "black", position: "absolute", right: "10px", margin: "10px"}} onClick={() => {
+        if (gameInfo) {
 
-                    // Fire Event
-                    const newHealth = new CustomEvent("healthChange", {
-                        detail: {
-                            newHealth: 75
-                        }
-                    })
+            return (
+                
+                <div className={styles.background}>
+                    SECONDS LENGTH: { gameInfo.lengthSec }
+                    {/* My test cube :) */}
+                    <div style={{height: "25px", width: "25px", backgroundColor: "black", position: "absolute", right: "10px", margin: "10px"}} onClick={() => {
 
-                    document.dispatchEvent(newHealth)
+                        // Fire Event
+                        const newHealth = new CustomEvent("healthChange", {
+                            detail: {
+                                newHealth: 75
+                            }
+                        })
 
-                }}/>
+                        document.dispatchEvent(newHealth)
 
-                <div className={styles.topBar}>
+                    }}/>
 
-                    <HealthBar percentage={100}/>
+                    <div className={styles.topBar}>
+
+                        <HealthBar percentage={100}/>
+
+                    </div>
+
+                    <NumberCombination count={4} zoneName={gameInfo.puzzles[0].zoneName} requests={props.requests}/>
 
                 </div>
 
-                <NumberCombination count={4} zoneName={gameInfo.puzzles[0].zoneName} requests={props.requests}/>
+            )
 
-            </div>
-
-        )
-
+        }
+        
     }
 
     return (<div/>) // Error suppresion.
