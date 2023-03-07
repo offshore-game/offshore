@@ -1,7 +1,16 @@
 import { io, Socket } from "socket.io-client";
 import { validateTokenEnums } from "./types/enums";
 
+export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
 type puzzleTypes = "numberCombination" | "buttonCombination" | "buttonSpeed" | "wireConnect" | "wireCut"
+
+export type startGamePayload = {
+    lengthSec: number,
+    puzzles: { 
+        zoneName: zoneNames,
+        type: puzzleTypes
+    }[]
+}
 
 export default class Requests {
 
@@ -52,6 +61,7 @@ export default class Requests {
                     localStorage.setItem("token", data.token)
                     localStorage.setItem("roomCode", roomCode)
                     localStorage.setItem("username", username)
+                    localStorage.setItem("isOwner", "false") // Make sure the client doesn't get confused
                     
                     return res(data.otherPlayers); // Success
 
@@ -119,16 +129,16 @@ export default class Requests {
         })
     }
 
-    async startGame(): Promise<boolean | number> {
+    async startGame(): Promise<false | startGamePayload> {
 
         return new Promise((res, rej) => {
 
             const token = localStorage.getItem("token")
             const roomCode = localStorage.getItem("roomCode")
 
-            this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: boolean | number) => {
+            this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: false | startGamePayload) => {
 
-                return res(result) // Resolve True OR False.
+                return res(result) // Resolve with false OR the payload of puzzles.
 
             })
 

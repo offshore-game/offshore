@@ -22,6 +22,8 @@ export default class GameLobby {
     healthPoints: number
     io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
 
+    percentKeepActive: number
+
 
     constructor(io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>) {
         this.id = makeLobbyId(4) // Create a random 4 letter ID for the lobby.
@@ -42,6 +44,8 @@ export default class GameLobby {
 
         this.healthPoints = 100
         this.durationSec = 300
+        this.percentKeepActive = 0.6 // 60%
+
     }
 
 
@@ -59,6 +63,116 @@ export default class GameLobby {
 
             // Tell all clients game's over, by loss
             this.io.in(this.id).emit("gameOver")
+
+        }
+
+    }
+
+    generatePuzzle(addTimeout?: boolean): void | Puzzles {
+
+        /*
+            PUZZLE GENERATION TECHNIQUE:
+            Listen for when a puzzle is solved. When it is
+            solved, check how many puzzles are needed to meet
+            the percentageKeepActive requirement. 
+            
+            Then, look for what puzzle types are not used.
+            (If there are none, select a general random one).
+            
+            Then, check for what zones are inactive and set a
+            timeout to spawn the puzzle there.
+            (As a safeguard, check if the zone is still free at the
+            end of the timeout. If not, pick a different zone. If all
+            required zones are full, destroy the puzzle). 
+        */
+        
+        // Find what puzzle types aren't in use yet
+        let unusedPuzzles: puzzleTypes[] = puzzleTypeArray
+        for (const puzzle of [...this.puzzles.active, ...this.puzzles.awaiting]) { // For every puzzle active and about to be active...
+            
+            // Find it's name in the unused array and delete it if it exists
+            const isInArray = unusedPuzzles.findIndex((value) => value == puzzle.type)
+
+            // Not Found
+            if (isInArray == -1) continue;
+            
+            // Delete from the array
+            unusedPuzzles.splice(isInArray, 1)
+            continue;
+
+        }
+
+
+        // Find what zones are free
+        let unusedZones: zoneNames[] = this.zones
+        for (const puzzle of [...this.puzzles.active, ...this.puzzles.awaiting]) { // For every puzzle active and about to be active...
+                
+            const isInArray = unusedZones.findIndex((value) => value == puzzle.zoneName)
+
+            // Not Found
+            if (isInArray == -1) continue;
+            
+            // Delete from the array
+            unusedZones.splice(isInArray, 1)
+            continue;
+
+        }
+
+        // If all puzzles are in use, just pick a random one from the whole list
+        if (unusedPuzzles.length == 0) unusedPuzzles = puzzleTypeArray
+
+
+        // Select a random type of puzzle
+        const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
+
+        // Select a random zone
+        const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
+
+        let generatedPuzzle: Puzzles
+
+        // Make the puzzle using the random type
+        if (randomlySelectedPuzzleType == "numberCombination") {
+
+            // FEATURE: Digit Count and Duration are Arbitrary for now
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 60)
+
+        } else {
+
+            // FEATURE: add more puzzle types!
+
+        }
+
+        // Delay activating the puzzle
+        if (addTimeout) {
+
+            // Add the puzzle to the awaiting array
+            this.puzzles.awaiting.push(generatedPuzzle)
+
+            setTimeout(() => {
+
+                const puzzleIndex = this.puzzles.awaiting.findIndex((puzzle) => puzzle.zoneName == randomlySelectedZone) // This is really the only unique identifier at a given time
+
+                // Destroyed for whatever reason
+                if (puzzleIndex == -1) return;
+
+                                                                                                                        // FEATURE: Send to Client
+
+                // Remove from the "awaiting" array
+                this.puzzles.awaiting.splice(puzzleIndex, 1)
+
+                // Add to the "active" array
+                this.puzzles.active.push(generatedPuzzle)
+
+                return;
+
+            }, 2000 /* 2S to MS */)
+
+        } else {
+
+            // Add to the "active" array
+            this.puzzles.active.push(generatedPuzzle)
+
+            return generatedPuzzle;
 
         }
 
@@ -159,14 +273,84 @@ export default class GameLobby {
 
     }
 
-    async startGame() {
+    async startGame(): Promise<false | { lengthSec: number, puzzlePayload: { zoneName: zoneNames, puzzles: puzzleTypes[] }[] }> {
+
+        /*
+            FEATURE: A timeout is needed for each "stage" the lobby
+            can go through within the five minutes.
+        */
+
+        /*
+            We need to generate puzzles, but prevent them from overlapping
+            in different boat zones until they expire.
+
+            SOLUTION ONE:
+            Keep count of the number of active puzzles and their zones. Keep
+            a percentage of zones active with a puzzle. When a puzzle is completed
+            in a zone, add a delay and generate a new puzzle to be added there.
+
+            ***Add a safeguard to prevent puzzles from overlapping in a zone.
+        */
+
+        const zoneCount = this.zones.length
+
+        // A puzzle has been completed successfully
+        this.events.emitter.on(this.events.names.complete, (payload: { puzzle: Puzzles }) => {
+
+            // Handle the puzzle completion
+            const completedIndex = this.puzzles.active.findIndex(value => payload.puzzle.zoneName == value.zoneName)
+            if (completedIndex != -1) { // If it exists
+
+                const puzzle = this.puzzles.active[completedIndex]
+                clearTimeout(puzzle.expirationTimeout)
+                
+                this.puzzles.solved.push(puzzle) // Saved as a solved puzzle
+                this.puzzles.active.splice(completedIndex, 1) // Delete from the active puzzle array
+
+                
+
+            }
+            
+            // Check if we need another puzzle
+            const activeCount = Math.floor(zoneCount * this.percentKeepActive)
+            // If there are enough puzzles, don't make more.
+            if (activeCount >= zoneCount * this.percentKeepActive) return;
+
+            // Generate another puzzle (with a timeout)
+            this.generatePuzzle(true)
+            
+        })
+
+        // A puzzle has expired
+        this.events.emitter.on(this.events.names.expired, (payload: { puzzle: Puzzles }) => {
+            
+            /*
+                1) Tell the game lobby to deduct health points (and tell clients the new health)
+                2) Move the puzzle from active to "solved"
+            */
+
+            // 25 Point deduction for the puzzle expiring
+            this.changeHealth(25) // This function handles sending to clients the new health
+
+            // Find the right puzzle
+            const puzzleIndex = this.puzzles.active.findIndex((puzzle) => puzzle.zoneName == payload.puzzle.zoneName)
+            if (puzzleIndex == -1) return; // Doesn't exist
+
+            const puzzle = this.puzzles.active[puzzleIndex]
+
+            // Remove from the "active" array
+            this.puzzles.active.splice(puzzleIndex, 1)
+
+            // Add to the "solved" array
+            this.puzzles.solved.push(puzzle)
+
+            // FEATURE: make new puzzle?
+
+        })
 
         return new Promise((res, rej) => {
 
             console.log("game started")
-
-            // TESTING
-            this.puzzles.active.push(new NumberCombination(this, "a", 5, 100))
 
             // Set the game time
             this.durationSec = 300 // 300 Seconds = 5 Minutes
@@ -175,169 +359,47 @@ export default class GameLobby {
             this.state = "INGAME"
 
             /*
-                FEATURE: A timeout is needed for each "stage" the lobby
-                can go through within the five minutes.
+                First we need to generate the original list of puzzles for the lobby
             */
 
-            /*
-                We need to generate puzzles, but prevent them from overlapping
-                in different boat zones until they expire.
+            const puzzleCount = Math.floor(this.zones.length * this.percentKeepActive)
 
-                SOLUTION ONE:
-                Keep count of the number of active puzzles and their zones. Keep
-                a percentage of zones active with a puzzle. When a puzzle is completed
-                in a zone, add a delay and generate a new puzzle to be added there.
+            console.debug(`Need ${puzzleCount} puzzles`)
 
-                ***Add a safeguard to prevent puzzles from overlapping in a zone.
-            */
+            const ruleset = {
+                lengthSec: 300,
+                puzzlePayload: [],
+            }
 
+            // Continually generate puzzles to meet the required amount
+            for (let i = 0; i <= puzzleCount; i++) {
 
-            const zoneCount = this.zones.length // Get the number of puzzle zones
-            const percentageKeepActive = 0.6 // 60%
+                // Generate a puzzle (without a timeout)
+                const generated = this.generatePuzzle(false)
 
+                console.log('gen:', generated)
 
-            /*
-                PUZZLE GENERATION TECHNIQUE:
-                Listen for when a puzzle is solved. When it is
-                solved, check how many puzzles are needed to meet
-                the percentageKeepActive requirement. 
-                
-                Then, look for what puzzle types are not used.
-                (If there are none, select a general random one).
-                
-                Then, check for what zones are inactive and set a
-                timeout to spawn the puzzle there.
-                (As a safeguard, check if the zone is still free at the
-                end of the timeout. If not, pick a different zone. If all
-                required zones are full, destroy the puzzle). 
-            */
+                if (generated) {
 
-            
-            // A puzzle has been completed successfully
-            this.events.emitter.on(this.events.names.complete, (payload: { puzzle: Puzzles }) => {
-
-                // Handle the puzzle completion
-                const completedIndex = this.puzzles.active.findIndex(value => payload.puzzle.zoneName == value.zoneName)
-                if (completedIndex != -1) { // If it exists
-
-                    const puzzle = this.puzzles.active[completedIndex]
-                    clearTimeout(puzzle.expirationTimeout)
-                    
-                    this.puzzles.solved.push(puzzle) // Saved as a solved puzzle
-                    this.puzzles.active.splice(completedIndex, 1) // Delete from the active puzzle array
-
-                    
+                    ruleset.puzzlePayload.push({
+                        zoneName: generated.zoneName,
+                        type: generated.type,
+                    })
 
                 }
+ 
+            }
 
-                const activeCount = Math.floor(zoneCount * percentageKeepActive)
-
-                // If there are enough puzzles, don't make more.
-                if (activeCount >= zoneCount * percentageKeepActive) return;
-
-                // Find what puzzle types aren't in use yet
-                let unusedPuzzles: puzzleTypes[] = puzzleTypeArray
-                for (const puzzle of [...this.puzzles.active, ...this.puzzles.awaiting]) { // For every puzzle active and about to be active...
-
-                    // Find it's name in the unused array and delete it if it exists
-                    const isInArray = unusedPuzzles.findIndex((value) => value == puzzle.type)
-
-                    // Not Found
-                    if (isInArray == -1) continue;
-                    
-                    // Delete from the array
-                    unusedPuzzles.splice(isInArray, 1)
-                    continue;
-
-                }
+                        // TESTING
+                        this.puzzles.active.push(new NumberCombination(this, "a", 5, 100))
 
 
-                // Find what zones are free
-                let unusedZones: zoneNames[] = this.zones
-                for (const puzzle of [...this.puzzles.active, ...this.puzzles.awaiting]) { // For every puzzle active and about to be active...
-
-                    const isInArray = unusedZones.findIndex((value) => value == puzzle.zoneName)
-
-                    // Not Found
-                    if (isInArray == -1) continue;
-                    
-                    // Delete from the array
-                    unusedZones.splice(isInArray, 1)
-                    continue;
-
-                }
-
-                // If all puzzles are in use, just pick a random one from the whole list
-                if (unusedPuzzles.length == 0) unusedPuzzles = puzzleTypeArray
+            // Resolve with the ruleset payload
+            return res(ruleset);
 
 
-                // Select a random type of puzzle
-                const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
 
-                // Select a random zone
-                const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
-
-                let generatedPuzzle: Puzzles
-
-                // Make the puzzle using the random type
-                if (randomlySelectedPuzzleType == "numberCombination") {
-
-                    // FEATURE: Digit Count and Duration are Arbitrary for now
-                    generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 60)
-
-                    // Add the puzzle to the awaiting array
-                    this.puzzles.awaiting.push(generatedPuzzle)
-
-                }
-
-
-                // Delay activating the puzzle
-                setTimeout(() => {
-
-                    const puzzleIndex = this.puzzles.awaiting.findIndex((puzzle) => puzzle.zoneName == randomlySelectedZone) // This is really the only unique identifier at a given time
-
-                    // Destroyed for whatever reason
-                    if (puzzleIndex == -1) return;
-
-                    // FEATURE: Send to Client
-
-                    // Remove from the "awaiting" array
-                    this.puzzles.awaiting.splice(puzzleIndex, 1)
-
-                    // Add to the "active" array
-                    this.puzzles.active.push(generatedPuzzle)
-
-                    return;
-
-                }, 2000 /* 2S to MS */)
-
-            })
-
-            // A puzzle has expired
-            this.events.emitter.on(this.events.names.expired, (payload: { puzzle: Puzzles }) => {
-                
-                /*
-                    1) Tell the game lobby to deduct health points (and tell clients the new health)
-                    2) Move the puzzle from active to "solved"
-                */
-
-                // 25 Point deduction for the puzzle expiring
-                this.changeHealth(25) // This function handles sending to clients the new health
-
-                // Find the right puzzle
-                const puzzleIndex = this.puzzles.active.findIndex((puzzle) => puzzle.zoneName == payload.puzzle.zoneName)
-                if (puzzleIndex == -1) return; // Doesn't exist
-
-                const puzzle = this.puzzles.active[puzzleIndex]
-
-                // Remove from the "active" array
-                this.puzzles.active.splice(puzzleIndex, 1)
-
-                // Add to the "solved" array
-                this.puzzles.solved.push(puzzle)
-
-            })
-
+  
         })
 
     }

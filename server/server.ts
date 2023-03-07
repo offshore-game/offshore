@@ -142,7 +142,7 @@ io.sockets.on("connection", function (socket) {
 
     })
 
-    socket.on("startGame", function (data: { token: string, roomCode: string, ruleset?: { lengthSec: number, difficulty: "EASY" | "NORMAL" | "HARD" } }, callback ) {
+    socket.on("startGame", async function (data: { token: string, roomCode: string, ruleset?: { lengthSec: number, difficulty: "EASY" | "NORMAL" | "HARD" } }, callback ) {
 
         const lobby = lobbies.get(data.roomCode)
 
@@ -154,19 +154,22 @@ io.sockets.on("connection", function (socket) {
             if (player?.owner) {
             
                 // Run the startGame() function
-                lobby.startGame()
+                const result = await lobby.startGame()
+                    if (!result) return callback(globalErrors.TOKEN_INVALID);
 
-                // Communicate to all clients that the game has started
+                // Signal to the clients the game started, with all the puzzles
                 io.in(lobby.id).emit("gameStart", {
                     // Send to the client the ruleset of the match.
 
-                    lengthSec: 300, // 5 Minutes = 300 Seconds
+                    lengthSec: result.lengthSec, // 5 Minutes = 300 Seconds
+                    puzzles: result
 
                 })
 
+                console.debug('sending owner:', result)
 
                 // Return a success
-                return callback(true);
+                return callback(result);
 
             // Player is not the owner of the lobby
             } else {

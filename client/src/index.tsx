@@ -28,7 +28,7 @@ root.render(
 
             <Route path="/lobby/:id" element={ <Home requests={Connection} gameLobby={true}/> } />
             <Route path="/game/:id" element={ <Game requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}
-            <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><NumberCombination count={4} requests={Connection}/></div> } />
+            <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><NumberCombination count={4} zoneName={"a"} requests={Connection}/></div> } />
           </Routes>
         </BrowserRouter>
       </div>

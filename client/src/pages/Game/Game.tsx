@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import { startGamePayload } from '../../API/requests';
 import { validateTokenEnums } from '../../API/types/enums';
 import HealthBar from '../../components/HealthBar/HealthBar';
 import NumberCombination from '../../Puzzles/NumberCombination/NumberCombination';
@@ -18,8 +19,13 @@ export default function Game(props: AuthProp) {
 
     const navigate = useNavigate();
     const { id } = useParams();
-    
+
+    const { state } = useLocation()
+
     const [status, setStatus] = useState(statusType.inGame);
+    const [ gameInfo, setGameInfo ] = useState({} as startGamePayload);
+
+    console.log(gameInfo)
 
     useEffect(() => {
 
@@ -51,6 +57,7 @@ export default function Game(props: AuthProp) {
         }
         auth()
 
+        setGameInfo(state)
         // FEATURE: Add an event listener in here to see when the game starts, so the frame can switch.
 
     }, [])
@@ -62,7 +69,7 @@ export default function Game(props: AuthProp) {
         return (
 
             <div className={styles.background}>
-                
+                SECONDS LENGTH: { gameInfo.lengthSec }
                 {/* My test cube :) */}
                 <div style={{height: "25px", width: "25px", backgroundColor: "black", position: "absolute", right: "10px", margin: "10px"}} onClick={() => {
 
@@ -83,7 +90,7 @@ export default function Game(props: AuthProp) {
 
                 </div>
 
-                <NumberCombination count={4} requests={props.requests}/>
+                <NumberCombination count={4} zoneName={gameInfo.puzzles[0].zoneName} requests={props.requests}/>
 
             </div>
 

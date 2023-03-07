@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { RxTriangleUp, RxTriangleDown } from 'react-icons/rx'
+import { zoneNames } from '../../API/requests'
 import Button from '../../components/Button/Button'
 import { AuthProp } from '../../utils/propTypes'
 import styles from './NumberCombination.module.css'
 
-export default function NumberCombination(props: { count: number } & AuthProp) {
+export default function NumberCombination(props: { count: number, zoneName: zoneNames } & AuthProp) {
 
     const [numberElems, setNumberElems] = useState([] as any[])
 
