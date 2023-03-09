@@ -1,4 +1,4 @@
-    import React, { useEffect, useState } from 'react'
+    import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { startGamePayload } from '../../API/requests';
 import { validateTokenEnums } from '../../API/types/enums';
@@ -24,6 +24,8 @@ export default function Game(props: AuthProp) {
 
     const [status, setStatus] = useState(statusType.inGame);
     const [ gameInfo, setGameInfo ] = useState(undefined as any as startGamePayload);
+
+    const shadow = useRef(undefined as any as HTMLDivElement)
 
     useEffect(() => {
 
@@ -71,6 +73,9 @@ export default function Game(props: AuthProp) {
             return (
                 
                 <div className={styles.background}>
+                    
+                    <div ref={shadow} className={styles.shadow}/>
+
                     SECONDS LENGTH: { gameInfo.lengthSec }
                     {/* My test cube :) */}
                     <div style={{height: "25px", width: "25px", backgroundColor: "black", position: "absolute", right: "10px", margin: "10px"}} onClick={() => {
@@ -92,7 +97,41 @@ export default function Game(props: AuthProp) {
 
                     </div>
 
-                    <NumberCombination count={4} zoneName={gameInfo.puzzles[0].zoneName} requests={props.requests}/>
+                    <div className={styles.testButton} onClick={() => {
+
+                        // Animate the "activePuzzle" div in
+                        const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+
+                        if (activePuzzleContainer && shadow) {
+
+                            activePuzzleContainer.className = styles.activePuzzle
+                            shadow.current.style.zIndex = "999"
+
+                        }
+
+                    }}>Click me to see the puzzle!</div>
+
+
+
+                    <div id="activePuzzleContainer" className={styles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
+
+                        <div className={styles.exitCube} onClick={() => {
+                            // Animate the "activePuzzle" div out
+                            const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+
+                            if (activePuzzleContainer && shadow) {
+
+                                activePuzzleContainer.className = styles.hiddenPuzzle
+                                shadow.current.style.zIndex = "-1"
+
+                            }
+
+                        }}/>
+                        <NumberCombination count={4} zoneName={gameInfo.puzzles[0].zoneName} requests={props.requests}/>
+
+                    </div>
+
+                    
 
                 </div>
 

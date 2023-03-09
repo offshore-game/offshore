@@ -16,3 +16,101 @@
     background-color: darkblue;
 
 }
+
+.shadow {
+
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+
+    background-color: black;
+
+    opacity: calc(75%);
+
+    /*z-index: 999; only when active*/
+    z-index: -1;
+
+}
+
+.testButton {
+
+    background-color: skyblue;
+    border-radius: 10px;
+
+    width: 200px;
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.hiddenPuzzle {
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+
+    position: relative;
+
+    background-color: gray;
+
+    width: 50%;
+    height: 50%;
+
+    top: 100vh;
+    
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    transition: top 0.8s cubic-bezier(.47, 1.64, .41, 1);
+
+}
+
+.activePuzzle {
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+
+    position: relative;
+
+    background-color: gray;
+    z-index: 9999;
+
+    width: 50%;
+    height: 50%;
+
+    top: 0%;
+    
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    transition: top 0.8s cubic-bezier(.47, 1.64, .41, 1);
+
+}
+
+.exitCube {
+
+    position: absolute;
+
+    height: 10px;
+    width: 10px;
+
+    background-color: black;
+
+    right: 0;
+    top: 0;
+    margin: 10px;
+
+    cursor: pointer;
+
+}
