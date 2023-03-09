@@ -20,6 +20,8 @@ export default class Puzzle {
             // Tell the game lobby that the puzzle expired
             lobby.events.emitter.emit(lobby.events.names.expired, { puzzle: this })
 
+            console.warn("puzzle expired!")
+
         }, durationSec * 1000)
 
     }

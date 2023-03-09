@@ -373,7 +373,7 @@ export default class GameLobby {
             }
 
             // Continually generate puzzles to meet the required amount
-            for (let i = 0; i <= puzzleCount; i++) {
+            for (let i = 1; i <= puzzleCount; i++) {
 
                 // Generate a puzzle (without a timeout)
                 const generated = this.generatePuzzle(false)
