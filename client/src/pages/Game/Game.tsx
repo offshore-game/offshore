@@ -12,15 +12,6 @@ export enum statusType {
     waitingGameEnd = 1, // Idle in lobby awaiting game end event.
 }
 
-// Events
-const newHealth = new CustomEvent("healthChange", {
-    detail: {
-        newHealth: 75
-    }
-})
-
-
-
 // To act as a switch point for different components related to the game.
 export default function Game(props: AuthProp) {
 
@@ -186,12 +177,6 @@ export default function Game(props: AuthProp) {
                     }}/>
 
                     SECONDS LENGTH: { gameInfo.lengthSec }
-                    {/* My test cube :) */}
-                    <div style={{height: "25px", width: "25px", backgroundColor: "black", position: "absolute", right: "10px", margin: "10px"}} onClick={() => {
-
-                        document.dispatchEvent(newHealth)
-
-                    }}/>
 
                     <div className={styles.topBar}>
 
