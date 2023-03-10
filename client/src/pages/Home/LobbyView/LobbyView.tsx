@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { startGamePayload } from '../../../API/requests';
+import { gameInfo } from '../../../API/requests';
 import { AuthProp } from '../../../utils/propTypes';
 import styles from './LobbyView.module.css'
 
@@ -76,7 +76,7 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
 
         console.log("socket: ", props.requests.socket)
 
-        props.requests.socket.on("gameStart", (payload: startGamePayload) => {
+        props.requests.socket.on("gameStart", (payload: gameInfo) => {
 
             navigate(`/game/${roomCode}`, { replace: true, state: payload }) // Navigate to the game page
 

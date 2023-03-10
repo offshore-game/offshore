@@ -16,6 +16,15 @@ const io = new Server(8080, {
 
 const lobbies = new Map<string, GameLobby>()
 
+function destroyLobby(lobby: GameLobby) {
+
+    // Clear the game tick loop
+    clearInterval(lobby.gameLifecycleLoop)
+
+    lobbies.delete(lobby.id)
+
+}
+
 io.sockets.on("connection", function (socket) {
 
     console.debug("client connected")
@@ -55,7 +64,7 @@ io.sockets.on("connection", function (socket) {
         console.debug(`New lobby made with ID ${lobby.id}`)
 
         const player = await lobby.addPlayer(data.username, socket, true).catch((err) => { 
-            lobbies.delete(lobby.id) // Destroy the lobby; bad player.
+            destroyLobby(lobby) // Destroy the lobby; bad player.
             console.debug(`Deleted lobby with ID ${lobby.id}`)
             return callback(err);
         })
@@ -250,7 +259,7 @@ io.sockets.adapter.on("leave-room", async (roomId, socketId) => {
                 io.in(roomId).emit("lobbyClose")
 
                 // Delete the lobby
-                lobbies.delete(roomId)
+                destroyLobby(lobby)
 
                 console.debug(`Room of ID ${roomId} destroyed due to inactivity.`)
 
@@ -261,7 +270,10 @@ io.sockets.adapter.on("leave-room", async (roomId, socketId) => {
         // Clear lobby if no connected players remain.
         const connectedPlayers = lobby.players.filter(player => player.connected == true)
         if (connectedPlayers.length == 0) {
-            lobbies.delete(roomId)
+            
+            // Delete the lobby
+            destroyLobby(lobby)
+            
         }
 
     }

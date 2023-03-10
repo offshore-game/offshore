@@ -4,13 +4,15 @@ import { validateTokenEnums } from "./types/enums";
 export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
 type puzzleTypes = "numberCombination" | "buttonCombination" | "buttonSpeed" | "wireConnect" | "wireCut"
 
-export type startGamePayload = {
+export type PuzzleInfo = {
+    zoneName: zoneNames,
+    type: puzzleTypes,
+    numberCount?: number,
+}
+
+export type gameInfo = {
     lengthSec: number,
-    puzzles: { 
-        zoneName: zoneNames,
-        type: puzzleTypes,
-        numberCount?: number,
-    }[]
+    puzzles: PuzzleInfo[]
 }
 
 export default class Requests {
@@ -130,14 +132,14 @@ export default class Requests {
         })
     }
 
-    async startGame(): Promise<false | startGamePayload> {
+    async startGame(): Promise<false | gameInfo> {
 
         return new Promise((res, rej) => {
 
             const token = localStorage.getItem("token")
             const roomCode = localStorage.getItem("roomCode")
 
-            this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: false | startGamePayload) => {
+            this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: false | gameInfo) => {
 
                 return res(result) // Resolve with false OR the payload of puzzles.
 

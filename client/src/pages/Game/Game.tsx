@@ -1,10 +1,8 @@
-    import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import { startGamePayload } from '../../API/requests';
+import { gameInfo, zoneNames } from '../../API/requests';
 import { validateTokenEnums } from '../../API/types/enums';
 import HealthBar from '../../components/HealthBar/HealthBar';
-import NumberCombination from '../../Puzzles/NumberCombination/NumberCombination';
-import ButtonCombination from '../../Puzzles/NumberCombination/NumberCombination';
 import { AuthProp } from '../../utils/propTypes';
 import styles from './Game.module.css'
 import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
@@ -13,6 +11,14 @@ export enum statusType {
     inGame = 0, // Started Game
     waitingGameEnd = 1, // Idle in lobby awaiting game end event.
 }
+
+// Events
+const newHealth = new CustomEvent("healthChange", {
+    detail: {
+        newHealth: 75
+    }
+})
+
 
 
 // To act as a switch point for different components related to the game.
@@ -23,9 +29,9 @@ export default function Game(props: AuthProp) {
 
     const { state } = useLocation()
 
-    const [status, setStatus] = useState(statusType.inGame);
-    const [ gameInfo, setGameInfo ] = useState(undefined as any as startGamePayload);
-    const [ activePuzzle, setActivePuzzle ] = useState(undefined as any as JSX.Element)
+    const [ status, setStatus ] = useState(statusType.inGame);
+    const [ gameInfo, setGameInfo ] = useState(undefined as any as gameInfo);
+    const [ activePuzzle, setActivePuzzle ] = useState({ element: undefined, zoneName: undefined } as any as { element: JSX.Element, zoneName: zoneNames | undefined })
 
     useEffect(() => {
 
@@ -58,6 +64,40 @@ export default function Game(props: AuthProp) {
         auth()
 
         setGameInfo(state)
+
+        // Event Listeners for Game Events \\
+        
+        props.requests.socket.on("puzzleChange", (payload: { newGameInfo: gameInfo }) => {
+
+            /*
+                1) Check if the active puzzle was changed
+                2) Set gameInfo's puzzle array again
+            */
+
+            const newGameInfo = payload.newGameInfo
+            const newPuzzles = newGameInfo.puzzles
+
+            // If ACTIVE puzzle is not found in the new puzzle array
+            if (newPuzzles.findIndex(puzzle => activePuzzle.zoneName == puzzle.zoneName) == -1) {
+                
+                // Wipe and Close the activePuzzle module
+                const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+                const shadow = document.getElementById('shadow')
+
+                if (activePuzzleContainer && shadow) {
+
+                    setActivePuzzle({ element: <div/>, zoneName: undefined })
+                    activePuzzleContainer.className = styles.hiddenPuzzle
+                    shadow.style.zIndex = "-1"
+
+                }
+
+            }
+
+            return setGameInfo(newGameInfo);
+
+        })
+
         // FEATURE: Add an event listener in here to see when the game starts, so the frame can switch.
 
     }, [])
@@ -71,7 +111,7 @@ export default function Game(props: AuthProp) {
         // TESTING \\
         const puzzleTargetSamples = []
         for (const puzzle of gameInfo.puzzles) {
-
+            
             puzzleTargetSamples.push(<PuzzleTarget active={true} zoneName={puzzle.zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>)
 
         }
@@ -90,7 +130,7 @@ export default function Game(props: AuthProp) {
 
                         if (activePuzzleContainer && shadow) {
 
-                            setActivePuzzle(undefined as any)
+                            setActivePuzzle({ element: <div/>, zoneName: undefined })
                             activePuzzleContainer.className = styles.hiddenPuzzle
                             shadow.style.zIndex = "-1"
 
@@ -101,13 +141,6 @@ export default function Game(props: AuthProp) {
                     SECONDS LENGTH: { gameInfo.lengthSec }
                     {/* My test cube :) */}
                     <div style={{height: "25px", width: "25px", backgroundColor: "black", position: "absolute", right: "10px", margin: "10px"}} onClick={() => {
-
-                        // Fire Event
-                        const newHealth = new CustomEvent("healthChange", {
-                            detail: {
-                                newHealth: 75
-                            }
-                        })
 
                         document.dispatchEvent(newHealth)
 
@@ -134,14 +167,14 @@ export default function Game(props: AuthProp) {
 
                             if (activePuzzleContainer && shadow) {
 
-                                setActivePuzzle(undefined as any)
+                                setActivePuzzle({ element: <div/>, zoneName: undefined })
                                 activePuzzleContainer.className = styles.hiddenPuzzle
                                 shadow.style.zIndex = "-1"
 
                             }
 
                         }}/>
-                        { activePuzzle }
+                        { activePuzzle.element }
                         
 
                     </div>

@@ -17,6 +17,8 @@ type puzzleArrayPayload = {
     numberCount?: number,
 }[]
 
+
+
 export default class GameLobby {
 
     id: string
@@ -27,7 +29,8 @@ export default class GameLobby {
     durationSec: number
     healthPoints: number
     io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
-   
+
+    gameLifecycleLoop: ReturnType<typeof setInterval>
 
     percentKeepActive: number
 
@@ -111,7 +114,7 @@ export default class GameLobby {
 
 
         // Find what zones are free
-        let unusedZones: zoneNames[] = this.zones
+        let unusedZones: zoneNames[] = [...this.zones]
         for (const puzzle of [...this.puzzles.active, ...this.puzzles.awaiting]) { // For every puzzle active and about to be active...
                 
             const isInArray = unusedZones.findIndex((value) => value == puzzle.zoneName)
@@ -135,18 +138,20 @@ export default class GameLobby {
         // Select a random zone
         const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
 
+        console.log('random zone: ', randomlySelectedZone)
+
         let generatedPuzzle: Puzzles
 
         // Make the puzzle using the random type
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 60)
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 30)
 
         } else {
 
             // FEATURE: add more puzzle types!
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 60)
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 30)
 
         }
 
@@ -171,6 +176,9 @@ export default class GameLobby {
                 // Add to the "active" array
                 this.puzzles.active.push(generatedPuzzle)
 
+                // Tell the client a new puzzle was made
+                this.io.in(this.id).emit("puzzleChange", { newGameInfo: this.prepareGamePayload() })
+
                 return;
 
             }, 2000 /* 2S to MS */)
@@ -180,8 +188,35 @@ export default class GameLobby {
             // Add to the "active" array
             this.puzzles.active.push(generatedPuzzle)
 
+            // Tell the client a new puzzle was made
+            this.io.in(this.id).emit("puzzleChange", { newGameInfo: this.prepareGamePayload() })
+
             return generatedPuzzle;
 
+        }
+
+    }
+
+    prepareGamePayload(): { lengthSec: number, puzzles: puzzleArrayPayload } {
+    
+        const puzzleInfo = []
+        for (const puzzle of this.puzzles.active) {
+
+            if (puzzle.type == "numberCombination") {
+
+                puzzleInfo.push({
+                    zoneName: puzzle.zoneName,
+                    type: puzzle.type,
+                    numberCount: puzzle.digitCount
+                })
+
+            }
+
+        }
+
+        return {
+            lengthSec: 300,
+            puzzles: puzzleInfo
         }
 
     }
@@ -300,8 +335,6 @@ export default class GameLobby {
             ***Add a safeguard to prevent puzzles from overlapping in a zone.
         */
 
-        const zoneCount = this.zones.length
-
         // A puzzle has been completed successfully
         this.events.emitter.on(this.events.names.complete, (payload: { puzzle: Puzzles }) => {
 
@@ -315,17 +348,10 @@ export default class GameLobby {
                 this.puzzles.solved.push(puzzle) // Saved as a solved puzzle
                 this.puzzles.active.splice(completedIndex, 1) // Delete from the active puzzle array
 
-                
+                // Tell the client puzzles changed
+                this.io.in(this.id).emit("puzzleChange", { newGameInfo: this.prepareGamePayload() })
 
             }
-            
-            // Check if we need another puzzle
-            const activeCount = Math.floor(zoneCount * this.percentKeepActive)
-            // If there are enough puzzles, don't make more.
-            if (activeCount >= zoneCount * this.percentKeepActive) return;
-
-            // Generate another puzzle (with a timeout)
-            this.generatePuzzle(true)
             
         })
 
@@ -352,9 +378,38 @@ export default class GameLobby {
             // Add to the "solved" array
             this.puzzles.solved.push(puzzle)
 
-            // FEATURE: make new puzzle?
+            // Tell the client puzzles changed
+            this.io.in(this.id).emit("puzzleChange", { newGameInfo: this.prepareGamePayload() })
+
 
         })
+
+        // Keep the game tick lifecycle running
+        this.gameLifecycleLoop = setInterval(() => {
+
+            console.debug('tick running')
+            
+            const totalZoneCount = this.zones.length
+
+            // Check how many puzzles are needed to be active
+            const requiredActive = Math.floor(totalZoneCount * this.percentKeepActive)
+
+            // Check if there are enough puzzles; don't make more.
+            if (this.puzzles.active.length >= requiredActive) return;
+
+            const differential = requiredActive - this.puzzles.active.length
+
+            for (let i = 0; i < differential; i++) {
+
+                // Generate another puzzle (with a timeout)
+                this.generatePuzzle(true)
+
+            }
+
+
+
+        }, 2000 /* 2 seconds */)
+    
 
         return new Promise((res, rej) => {
 
