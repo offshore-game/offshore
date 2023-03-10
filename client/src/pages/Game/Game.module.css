@@ -33,20 +33,6 @@
 
 }
 
-.testButton {
-
-    background-color: skyblue;
-    border-radius: 10px;
-
-    width: 200px;
-    height: 50px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
 .hiddenPuzzle {
 
     display: flex;
@@ -56,7 +42,7 @@
 
     flex-direction: column;
 
-    position: relative;
+    position: absolute;
 
     background-color: gray;
 
@@ -81,7 +67,7 @@
 
     flex-direction: column;
 
-    position: relative;
+    position: absolute;
 
     background-color: gray;
     z-index: 9999;
@@ -89,7 +75,7 @@
     width: 50%;
     height: 50%;
 
-    top: 0%;
+    top: 25%;
     
     left: 50%;
     transform: translate(-50%, 0);

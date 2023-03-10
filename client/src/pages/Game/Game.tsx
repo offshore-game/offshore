@@ -7,6 +7,7 @@ import NumberCombination from '../../Puzzles/NumberCombination/NumberCombination
 import ButtonCombination from '../../Puzzles/NumberCombination/NumberCombination';
 import { AuthProp } from '../../utils/propTypes';
 import styles from './Game.module.css'
+import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
 
 export enum statusType {
     inGame = 0, // Started Game
@@ -24,8 +25,7 @@ export default function Game(props: AuthProp) {
 
     const [status, setStatus] = useState(statusType.inGame);
     const [ gameInfo, setGameInfo ] = useState(undefined as any as startGamePayload);
-
-    const shadow = useRef(undefined as any as HTMLDivElement)
+    const [ activePuzzle, setActivePuzzle ] = useState(undefined as any as JSX.Element)
 
     useEffect(() => {
 
@@ -74,7 +74,7 @@ export default function Game(props: AuthProp) {
                 
                 <div className={styles.background}>
                     
-                    <div ref={shadow} className={styles.shadow}/>
+                    <div id="shadow" className={styles.shadow}/>
 
                     SECONDS LENGTH: { gameInfo.lengthSec }
                     {/* My test cube :) */}
@@ -97,19 +97,9 @@ export default function Game(props: AuthProp) {
 
                     </div>
 
-                    <div className={styles.testButton} onClick={() => {
-
-                        // Animate the "activePuzzle" div in
-                        const activePuzzleContainer = document.getElementById('activePuzzleContainer')
-
-                        if (activePuzzleContainer && shadow) {
-
-                            activePuzzleContainer.className = styles.activePuzzle
-                            shadow.current.style.zIndex = "999"
-
-                        }
-
-                    }}>Click me to see the puzzle!</div>
+                    <PuzzleTarget active={true} zoneName={gameInfo.puzzles[0].zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>
+                    <PuzzleTarget active={true} zoneName={gameInfo.puzzles[1].zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>
+                    <PuzzleTarget active={true} zoneName={gameInfo.puzzles[2].zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>
 
 
 
@@ -118,16 +108,19 @@ export default function Game(props: AuthProp) {
                         <div className={styles.exitCube} onClick={() => {
                             // Animate the "activePuzzle" div out
                             const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+                            const shadow = document.getElementById('shadow')
 
                             if (activePuzzleContainer && shadow) {
 
+                                setActivePuzzle(undefined as any)
                                 activePuzzleContainer.className = styles.hiddenPuzzle
-                                shadow.current.style.zIndex = "-1"
+                                shadow.style.zIndex = "-1"
 
                             }
 
                         }}/>
-                        <NumberCombination count={4} zoneName={gameInfo.puzzles[0].zoneName} requests={props.requests}/>
+                        { activePuzzle }
+                        
 
                     </div>
 
