@@ -18,7 +18,7 @@ export default function PuzzleTarget(props: { active: boolean, zoneName: zoneNam
 
                 // FEATURE: differentiate between different types of puzzles
 
-                props.setActivePuzzle(<NumberCombination count={4} zoneName={props.zoneName} requests={props.requests}/> )
+                props.setActivePuzzle(<NumberCombination count={props.gameInfo.puzzles.find(puzzle => puzzle.zoneName == props.zoneName)?.numberCount!} zoneName={props.zoneName} requests={props.requests}/> )
 
                 activePuzzleContainer.className = gameStyles.activePuzzle
                 shadow.style.zIndex = "999"

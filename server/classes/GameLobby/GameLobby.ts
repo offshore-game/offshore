@@ -11,6 +11,12 @@ export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j
 
 type Puzzles = NumberCombination & Puzzle
 
+type puzzleArrayPayload = {
+    zoneName: zoneNames,
+    type: puzzleTypes,
+    numberCount?: number,
+}[]
+
 export default class GameLobby {
 
     id: string
@@ -275,7 +281,7 @@ export default class GameLobby {
 
     }
 
-    async startGame(): Promise<false | { lengthSec: number, puzzles: { zoneName: zoneNames, puzzles: puzzleTypes[] }[] }> {
+    async startGame(): Promise<false | { lengthSec: number, puzzles: puzzleArrayPayload }> {
 
         /*
             FEATURE: A timeout is needed for each "stage" the lobby
@@ -370,7 +376,7 @@ export default class GameLobby {
 
             const ruleset = {
                 lengthSec: 300,
-                puzzles: [],
+                puzzles: [] as puzzleArrayPayload,
             }
 
             // Continually generate puzzles to meet the required amount
@@ -381,25 +387,24 @@ export default class GameLobby {
 
                 if (generated) {
 
-                    ruleset.puzzles.push({
-                        zoneName: generated.zoneName,
-                        type: generated.type,
-                    })
+                    if (generated.type == "numberCombination") {
+
+                        ruleset.puzzles.push({
+                            zoneName: generated.zoneName,
+                            type: generated.type,
+                            numberCount: generated.digitCount
+                        })
+
+                    }
 
                 }
  
             }
 
-                        // TESTING
-                        //this.puzzles.active.push(new NumberCombination(this, "a", 5, 100))
-
-
+            
             // Resolve with the ruleset payload
             return res(ruleset);
 
-
-
-  
         })
 
     }

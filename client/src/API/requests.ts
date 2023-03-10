@@ -8,7 +8,8 @@ export type startGamePayload = {
     lengthSec: number,
     puzzles: { 
         zoneName: zoneNames,
-        type: puzzleTypes
+        type: puzzleTypes,
+        numberCount?: number,
     }[]
 }
 

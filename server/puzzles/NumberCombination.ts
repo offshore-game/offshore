@@ -13,10 +13,13 @@ export default class NumberCombination extends Puzzle {
 
     solution: NumberCombinationAnswer
     fragmentedSolution: NumberCombinationAnswer[][]
+    digitCount: number
 
     constructor(lobby: GameLobby, zoneName: zoneNames, digitCount: number, puzzleDurationSec: number) {
         
         super(lobby, zoneName, "numberCombination", puzzleDurationSec)
+
+        this.digitCount = digitCount
 
         // Generate the solution
         const generatedSolution: NumberCombinationAnswer = {}
