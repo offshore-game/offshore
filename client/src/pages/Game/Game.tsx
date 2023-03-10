@@ -68,13 +68,35 @@ export default function Game(props: AuthProp) {
 
         if (!gameInfo) {console.log('no game info'); return (<div/>)}
 
+        // TESTING \\
+        const puzzleTargetSamples = []
+        for (const puzzle of gameInfo.puzzles) {
+
+            puzzleTargetSamples.push(<PuzzleTarget active={true} zoneName={puzzle.zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>)
+
+        }
+
         if (gameInfo) {
 
             return (
                 
                 <div className={styles.background}>
                     
-                    <div id="shadow" className={styles.shadow}/>
+                    <div id="shadow" className={styles.shadow} onClick={() => {
+
+                        // Animate the "activePuzzle" div out
+                        const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+                        const shadow = document.getElementById('shadow')
+
+                        if (activePuzzleContainer && shadow) {
+
+                            setActivePuzzle(undefined as any)
+                            activePuzzleContainer.className = styles.hiddenPuzzle
+                            shadow.style.zIndex = "-1"
+
+                        }
+
+                    }}/>
 
                     SECONDS LENGTH: { gameInfo.lengthSec }
                     {/* My test cube :) */}
@@ -97,9 +119,9 @@ export default function Game(props: AuthProp) {
 
                     </div>
 
-                    <PuzzleTarget active={true} zoneName={gameInfo.puzzles[0].zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>
-                    <PuzzleTarget active={true} zoneName={gameInfo.puzzles[1].zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>
-                    <PuzzleTarget active={true} zoneName={gameInfo.puzzles[2].zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>
+                    
+
+                    { puzzleTargetSamples }
 
 
 
