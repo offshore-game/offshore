@@ -9,10 +9,15 @@ export default function makeLobbyId(length: number, lobbyIDs: string[]) {
         result += characters.charAt(Math.floor(Math.random() * characters.length))
 
     }
+
     if (lobbyIDs.includes(result)) {
+
         return makeLobbyId(length, lobbyIDs)
+        
+    } else {
+
+        return result
+
     }
-    lobbyIDs.push(result)
-    return result;
 
 }
