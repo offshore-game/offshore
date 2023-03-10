@@ -65,9 +65,15 @@ export default function Game(props: AuthProp) {
 
         setGameInfo(state)
 
-        // Event Listeners for Game Events \\
-        
-        props.requests.socket.on("puzzleChange", (payload: { newGameInfo: gameInfo }) => {
+        // FEATURE: Add an event listener in here to see when the game starts, so the frame can switch.
+
+    }, [])
+
+
+    // Event Listeners for Game Events \\
+    useEffect(() => {
+
+        const puzzleChangeFunction = (payload: { newGameInfo: gameInfo }) => {
 
             /*
                 1) Check if the active puzzle was changed
@@ -85,10 +91,16 @@ export default function Game(props: AuthProp) {
                 const shadow = document.getElementById('shadow')
 
                 if (activePuzzleContainer && shadow) {
+                    console.log('p change')
+                    
+                    // Delay it only to show the correct answer animation
+                    setTimeout(() => {
 
-                    setActivePuzzle({ element: <div/>, zoneName: undefined })
-                    activePuzzleContainer.className = styles.hiddenPuzzle
-                    shadow.style.zIndex = "-1"
+                        setActivePuzzle({ element: <div/>, zoneName: undefined })
+                        activePuzzleContainer.className = styles.hiddenPuzzle
+                        shadow.style.zIndex = "-1"
+
+                    }, 1000)
 
                 }
 
@@ -96,22 +108,57 @@ export default function Game(props: AuthProp) {
 
             return setGameInfo(newGameInfo);
 
-        })
+        }
+        props.requests.socket.on("puzzleChange", puzzleChangeFunction)
 
-        // FEATURE: Add an event listener in here to see when the game starts, so the frame can switch.
 
-    }, [])
+        const resultFunction = (event: any) => {
+
+            const zoneName = event.detail.zoneName as zoneNames
+            const correct = event.detail.result as boolean
+
+            if (activePuzzle.zoneName == zoneName) {
+                const overlay = document.getElementById('puzzleAnswerOverlay')
+                    if (!overlay) return;
+
+                // Answered Correctly
+                if (correct) {
+                    overlay.className = styles.correctAnswerOverlay
+                }
+
+                // Answered Incorrectly
+                if (!correct) {
+                    overlay.className = styles.incorrectAnswerOverlay
+                }
+
+                setTimeout(() => { overlay.className = styles.inactiveAnswerOverlay }, 1000)
+
+            }
+
+        }
+        document.addEventListener("puzzleResult", resultFunction)
+
+
+        return () => {
+
+            // Destroy event listeners
+            document.removeEventListener("puzzleResult", resultFunction)
+            props.requests.socket.off("puzzleChange", puzzleChangeFunction)
+
+        }
+
+    })
     
 
     // The game has started; show the game window.
     if (status == statusType.inGame) {
 
-        if (!gameInfo) {console.log('no game info'); return (<div/>)}
+        if (!gameInfo) return (<div/>)
 
         // TESTING \\
         const puzzleTargetSamples = []
         for (const puzzle of gameInfo.puzzles) {
-            
+
             puzzleTargetSamples.push(<PuzzleTarget active={true} zoneName={puzzle.zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>)
 
         }
@@ -148,7 +195,7 @@ export default function Game(props: AuthProp) {
 
                     <div className={styles.topBar}>
 
-                        <HealthBar percentage={100}/>
+                        <HealthBar percentage={100} requests={props.requests}/>
 
                     </div>
 
@@ -159,6 +206,8 @@ export default function Game(props: AuthProp) {
 
 
                     <div id="activePuzzleContainer" className={styles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
+
+                        <div id="puzzleAnswerOverlay" className={styles.inactiveAnswerOverlay /* inactiveAnswerOverlay, correctAnswerOverlay, incorrectAnswerOverlay */}/>
 
                         <div className={styles.exitCube} onClick={() => {
                             // Animate the "activePuzzle" div out

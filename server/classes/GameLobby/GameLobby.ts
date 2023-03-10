@@ -22,7 +22,7 @@ type puzzleArrayPayload = {
 export default class GameLobby {
 
     id: string
-    events: { emitter: EventEmitter, names: { complete: string, expired: string } }
+    events: { emitter: EventEmitter, names: { complete: string, expired: string, incorrect: string } }
     state: "LOBBY" | "INGAME" | "END"
     players: Player[]
     puzzles: { active: Puzzles[], awaiting: Puzzles[], solved: Puzzles[] }
@@ -39,7 +39,7 @@ export default class GameLobby {
         this.id = makeLobbyId(4, lobbyIDs) // Create a random 4 letter ID for the lobby.
         this.events = {
             emitter: new EventEmitter(),
-            names: {complete: "puzzleComplete", expired: "puzzleExpired"}
+            names: { complete: "puzzleComplete", expired: "puzzleExpired", incorrect: "puzzleIncorrect" }
         }
         this.state = "LOBBY"
         this.players = []
@@ -378,11 +378,20 @@ export default class GameLobby {
             // Add to the "solved" array
             this.puzzles.solved.push(puzzle)
 
+
             // Tell the client puzzles changed
             this.io.in(this.id).emit("puzzleChange", { newGameInfo: this.prepareGamePayload() })
 
 
         })
+
+        // A puzzle was solved incorrectly
+        this.events.emitter.on(this.events.names.incorrect, (payload: { puzzle: Puzzles}) => [
+
+            // Deduct health points
+            this.changeHealth(10)
+
+        ])
 
         // Keep the game tick lifecycle running
         this.gameLifecycleLoop = setInterval(() => {

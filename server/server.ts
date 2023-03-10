@@ -211,11 +211,16 @@ io.sockets.on("connection", function (socket) {
 
                     // Tell the lobby class the puzzle is correct and completed
                     lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle })
+
+                    // Tell the client that the puzzle was answered correctly
                     return callback(true)
 
                 } else { // Answer is Wrong
 
-                    // Do nothing?
+                    // Tell the lobby class the puzzle was answered incorrectly
+                    lobby.events.emitter.emit(lobby.events.names.incorrect, { puzzle: puzzle })
+
+                    // Tell the client that the puzzle was answered incorrectly
                     return callback(false)
 
                 }
