@@ -27,7 +27,7 @@ export default class GameLobby {
 
 
     constructor(io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, lobbyIDs: string[]) {
-        this.id = makeLobbyId(4) // Create a random 4 letter ID for the lobby.
+        this.id = makeLobbyId(4, lobbyIDs) // Create a random 4 letter ID for the lobby.
         this.events = {
             emitter: new EventEmitter(),
             names: {complete: "puzzleComplete", expired: "puzzleExpired"}

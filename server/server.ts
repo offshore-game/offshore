@@ -50,7 +50,7 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("createLobby", async function (data: { username: string }, callback) {
 
-        const lobby = new GameLobby(io)
+        const lobby = new GameLobby(io, Array.from(lobbies.keys()))
             lobbies.set(lobby.id, lobby) // Add to lobby map
         console.debug(`New lobby made with ID ${lobby.id}`)
 
