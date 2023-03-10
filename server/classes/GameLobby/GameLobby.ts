@@ -21,11 +21,12 @@ export default class GameLobby {
     durationSec: number
     healthPoints: number
     io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+   
 
     percentKeepActive: number
 
 
-    constructor(io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>) {
+    constructor(io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>, lobbyIDs: string[]) {
         this.id = makeLobbyId(4) // Create a random 4 letter ID for the lobby.
         this.events = {
             emitter: new EventEmitter(),
