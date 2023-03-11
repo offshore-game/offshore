@@ -63,8 +63,6 @@ export default class GameLobby {
 
     changeHealth(subtractAmount: number) {
 
-        console.log('health deduction')
-
         // Will subtract this amount from the health counter
         this.healthPoints = this.healthPoints - subtractAmount
 

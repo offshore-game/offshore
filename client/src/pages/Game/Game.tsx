@@ -82,8 +82,7 @@ export default function Game(props: AuthProp) {
                 const shadow = document.getElementById('shadow')
 
                 if (activePuzzleContainer && shadow) {
-                    console.log('p change')
-                    
+
                     // Delay it only to show the correct answer animation
                     setTimeout(() => {
 

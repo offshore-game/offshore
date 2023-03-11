@@ -22,8 +22,6 @@ export default function HealthBar(props: { percentage: number } & AuthProp) {
 
     })
 
-    console.log('out health val:', health)
-
     return (
         <div className={styles.base}>
 
