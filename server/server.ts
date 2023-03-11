@@ -3,6 +3,7 @@ import { globalErrors } from './types/enums'
 import GameLobby, { zoneNames } from './classes/GameLobby/GameLobby'
 import Player from './classes/Player'
 import { puzzleTypes } from './puzzles/Puzzle'
+import randomNumber from './generators/randomNumber'
 
 // https://socket.io/docs/v4/rooms/
 
@@ -165,6 +166,14 @@ io.sockets.on("connection", function (socket) {
                 // Run the startGame() function
                 const result = await lobby.startGame()
                     if (!result) return callback(globalErrors.TOKEN_INVALID);
+
+         // Assigns a random role to the player 
+                
+                for (let i = 0; i < lobby.players.length; i++) {
+                    const possibleRoles = ["READER", "SOLVER"] as ("READER"|"SOLVER")[]
+                    const selectedRole = possibleRoles[randomNumber(0, 1)];
+                    lobby.players[i].role = selectedRole;
+                }
 
                 // Signal to the clients the game started, with all the puzzles
                 io.in(lobby.id).emit("gameStart", result)
