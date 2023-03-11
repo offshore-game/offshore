@@ -30,6 +30,8 @@ export default function Game(props: AuthProp) {
     const [ gameTimer, setGameTimer ] = useState(gameInfo ? gameInfo.lengthSec : 0)
     const [ gameTimerCountdown, setTimerFunction ] = useState(undefined as any)
 
+    const [ coins, setCoins ] = useState(0)
+
     useEffect(() => {
 
         const auth = async () => {
@@ -114,6 +116,13 @@ export default function Game(props: AuthProp) {
         }
         props.requests.socket.on("gameOver", gameOverFunction)
 
+        const pointsChangedFunction = (payload: { newPoints: number }) => {
+
+            setCoins(payload.newPoints)
+
+        }
+        props.requests.socket.on("pointsChanged", pointsChangedFunction)
+
         const resultFunction = (event: any) => {
 
             const zoneName = event.detail.zoneName as zoneNames
@@ -147,6 +156,7 @@ export default function Game(props: AuthProp) {
             document.removeEventListener("puzzleResult", resultFunction)
             props.requests.socket.off("puzzleChange", puzzleChangeFunction)
             props.requests.socket.off("gameOver", gameOverFunction)
+            props.requests.socket.off("pointsChanged", pointsChangedFunction)
 
         }
 
@@ -237,6 +247,8 @@ export default function Game(props: AuthProp) {
                     SECONDS LENGTH: { fmtMSS(gameTimer) }
                     <br/>
                     STAGE: Stage {getStageNumber()}
+                    <br/>
+                    COINS: { coins }
 
                     <div className={styles.topBar}>
 

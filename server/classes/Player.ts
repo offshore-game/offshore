@@ -16,6 +16,7 @@ export default class Player {
     socket: Socket | undefined
     connected: boolean
     owner: boolean
+    points: number
 
     constructor(username: string, socket: Socket, isOwner?: boolean) {
 
@@ -26,9 +27,18 @@ export default class Player {
         this.socketId = socket.id
         this.connected = true
         this.owner = isOwner ? true : false
+        this.points = 0
 
     }
 
+    changePoints(valueToAdd: number) {
 
+        // Change the points internally
+        this.points = this.points + valueToAdd
+
+        // Tell the player their points changed
+        this.socket.emit("pointsChanged", { newPoints: this.points })
+
+    }
 
 }

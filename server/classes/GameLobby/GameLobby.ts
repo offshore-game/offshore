@@ -357,7 +357,7 @@ export default class GameLobby {
 
 
         // A puzzle has been completed successfully
-        this.events.emitter.on(this.events.names.complete, (payload: { puzzle: Puzzles }) => {
+        this.events.emitter.on(this.events.names.complete, (payload: { puzzle: Puzzles, socket: Socket }) => {
 
             // Handle the puzzle completion
             const completedIndex = this.puzzles.active.findIndex(value => payload.puzzle.zoneName == value.zoneName)
@@ -371,6 +371,9 @@ export default class GameLobby {
 
                 // Tell the client puzzles changed
                 this.io.in(this.id).emit("puzzleChange", { newGameInfo: this.prepareGamePayload() })
+
+                // Give 10 points to the player who answered correctly
+                this.players.find(player => player.socketId == payload.socket.id).changePoints(10)
 
             }
             
@@ -407,12 +410,15 @@ export default class GameLobby {
         })
 
         // A puzzle was solved incorrectly
-        this.events.emitter.on(this.events.names.incorrect, (payload: { puzzle: Puzzles}) => [
+        this.events.emitter.on(this.events.names.incorrect, (payload: { puzzle: Puzzles, socket: Socket }) => {
 
             // Deduct health points
             this.changeHealth(10)
 
-        ])
+            // Deduct 10 points from the player who answered correctly
+            this.players.find(player => player.socketId == payload.socket.id).changePoints(-10)
+
+        })
 
         // Keep the game tick lifecycle running
         this.gameLifecycleLoop = setInterval(() => {

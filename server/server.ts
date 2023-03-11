@@ -192,7 +192,7 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("answerPuzzle", function(data: { token: string, roomCode: string, zoneName: zoneNames, puzzleType: puzzleTypes, answer: any }, callback) {
-     
+    
         if (data.puzzleType == "numberCombination") {
     
             const lobby = lobbies.get(data.roomCode)
@@ -210,7 +210,7 @@ io.sockets.on("connection", function (socket) {
                 if (validated) { // Answer is Right
 
                     // Tell the lobby class the puzzle is correct and completed
-                    lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle })
+                    lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle, socket: socket })
 
                     // Tell the client that the puzzle was answered correctly
                     return callback(true)
@@ -218,7 +218,7 @@ io.sockets.on("connection", function (socket) {
                 } else { // Answer is Wrong
 
                     // Tell the lobby class the puzzle was answered incorrectly
-                    lobby.events.emitter.emit(lobby.events.names.incorrect, { puzzle: puzzle })
+                    lobby.events.emitter.emit(lobby.events.names.incorrect, { puzzle: puzzle, socket: socket })
 
                     // Tell the client that the puzzle was answered incorrectly
                     return callback(false)
