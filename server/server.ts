@@ -199,6 +199,10 @@ io.sockets.on("connection", function (socket) {
 
             if (lobby) {
 
+                // Make sure the player is actually allowed to answer puzzles (has to be a SOLVER)
+                if (lobby.players.find(player => player.socketId == socket.id).role != "SOLVER") return callback(false);
+
+                
                 const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
 
                 // Puzzle doesn't exist
