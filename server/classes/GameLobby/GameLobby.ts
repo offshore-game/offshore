@@ -63,10 +63,14 @@ export default class GameLobby {
 
     changeHealth(subtractAmount: number) {
 
+        console.log('health deduction')
+
         // Will subtract this amount from the health counter
         this.healthPoints = this.healthPoints - subtractAmount
 
         this.io.in(this.id).emit("healthChange", { health: this.healthPoints })
+
+        console.log('new health:', this.healthPoints)
 
         // Check if the server's health has dropped to zero or (bugged) below that
         if (this.healthPoints <= 0) {
@@ -146,12 +150,12 @@ export default class GameLobby {
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 30)
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 5)
 
         } else {
 
             // FEATURE: add more puzzle types!
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 30)
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 5)
 
         }
 

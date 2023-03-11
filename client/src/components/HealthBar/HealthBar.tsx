@@ -9,8 +9,8 @@ export default function HealthBar(props: { percentage: number } & AuthProp) {
     useEffect(() => {
         
         props.requests.socket.on("healthChange", (payload: { health: number }) => {
-
-            setHealth(payload.health)
+            
+            setHealth(health < 0 ? 0 : payload.health)
 
         })
 
@@ -20,7 +20,9 @@ export default function HealthBar(props: { percentage: number } & AuthProp) {
 
         }
 
-    }, [])
+    })
+
+    console.log('out health val:', health)
 
     return (
         <div className={styles.base}>
