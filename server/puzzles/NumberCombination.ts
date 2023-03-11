@@ -15,9 +15,9 @@ export default class NumberCombination extends Puzzle {
     fragmentedSolution: NumberCombinationAnswer[][]
     digitCount: number
 
-    constructor(lobby: GameLobby, zoneName: zoneNames, digitCount: number, puzzleDurationSec: number) {
+    constructor(lobby: GameLobby, zoneName: zoneNames, digitCount: number, puzzleDurationSec: number, spawnDelaySec: number) {
         
-        super(lobby, zoneName, "numberCombination", puzzleDurationSec)
+        super(lobby, zoneName, "numberCombination", puzzleDurationSec, spawnDelaySec)
 
         this.digitCount = digitCount
 

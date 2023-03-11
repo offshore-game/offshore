@@ -11,18 +11,22 @@ export default class Puzzle {
     type: puzzleTypes
     expirationTimeout: NodeJS.Timeout
 
-    constructor(lobby: GameLobby, zoneName: zoneNames, type: puzzleTypes, durationSec: number) {
+    constructor(lobby: GameLobby, zoneName: zoneNames, type: puzzleTypes, durationSec: number, spawnDelaySec: number) {
 
         this.zoneName = zoneName
         this.type = type
         this.expirationTimeout = setTimeout(() => {
 
-            // Tell the game lobby that the puzzle expired
-            lobby.events.emitter.emit(lobby.events.names.expired, { puzzle: this })
+            setTimeout(() => {
 
-            console.warn("puzzle expired!")
-
-        }, durationSec * 1000)
+                // Tell the game lobby that the puzzle expired
+                lobby.events.emitter.emit(lobby.events.names.expired, { puzzle: this })
+    
+                console.warn("puzzle expired!")
+    
+            }, durationSec * 1000)
+            
+        }, spawnDelaySec * 1000)
 
     }
 

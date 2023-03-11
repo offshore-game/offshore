@@ -9,7 +9,10 @@ import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
 
 export enum statusType {
     inGame = 0, // Started Game
-    waitingGameEnd = 1, // Idle in lobby awaiting game end event.
+    startCutscene = 1, // Cutscene
+    successEnding = 2,
+    failEnding = 3,
+    leaderboard = 4,
 }
 
 // To act as a switch point for different components related to the game.
@@ -20,9 +23,12 @@ export default function Game(props: AuthProp) {
 
     const { state } = useLocation()
 
-    const [ status, setStatus ] = useState(statusType.inGame);
+    const [ status, setStatus ] = useState(statusType.startCutscene);
     const [ gameInfo, setGameInfo ] = useState(undefined as any as gameInfo);
     const [ activePuzzle, setActivePuzzle ] = useState({ element: undefined, zoneName: undefined } as any as { element: JSX.Element, zoneName: zoneNames | undefined })
+
+    const [ gameTimer, setGameTimer ] = useState(gameInfo ? gameInfo.lengthSec : 0)
+    const [ gameTimerCountdown, setTimerFunction ] = useState(undefined as any)
 
     useEffect(() => {
 
@@ -35,7 +41,7 @@ export default function Game(props: AuthProp) {
                 
                 // We need to double check the socket is registered to game events.
                 await props.requests.rejoinLobby().catch((err) => { throw err })
-                return setStatus(statusType.inGame)
+                return setStatus(statusType.startCutscene)
 
             } else if (result == validateTokenEnums.TOKEN_INVALID) { // User doesn't have authorization for this.
                 
@@ -101,6 +107,12 @@ export default function Game(props: AuthProp) {
         }
         props.requests.socket.on("puzzleChange", puzzleChangeFunction)
 
+        const gameOverFunction = (payload: { success: boolean, leaderboard: any[] }) => {
+
+            setTimeout(() => { setStatus(payload.success ? statusType.successEnding : statusType.failEnding) }, 2000)
+
+        }
+        props.requests.socket.on("gameOver", gameOverFunction)
 
         const resultFunction = (event: any) => {
 
@@ -134,11 +146,58 @@ export default function Game(props: AuthProp) {
             // Destroy event listeners
             document.removeEventListener("puzzleResult", resultFunction)
             props.requests.socket.off("puzzleChange", puzzleChangeFunction)
+            props.requests.socket.off("gameOver", gameOverFunction)
 
         }
 
     })
     
+    // Game Timer
+    useEffect(() => {
+
+        if (status == statusType.inGame) {
+
+            setTimerFunction(setInterval(() => {
+                setGameTimer(prevTime => prevTime - 1)
+            }, 1000))
+
+        } else {
+
+            clearInterval(gameTimerCountdown)
+            setTimerFunction(undefined)
+
+        }
+
+    }, [status])
+
+    
+    function getStageNumber() {
+
+        if (gameTimer <= 60) {
+            
+            return 5
+
+        } else if (gameTimer <= 120) {
+
+            return 4
+
+        } else if (gameTimer <= 180) {
+
+            return 3
+
+        } else if (gameTimer <= 240) {
+
+            return 2
+
+        } else {
+
+            return 1
+
+        }
+
+    }
+
+    function fmtMSS(s: number){return(s-(s%=60))/60+(9<s?':':':0')+s}
 
     // The game has started; show the game window.
     if (status == statusType.inGame) {
@@ -175,7 +234,9 @@ export default function Game(props: AuthProp) {
 
                     }}/>
 
-                    SECONDS LENGTH: { gameInfo.lengthSec }
+                    SECONDS LENGTH: { fmtMSS(gameTimer) }
+                    <br/>
+                    STAGE: Stage {getStageNumber()}
 
                     <div className={styles.topBar}>
 
@@ -220,6 +281,39 @@ export default function Game(props: AuthProp) {
 
         }
         
+    }
+
+    // The game is at the start cutscene; display it.
+    if (status == statusType.startCutscene) {
+
+        // After 5 seconds, set it to the game
+        setTimeout(() => { setGameTimer(gameInfo.lengthSec); setStatus(statusType.inGame) }, 5000)
+
+        return (
+            <div style={{height: "100vh", width: "100vw", backgroundColor: "black"}}/>
+        )
+
+    }
+
+    // The game is at the good ending cutscene; display it.
+    if (status == statusType.successEnding) {
+
+        // After 5 seconds, show the leaderboard
+        setTimeout(() => { setStatus(statusType.leaderboard) }, 5000)
+
+        return (
+            <div style={{height: "100vh", width: "100vw", backgroundColor: "green"}}/>
+        )
+
+    }
+
+    // The game is at the failed ending cutscene; display it.
+    if (status == statusType.failEnding) {
+
+        return (
+            <div style={{height: "100vh", width: "100vw", backgroundColor: "red"}}/>
+        )
+
     }
 
     return (<div/>) // Error suppresion.
