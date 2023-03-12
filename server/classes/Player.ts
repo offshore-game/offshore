@@ -22,7 +22,7 @@ export default class Player {
 
         this.token = generateToken()
         this.username = username
-        this.role = "SOLVER"//undefined // This is for testing
+        this.role = undefined
         this.socket = socket
         this.socketId = socket.id
         this.connected = true

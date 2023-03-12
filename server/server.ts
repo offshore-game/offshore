@@ -169,17 +169,41 @@ io.sockets.on("connection", function (socket) {
 
                 // Assigns a random role to the player 
                 for (let i = 0; i < lobby.players.length; i++) {
+
+                    const otherRoles = []
+                    for (const player of lobby.players) {
+                        if (player.role) {
+                            otherRoles.push(player.role)
+                        }
+                    }
+
+                    const solverCount = otherRoles.filter(otherRole => otherRole == "SOLVER").length
+                    const readerCount = otherRoles.filter(otherRole => otherRole == "READER").length
                     
-                    const possibleRoles = ["READER", "SOLVER"] as ("READER"|"SOLVER")[]
-                    const selectedRole = possibleRoles[randomNumber(0, 1)];
-                    lobby.players[i].role = selectedRole;
+                    if (solverCount <= readerCount) { // LESS or EQUAL solvers than readers
 
-                    // Signal to each individual client the game started, with all the puzzles AND their role
-                    io.in(lobby.id).emit("gameStart", {
-                        ...result,
-                        role: selectedRole,
-                    })
+                        // We need more solvers than readers
+                        lobby.players[i].role = "SOLVER"
+                        
+                        // Signal to each individual client the game started, with all the puzzles AND their role
+                        lobby.players[i].socket.emit("gameStart", {
+                            ...result,
+                            role: "SOLVER",
+                        })
 
+                    } else { // MORE solvers than readers
+
+                        // We need to keep it even
+                        lobby.players[i].role = "READER"
+
+                        // Signal to each individual client the game started, with all the puzzles AND their role
+                        lobby.players[i].socket.emit("gameStart", {
+                            ...result,
+                            role: "READER",
+                        })
+
+                    }
+                    
                 }
 
                 // Return a success
