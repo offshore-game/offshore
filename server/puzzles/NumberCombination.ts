@@ -12,10 +12,10 @@ interface NumberCombinationAnswer {
 export default class NumberCombination extends Puzzle {
 
     solution: NumberCombinationAnswer
-    fragmentedSolution: NumberCombinationAnswer[][]
+    fragmentedSolutions: NumberCombinationAnswer[][]
     digitCount: number
 
-    constructor(lobby: GameLobby, zoneName: zoneNames, digitCount: number, puzzleDurationSec: number, spawnDelaySec: number) {
+    constructor(lobby: GameLobby, zoneName: zoneNames, digitCount: number, puzzleDurationSec: number, spawnDelaySec: number, fragmentCount: number) {
         
         super(lobby, zoneName, "numberCombination", puzzleDurationSec, spawnDelaySec)
 
@@ -37,7 +37,7 @@ export default class NumberCombination extends Puzzle {
         console.debug(`Solution for zone ${zoneName}`)
         console.debug(this.solution)
 
-        this.fragmentedSolution = []
+        this.fragmentedSolutions = this.makeSolutions(fragmentCount)
 
     }
 
@@ -72,9 +72,9 @@ export default class NumberCombination extends Puzzle {
 
         }
 
-        this.fragmentedSolution = fragments
+        this.fragmentedSolutions = fragments
 
-        console.log('fragmented solutions:', this.fragmentedSolution)
+        console.log('fragmented solutions made:', this.fragmentedSolutions)
 
         return fragments;
 

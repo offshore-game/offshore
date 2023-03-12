@@ -6,7 +6,7 @@ export const puzzleTypeArray = ["numberCombination", "buttonCombination", "butto
 export default class Puzzle {
     
     solution: any
-    fragmentedSolution: any[]
+    fragmentedSolutions: any[]
     zoneName: zoneNames
     type: puzzleTypes
     remainingTime: number
