@@ -1,6 +1,22 @@
 import { io, Socket } from "socket.io-client";
 import { validateTokenEnums } from "./types/enums";
 
+export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
+type puzzleTypes = "numberCombination" | "buttonCombination" | "buttonSpeed" | "wireConnect" | "wireCut"
+
+export type PuzzleInfo = {
+    zoneName: zoneNames,
+    type: puzzleTypes,
+    remainingTime: number,
+    numberCount?: number,
+}
+
+export type gameInfo = {
+    lengthSec: number,
+    puzzles: PuzzleInfo[],
+    role?: "READER" | "SOLVER"
+}
+
 export default class Requests {
 
     socket: Socket
@@ -50,6 +66,7 @@ export default class Requests {
                     localStorage.setItem("token", data.token)
                     localStorage.setItem("roomCode", roomCode)
                     localStorage.setItem("username", username)
+                    localStorage.setItem("isOwner", "false") // Make sure the client doesn't get confused
                     
                     return res(data.otherPlayers); // Success
 
@@ -117,16 +134,33 @@ export default class Requests {
         })
     }
 
-    async startGame(): Promise<boolean | number> {
+    async startGame(): Promise<false | gameInfo> {
 
         return new Promise((res, rej) => {
 
             const token = localStorage.getItem("token")
             const roomCode = localStorage.getItem("roomCode")
 
-            this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: boolean | number) => {
+            this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: false | gameInfo) => {
 
-                return res(result) // Resolve True OR False.
+                return res(result) // Resolve with false OR the payload of puzzles.
+
+            })
+
+        })
+
+    }
+
+    async sendAnswer(zoneName: string, puzzleType: puzzleTypes, answer: any): Promise<boolean> {
+
+        return new Promise((res, rej) => {
+
+            const token = localStorage.getItem("token")
+            const roomCode = localStorage.getItem("roomCode")
+
+            this.socket.emit("answerPuzzle", { token: token!, roomCode: roomCode!, zoneName: zoneName, puzzleType: puzzleType, answer: answer }, (result: boolean) => {
+
+                return res(result) // Resolves with if the answer is right or wrong
 
             })
 
