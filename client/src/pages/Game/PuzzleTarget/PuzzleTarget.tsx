@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './PuzzleTarget.module.css'
-import gameStyles from '../Game.module.css'
+import solverGameStyles from '../../Game/Views/Solver/SolverGame.module.css'
 import { gameInfo, PuzzleInfo, zoneNames } from '../../../API/requests'
 import NumberCombination from '../../../Puzzles/NumberCombination/NumberCombination'
 import { AuthProp } from '../../../utils/propTypes'
@@ -52,7 +52,7 @@ export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInf
 
                 }
 
-                activePuzzleContainer.className = gameStyles.activePuzzle
+                activePuzzleContainer.className = solverGameStyles.activePuzzle
                 shadow.style.zIndex = "999"
 
             }

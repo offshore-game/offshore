@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import { gameInfo, zoneNames } from '../../API/requests';
-import { validateTokenEnums } from '../../API/types/enums';
-import HealthBar from '../../components/HealthBar/HealthBar';
-import { AuthProp } from '../../utils/propTypes';
-import { fmtMSS } from '../../utils/SecondsConversion';
-import styles from './Game.module.css'
-import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { validateTokenEnums } from "../../API/types/enums";
+import { AuthProp } from "../../utils/propTypes";
+import styles from './Views/Solver/SolverGame.module.css'
+import SolverGame from "./Views/Solver/SolverGame";
+import { gameInfo, zoneNames } from "../../API/requests";
+import { fmtMSS } from "../../utils/SecondsConversion";
+import HealthBar from "../../components/HealthBar/HealthBar";
 
 export enum statusType {
     inGame = 0, // Started Game
@@ -16,8 +16,9 @@ export enum statusType {
     leaderboard = 4,
 }
 
+
 // To act as a switch point for different components related to the game.
-export default function Game(props: AuthProp) {
+export default function GameSwitchPoint(props: AuthProp) {
 
     const navigate = useNavigate();
     const { id } = useParams();
@@ -25,14 +26,18 @@ export default function Game(props: AuthProp) {
     const { state } = useLocation()
 
     const [ status, setStatus ] = useState(statusType.startCutscene);
-    const [ gameInfo, setGameInfo ] = useState(undefined as any as gameInfo); // BUG: i don't think puzzle timers are being properly updated here
+    const [userRole, setUserRole] = useState(undefined as ("READER" | "SOLVER" | undefined))
     const [ activePuzzle, setActivePuzzle ] = useState({ element: undefined, zoneName: undefined } as any as { element: JSX.Element, zoneName: zoneNames | undefined })
 
-    const [ gameTimer, setGameTimer ] = useState(gameInfo ? gameInfo.lengthSec : 0)
+    const [ gameInfo, setGameInfo ] = useState(state as gameInfo);
+
+    
+    const [ gameTimer, setGameTimer ] = useState(state ? state.lengthSec as number : 0)
     const [ gameTimerCountdown, setTimerFunction ] = useState(undefined as any)
 
     const [ coins, setCoins ] = useState(0)
 
+    // Authorize
     useEffect(() => {
 
         const auth = async () => {
@@ -44,35 +49,30 @@ export default function Game(props: AuthProp) {
                 
                 // We need to double check the socket is registered to game events.
                 await props.requests.rejoinLobby().catch((err) => { throw err })
-                return setStatus(statusType.startCutscene)
-
+                return setUserRole("SOLVER") // arbitrary for now
+    
             } else if (result == validateTokenEnums.TOKEN_INVALID) { // User doesn't have authorization for this.
                 
                 localStorage.setItem("token", "")
                 localStorage.setItem("roomCode", "")
                 return navigate("/", { replace: true }) // Redirect home.
-
+    
             } else if (result == validateTokenEnums.ROOM_INVALID) { // Room doesn't exist anymore.
                 
                 localStorage.setItem("token", "")
                 localStorage.setItem("roomCode", "")
                 return navigate("/", { replace: true }) // Redirect home.
-
+    
             }
-
+    
         }
         auth()
-
-        setGameInfo(state)
-
-        // FEATURE: Add an event listener in here to see when the game starts, so the frame can switch.
-
+    
     }, [])
 
-
-    // Event Listeners for Game Events \\
+    // Universal Game Events \\
     useEffect(() => {
-
+    
         const puzzleChangeFunction = (payload: { newGameInfo: gameInfo }) => {
 
             /*
@@ -110,6 +110,13 @@ export default function Game(props: AuthProp) {
         }
         props.requests.socket.on("puzzleChange", puzzleChangeFunction)
 
+        const pointsChangedFunction = (payload: { newPoints: number }) => {
+
+            setCoins(payload.newPoints)
+
+        }
+        props.requests.socket.on("pointsChanged", pointsChangedFunction)
+        
         const gameOverFunction = (payload: { success: boolean, leaderboard: any[] }) => {
 
             setTimeout(() => { setStatus(payload.success ? statusType.successEnding : statusType.failEnding) }, 2000)
@@ -117,52 +124,16 @@ export default function Game(props: AuthProp) {
         }
         props.requests.socket.on("gameOver", gameOverFunction)
 
-        const pointsChangedFunction = (payload: { newPoints: number }) => {
-
-            setCoins(payload.newPoints)
-
-        }
-        props.requests.socket.on("pointsChanged", pointsChangedFunction)
-
-        const resultFunction = (event: any) => {
-
-            const zoneName = event.detail.zoneName as zoneNames
-            const correct = event.detail.result as boolean
-
-            if (activePuzzle.zoneName == zoneName) {
-                const overlay = document.getElementById('puzzleAnswerOverlay')
-                    if (!overlay) return;
-
-                // Answered Correctly
-                if (correct) {
-                    overlay.className = styles.correctAnswerOverlay
-                }
-
-                // Answered Incorrectly
-                if (!correct) {
-                    overlay.className = styles.incorrectAnswerOverlay
-                }
-
-                setTimeout(() => { overlay.className = styles.inactiveAnswerOverlay }, 1000)
-
-            }
-
-        }
-        document.addEventListener("puzzleResult", resultFunction)
-
-
         return () => {
 
-            // Destroy event listeners
-            document.removeEventListener("puzzleResult", resultFunction)
             props.requests.socket.off("puzzleChange", puzzleChangeFunction)
-            props.requests.socket.off("gameOver", gameOverFunction)
             props.requests.socket.off("pointsChanged", pointsChangedFunction)
+            props.requests.socket.off("gameOver", gameOverFunction)
 
         }
 
     })
-    
+
     // Game Timer
     useEffect(() => {
 
@@ -208,103 +179,53 @@ export default function Game(props: AuthProp) {
 
     }
 
-    
-
-    // The game has started; show the game window.
+    // The game has started
     if (status == statusType.inGame) {
 
-        if (!gameInfo) return (<div/>)
-
-        // TESTING \\
-        const puzzleTargetSamples = []
-        for (const puzzle of gameInfo.puzzles) {
-            console.log(`time of puzzle at ${puzzle.zoneName}: ${puzzle.remainingTime}`)
-            puzzleTargetSamples.push(<PuzzleTarget active={true} puzzle={puzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/>)
-
-        }
-
-        if (gameInfo) {
-
-            return (
+        return (
+            <div className={styles.background}>
                 
-                <div className={styles.background}>
-                    
-                    <div id="shadow" className={styles.shadow} onClick={() => {
-
-                        // Animate the "activePuzzle" div out
-                        const activePuzzleContainer = document.getElementById('activePuzzleContainer')
-                        const shadow = document.getElementById('shadow')
-
-                        if (activePuzzleContainer && shadow) {
-
-                            setActivePuzzle({ element: <div/>, zoneName: undefined })
-                            activePuzzleContainer.className = styles.hiddenPuzzle
-                            shadow.style.zIndex = "-1"
-
-                        }
-
-                    }}/>
-
-                    SECONDS LENGTH: { fmtMSS(gameTimer) }
-                    <br/>
-                    STAGE: Stage {getStageNumber()}
-                    <br/>
-                    COINS: { coins }
-
-                    <div className={styles.topBar}>
-
-                        <HealthBar percentage={100} requests={props.requests}/>
-
-                    </div>
-
-                    
-
-                    { puzzleTargetSamples }
-
-
-
-                    <div id="activePuzzleContainer" className={styles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
-
-                        <div id="puzzleAnswerOverlay" className={styles.inactiveAnswerOverlay /* inactiveAnswerOverlay, correctAnswerOverlay, incorrectAnswerOverlay */}/>
-
-                        <div className={styles.exitCube} onClick={() => {
-                            // Animate the "activePuzzle" div out
-                            const activePuzzleContainer = document.getElementById('activePuzzleContainer')
-                            const shadow = document.getElementById('shadow')
-
-                            if (activePuzzleContainer && shadow) {
-
-                                setActivePuzzle({ element: <div/>, zoneName: undefined })
-                                activePuzzleContainer.className = styles.hiddenPuzzle
-                                shadow.style.zIndex = "-1"
-
-                            }
-
-                        }}/>
-                        { activePuzzle.element }
-                        
-
-                    </div>
-
-                    
-
+                <div id="shadow" className={styles.shadow} onClick={() => {
+    
+                    // Animate the "activePuzzle" div out
+                    const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+                    const shadow = document.getElementById('shadow')
+    
+                    if (activePuzzleContainer && shadow) {
+    
+                        setActivePuzzle({ element: <div/>, zoneName: undefined })
+                        activePuzzleContainer.className = styles.hiddenPuzzle
+                        shadow.style.zIndex = "-1"
+    
+                    }
+    
+                }}/>
+    
+                SECONDS LENGTH: { fmtMSS(gameTimer) }
+                <br/>
+                STAGE: Stage {getStageNumber()}
+                <br/>
+                COINS: { coins }
+    
+                <div className={styles.topBar}>
+    
+                    <HealthBar percentage={100} requests={props.requests}/>
+    
                 </div>
 
-            )
+                <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/>
+            </div>
+        )
 
-        }
-        
     }
 
-    // The game is at the start cutscene; display it.
+    // The game is at the start cutscene
     if (status == statusType.startCutscene) {
 
-        // After 5 seconds, set it to the game
-        setTimeout(() => { setGameTimer(gameInfo.lengthSec); setStatus(statusType.inGame) }, 5000)
+        // After 5 seconds, show the game
+        setTimeout(() => { setStatus(statusType.inGame) }, 5000)
 
-        return (
-            <div style={{height: "100vh", width: "100vw", backgroundColor: "black"}}/>
-        )
+        return (<div/>)
 
     }
 
@@ -330,5 +251,13 @@ export default function Game(props: AuthProp) {
     }
 
     return (<div/>) // Error suppresion.
+
+    /*if (!userRole) return <div/>
+
+    if (userRole == "SOLVER") {
+
+        return <SolverGame requests={props.requests} gameInfo={state}/>
+
+    }*/
 
 }
