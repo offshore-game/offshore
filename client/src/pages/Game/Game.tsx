@@ -4,7 +4,7 @@ import { validateTokenEnums } from "../../API/types/enums";
 import { AuthProp } from "../../utils/propTypes";
 import styles from './Game.module.css'
 import SolverGame from "./Views/Solver/SolverGame";
-import { gameInfo, zoneNames } from "../../API/requests";
+import { gameInfo, PuzzleInfo, zoneNames } from "../../API/requests";
 import { fmtMSS } from "../../utils/SecondsConversion";
 import HealthBar from "../../components/HealthBar/HealthBar";
 import ReaderGame from "./Views/Reader/ReaderGame";
@@ -75,15 +75,14 @@ export default function GameSwitchPoint(props: AuthProp) {
     // Universal Game Events \\
     useEffect(() => {
     
-        const puzzleChangeFunction = (payload: { newGameInfo: gameInfo }) => {
+        const puzzleChangeFunction = (payload: { lengthSec: number, puzzles: PuzzleInfo[] }) => {
 
             /*
                 1) Check if the active puzzle was changed
                 2) Set gameInfo's puzzle array again
             */
 
-            const newGameInfo = payload.newGameInfo
-            const newPuzzles = newGameInfo.puzzles
+            const newPuzzles = payload.puzzles
 
             // If ACTIVE puzzle is not found in the new puzzle array
             if (newPuzzles.findIndex(puzzle => activePuzzle.zoneName == puzzle.zoneName) == -1) {
@@ -107,7 +106,7 @@ export default function GameSwitchPoint(props: AuthProp) {
 
             }
 
-            return setGameInfo(newGameInfo);
+            return setGameInfo(payload);
 
         }
         props.requests.socket.on("puzzleChange", puzzleChangeFunction)

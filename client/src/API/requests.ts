@@ -9,7 +9,9 @@ export type PuzzleInfo = {
     type: puzzleTypes,
     remainingTime: number,
     numberCount?: number,
-    solution?: any[], // The fragmented solution provided only if the player has the READER role.
+    solution?: {
+        fragments: any[], // The fragmented solution provided only if the player has the READER role.
+    },
 }
 
 export type gameInfo = {

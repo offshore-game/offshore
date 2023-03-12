@@ -43,7 +43,7 @@ export default function ManualTarget(props: { active: boolean, puzzle: PuzzleInf
                 if (props.puzzle.type == "numberCombination") {
 
                     props.setActivePuzzle({ 
-                        element: <NumberCombinationManual solution={props.puzzle.solution!}/>,
+                        element: <NumberCombinationManual solution={props.puzzle.solution!.fragments}/>,
                         zoneName: props.puzzle.zoneName 
                     })
 

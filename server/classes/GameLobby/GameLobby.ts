@@ -63,20 +63,12 @@ export default class GameLobby {
 
     zones = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"] as zoneNames[]
 
-    emitToAllRoleGroups(eventName: string, content: { solvers: any, readers: any }) {
+    emitToAllPlayers(eventName: string, individualPlayerContents: { socketId: string, payload: any }[]) {
 
+        for (const playerContent of individualPlayerContents) {
 
-        for (const player of this.players) {
-
-            if (player.role == "SOLVER") { // SOLVERS
-
-                player.socket.emit(eventName, content.solvers)
-
-            } else if (player.role == "READER") { // READERS
-
-                player.socket.emit(eventName, content.readers)
-
-            }
+            const socket = this.players.find(player => player.socketId == playerContent.socketId).socket
+            socket.emit(eventName, playerContent.payload)
 
         }
 
@@ -200,7 +192,7 @@ export default class GameLobby {
                 this.puzzles.active.push(generatedPuzzle)
 
                 // Tell the clients a new puzzle was made
-                this.emitToAllRoleGroups("puzzleChange", { solvers: { newGameInfo: this.prepareGamePayload("SOLVER") }, readers: { newGameInfo: this.prepareGamePayload("READER") }})
+                this.emitToAllPlayers("puzzleChange", this.prepareGamePayloads())
 
                 return;
 
@@ -212,7 +204,7 @@ export default class GameLobby {
             this.puzzles.active.push(generatedPuzzle)
 
             // Tell the clients a new puzzle was made
-            this.emitToAllRoleGroups("puzzleChange", { solvers: { newGameInfo: this.prepareGamePayload("SOLVER") }, readers: { newGameInfo: this.prepareGamePayload("READER") }})
+            this.emitToAllPlayers("puzzleChange", this.prepareGamePayloads())
 
             return generatedPuzzle;
 
@@ -220,36 +212,58 @@ export default class GameLobby {
 
     }
 
-    prepareGamePayload(role: "READER" | "SOLVER"): { lengthSec: number, puzzles: puzzleArrayPayload } {
+    prepareGamePayloads(): { socketId: string, payload: { lengthSec: number, puzzles: puzzleArrayPayload } }[] {
+        
+        let payloads = []
+        for (const player of this.players) {
+
+            const puzzleInfo = []
+            for (const puzzle of this.puzzles.active) {
     
-        const puzzleInfo = []
-        for (const puzzle of this.puzzles.active) {
+                if (puzzle.type == "numberCombination") {
+                    
+                    let toPush = {
+                        zoneName: puzzle.zoneName,
+                        type: puzzle.type,
+                        remainingTime: puzzle.remainingTime,
+                        numberCount: puzzle.digitCount,
+                        solution: undefined,
+                    }
+    
+                    // Include a fragment of the solution if the player is a READER
+                    if (player.role == "READER") {
+    
+                        let selectedFragment
+                        
+                        const findAlreadyAssigned = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == player.socketId)[0]
+                        const findUnusedFragment = selectedFragment = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == undefined)[0]
+                        if (findAlreadyAssigned) {
+                            selectedFragment = findAlreadyAssigned
+                        } else if (findUnusedFragment) {
+                            selectedFragment = findUnusedFragment
+                        }
 
-            if (puzzle.type == "numberCombination") {
-
-                let toPush = {
-                    zoneName: puzzle.zoneName,
-                    type: puzzle.type,
-                    remainingTime: puzzle.remainingTime,
-                    numberCount: puzzle.digitCount,
-                    solution: undefined,
+                        toPush.solution = selectedFragment
+    
+                    }
+    
+                    puzzleInfo.push(toPush)
+    
                 }
-
-                // Include a fragment of the solutions if the player is a reader
-                if (role == "READER") {
-                    toPush.solution = puzzle.fragmentedSolutions.pop()
-                }
-
-                puzzleInfo.push(toPush)
-
+    
             }
 
+            payloads.push({
+                socketId: player.socketId,
+                payload: {
+                    lengthSec: 300,
+                    puzzles: puzzleInfo,
+                },
+            })
+
         }
 
-        return {
-            lengthSec: 300,
-            puzzles: puzzleInfo
-        }
+        return payloads
 
     }
 
@@ -400,7 +414,7 @@ export default class GameLobby {
                 this.puzzles.active.splice(completedIndex, 1) // Delete from the active puzzle array
 
                 // Tell the clients the puzzles changed
-                this.emitToAllRoleGroups("puzzleChange", { solvers: { newGameInfo: this.prepareGamePayload("SOLVER") }, readers: { newGameInfo: this.prepareGamePayload("READER") }})
+                this.emitToAllPlayers("puzzleChange", this.prepareGamePayloads())
 
                 // Give 10 points to the player who answered correctly
                 this.players.find(player => player.socketId == payload.socket.id).changePoints(10)
@@ -432,9 +446,8 @@ export default class GameLobby {
             // Add to the "solved" array
             this.puzzles.solved.push(puzzle)
 
-
             // Tell the clients the puzzles changed
-            this.emitToAllRoleGroups("puzzleChange", { solvers: { newGameInfo: this.prepareGamePayload("SOLVER") }, readers: { newGameInfo: this.prepareGamePayload("READER") }})
+            this.emitToAllPlayers("puzzleChange", this.prepareGamePayloads())
 
 
         })
@@ -521,7 +534,7 @@ export default class GameLobby {
             // Set the state after 5 seconds
             setTimeout(() => { console.log("game started"); this.state = "INGAME" }, 5000)
 
-            const ruleset = this.prepareGamePayload("SOLVER") // less content; im also lazy to just do this properly so this works :p
+            const ruleset = this.prepareGamePayloads()[0].payload // less content; im also lazy to just do this properly so this works :p
 
             // Resolve with the ruleset payload
             return res(ruleset);

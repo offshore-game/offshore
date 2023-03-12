@@ -12,7 +12,19 @@ interface NumberCombinationAnswer {
 export default class NumberCombination extends Puzzle {
 
     solution: NumberCombinationAnswer
-    fragmentedSolutions: NumberCombinationAnswer[][]
+    fragmentedSolutions: { assignedSocket: string | undefined, fragments: NumberCombinationAnswer[] }[]
+    /*
+    [
+        {
+            assignedSocket: undefined,
+            fragments: [
+                {
+                    "0": 0
+                }
+            ]
+        }
+    ]
+    */
     digitCount: number
 
     constructor(lobby: GameLobby, zoneName: zoneNames, digitCount: number, puzzleDurationSec: number, spawnDelaySec: number, fragmentCount: number) {
@@ -34,9 +46,6 @@ export default class NumberCombination extends Puzzle {
         // Save the generated solution as a whole
         this.solution = generatedSolution
 
-        console.debug(`Solution for zone ${zoneName}`)
-        console.debug(this.solution)
-
         this.fragmentedSolutions = this.makeSolutions(fragmentCount)
 
     }
@@ -48,35 +57,34 @@ export default class NumberCombination extends Puzzle {
             2) Insert fragments into an array and return that
         */
 
-        const solutionAsArray = [] as {digitIndex: string, digitValue: number}[]
+        const fragmentedSolutions = []
 
+        const individualEntrySolutions = [] as { digitIndex: string, digitValue: number }[]
         for (const key of Object.keys(this.solution)) {
 
-            solutionAsArray.push({
-                
+            individualEntrySolutions.push({
+
                 digitIndex: key,
                 digitValue: this.solution[key]
-                
+
             })
 
         }
 
-        const centerIndex = Math.ceil(solutionAsArray.length / solutionCount)
+        const centerIndex = Math.ceil(individualEntrySolutions.length / solutionCount)
 
-        const fragments = [] as {digitIndex: string, digitValue: number}[][]
-
-        // For each requested number of solutions...
         for (let i = 0; i < solutionCount; i++) {
 
-            fragments.push(solutionAsArray.splice(-centerIndex))
+            fragmentedSolutions.push({
+                assignedSocket: undefined,
+                fragments: individualEntrySolutions.splice(-centerIndex)
+            })
 
         }
 
-        this.fragmentedSolutions = fragments
+        this.fragmentedSolutions = fragmentedSolutions
 
-        console.log('fragmented solutions made:', this.fragmentedSolutions)
-
-        return fragments;
+        return fragmentedSolutions
 
     }
 
