@@ -77,7 +77,7 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
         console.log("socket: ", props.requests.socket)
 
         props.requests.socket.on("gameStart", (payload: gameInfo) => {
-            // console.log("lobbyview", payload) // this is bugged if you click too fast lol
+
             navigate(`/game/${roomCode}`, { replace: true, state: payload }) // Navigate to the game page
 
         })

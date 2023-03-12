@@ -183,7 +183,7 @@ io.sockets.on("connection", function (socket) {
                 }
 
                 // Return a success
-                return callback(result);
+                return callback({...result, role: player.role });
 
             // Player is not the owner of the lobby
             } else {
