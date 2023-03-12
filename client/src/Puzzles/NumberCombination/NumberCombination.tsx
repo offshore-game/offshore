@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { RxTriangleUp, RxTriangleDown } from 'react-icons/rx'
+import { zoneNames } from '../../API/requests'
 import Button from '../../components/Button/Button'
+import { AuthProp } from '../../utils/propTypes'
 import styles from './NumberCombination.module.css'
 
-export default function NumberCombination(props: { count: number }) {
+export default function NumberCombination(props: { count: number, zoneName: zoneNames } & AuthProp) {
 
     const [numberElems, setNumberElems] = useState([] as any[])
 
     useEffect(() => {
         setNumberElems([]) // Prevent a duplication bug on component reset.
 
-        for (let i = 0; i <= props.count; i++) {
+        for (let i = 0; i < props.count; i++) {
             setNumberElems(entries => [...entries, <div key={i} className={styles.button}>
                 <RxTriangleUp className={styles.arrow} onClick={() => {
 
@@ -48,19 +50,30 @@ export default function NumberCombination(props: { count: number }) {
 
             </div>
 
-            <Button text={"Submit"} onClick={() => {
+            <Button text={`Submit as zone ${props.zoneName}`} onClick={async () => {
 
-                const combinationPayload: { [key: number]: string } = {}
+                const combinationPayload: { [key: string]: number } = {}
 
                 for (let i = 0; i < numberElems.length; i++) {
 
                     const element = document.getElementById(`buttonVal${i}`)!
-                    combinationPayload[i] = element.innerHTML
+                    combinationPayload[i] = +element.innerHTML
 
                 }
 
-                // (FEATURE) Insert API Call here
+                // API Call
                 console.log(combinationPayload)
+                const result = await props.requests.sendAnswer(props.zoneName, "numberCombination", combinationPayload)
+                
+                // Tell the game component the result
+                const resultEvent = new CustomEvent("puzzleResult", {
+                    detail: {
+                        zoneName: props.zoneName,
+                        result: result
+                    }
+                })
+                document.dispatchEvent(resultEvent)
+                
 
             }} style={{margin: "4vh", minHeight: "45px"}}/>
             

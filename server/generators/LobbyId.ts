@@ -1,6 +1,7 @@
-export default function makeLobbyId(length: number) {
+export default function makeLobbyId(length: number, lobbyIDs: string[]) {
 
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 
     let result = ""
     for (let i = 0; i < length; i++ ) {
@@ -9,6 +10,14 @@ export default function makeLobbyId(length: number) {
 
     }
 
-    return result;
+    if (lobbyIDs.includes(result)) {
+
+        return makeLobbyId(length, lobbyIDs)
+        
+    } else {
+
+        return result
+
+    }
 
 }

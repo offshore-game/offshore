@@ -1,19 +1,26 @@
 import { useEffect, useState } from 'react'
+import { AuthProp } from '../../utils/propTypes'
 import styles from './HealthBar.module.css'
 
-export default function HealthBar(props: { percentage: number }) {
+export default function HealthBar(props: { percentage: number } & AuthProp) {
 
     const [ health, setHealth ] = useState(props.percentage)
 
     useEffect(() => {
         
-        document.addEventListener("healthChange", (event: any) => {
-
-            setHealth(event.detail.newHealth)
+        props.requests.socket.on("healthChange", (payload: { health: number }) => {
+            
+            setHealth(health < 0 ? 0 : payload.health)
 
         })
 
-    }, [])
+        return () => {
+
+            props.requests.socket.off("healthChange")
+
+        }
+
+    })
 
     return (
         <div className={styles.base}>
