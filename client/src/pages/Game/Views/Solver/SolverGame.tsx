@@ -49,7 +49,7 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     // TESTING \\
     const puzzleTargetSamples = []
     for (const puzzle of props.gameInfo.puzzles) {
-        console.log(`time of puzzle at ${puzzle.zoneName}: ${puzzle.remainingTime}`)
+        //console.log(`time of puzzle at ${puzzle.zoneName}: ${puzzle.remainingTime}`)
         puzzleTargetSamples.push(<PuzzleTarget active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
 
     }

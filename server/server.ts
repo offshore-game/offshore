@@ -167,18 +167,20 @@ io.sockets.on("connection", function (socket) {
                 const result = await lobby.startGame()
                     if (!result) return callback(globalErrors.TOKEN_INVALID);
 
-         // Assigns a random role to the player 
-                
+                // Assigns a random role to the player 
                 for (let i = 0; i < lobby.players.length; i++) {
+                    
                     const possibleRoles = ["READER", "SOLVER"] as ("READER"|"SOLVER")[]
                     const selectedRole = possibleRoles[randomNumber(0, 1)];
                     lobby.players[i].role = selectedRole;
+
+                    // Signal to each individual client the game started, with all the puzzles AND their role
+                    io.in(lobby.id).emit("gameStart", {
+                        ...result,
+                        role: selectedRole,
+                    })
+
                 }
-
-                // Signal to the clients the game started, with all the puzzles
-                io.in(lobby.id).emit("gameStart", result)
-
-                console.debug('sending owner:', result)
 
                 // Return a success
                 return callback(result);

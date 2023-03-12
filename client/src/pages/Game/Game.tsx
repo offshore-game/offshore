@@ -26,7 +26,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     const { state } = useLocation()
 
     const [ status, setStatus ] = useState(statusType.startCutscene);
-    const [userRole, setUserRole] = useState(undefined as ("READER" | "SOLVER" | undefined))
+    const [ userRole, setUserRole ] = useState(undefined as ("READER" | "SOLVER" | undefined))
     const [ activePuzzle, setActivePuzzle ] = useState({ element: undefined, zoneName: undefined } as any as { element: JSX.Element, zoneName: zoneNames | undefined })
 
     const [ gameInfo, setGameInfo ] = useState(state as gameInfo);
@@ -49,7 +49,8 @@ export default function GameSwitchPoint(props: AuthProp) {
                 
                 // We need to double check the socket is registered to game events.
                 await props.requests.rejoinLobby().catch((err) => { throw err })
-                return setUserRole("SOLVER") // arbitrary for now
+                console.log(state.role)
+                return setUserRole(state.role) // arbitrary for now
     
             } else if (result == validateTokenEnums.TOKEN_INVALID) { // User doesn't have authorization for this.
                 
@@ -213,7 +214,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     
                 </div>
 
-                <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/>
+                { <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/>/*userRole == "SOLVER" ? <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/> : <div>reader</div>*/ }
             </div>
         )
 
