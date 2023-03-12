@@ -4,6 +4,7 @@ import { gameInfo, zoneNames } from '../../API/requests';
 import { validateTokenEnums } from '../../API/types/enums';
 import HealthBar from '../../components/HealthBar/HealthBar';
 import { AuthProp } from '../../utils/propTypes';
+import { fmtMSS } from '../../utils/SecondsConversion';
 import styles from './Game.module.css'
 import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
 
@@ -24,7 +25,7 @@ export default function Game(props: AuthProp) {
     const { state } = useLocation()
 
     const [ status, setStatus ] = useState(statusType.startCutscene);
-    const [ gameInfo, setGameInfo ] = useState(undefined as any as gameInfo);
+    const [ gameInfo, setGameInfo ] = useState(undefined as any as gameInfo); // BUG: i don't think puzzle timers are being properly updated here
     const [ activePuzzle, setActivePuzzle ] = useState({ element: undefined, zoneName: undefined } as any as { element: JSX.Element, zoneName: zoneNames | undefined })
 
     const [ gameTimer, setGameTimer ] = useState(gameInfo ? gameInfo.lengthSec : 0)
@@ -207,7 +208,7 @@ export default function Game(props: AuthProp) {
 
     }
 
-    function fmtMSS(s: number){return(s-(s%=60))/60+(9<s?':':':0')+s}
+    
 
     // The game has started; show the game window.
     if (status == statusType.inGame) {
@@ -217,8 +218,8 @@ export default function Game(props: AuthProp) {
         // TESTING \\
         const puzzleTargetSamples = []
         for (const puzzle of gameInfo.puzzles) {
-
-            puzzleTargetSamples.push(<PuzzleTarget active={true} zoneName={puzzle.zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>)
+            console.log(`time of puzzle at ${puzzle.zoneName}: ${puzzle.remainingTime}`)
+            puzzleTargetSamples.push(<PuzzleTarget active={true} puzzle={puzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/>)
 
         }
 

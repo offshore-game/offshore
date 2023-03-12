@@ -9,24 +9,39 @@ export default class Puzzle {
     fragmentedSolution: any[]
     zoneName: zoneNames
     type: puzzleTypes
+    remainingTime: number
     expirationTimeout: NodeJS.Timeout
 
     constructor(lobby: GameLobby, zoneName: zoneNames, type: puzzleTypes, durationSec: number, spawnDelaySec: number) {
 
         this.zoneName = zoneName
         this.type = type
+        this.remainingTime = durationSec
         this.expirationTimeout = setTimeout(() => {
+
+            // Decrease the remaining time every second
+            const interval = setInterval(() => {
+
+                this.remainingTime--
+
+            }, 1000)
+                        
 
             setTimeout(() => {
 
+                // Destroy the decrease interval timer
+                clearInterval(interval)
+                
                 // Tell the game lobby that the puzzle expired
                 lobby.events.emitter.emit(lobby.events.names.expired, { puzzle: this })
     
                 console.warn("puzzle expired!")
     
             }, durationSec * 1000)
-            
+
+
         }, spawnDelaySec * 1000)
+
 
     }
 

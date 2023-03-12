@@ -14,6 +14,7 @@ type Puzzles = NumberCombination & Puzzle
 type puzzleArrayPayload = {
     zoneName: zoneNames,
     type: puzzleTypes,
+    remainingTime: number,
     numberCount?: number,
 }[]
 
@@ -54,7 +55,7 @@ export default class GameLobby {
 
         this.healthPoints = 100
         this.durationSec = 300
-        this.percentKeepActive = 0.6 // 60%
+        this.percentKeepActive = 0.3 // 30%
 
     }
 
@@ -208,7 +209,8 @@ export default class GameLobby {
                 puzzleInfo.push({
                     zoneName: puzzle.zoneName,
                     type: puzzle.type,
-                    numberCount: puzzle.digitCount
+                    remainingTime: puzzle.remainingTime,
+                    numberCount: puzzle.digitCount,
                 })
 
             }
@@ -428,6 +430,15 @@ export default class GameLobby {
                 // -1 Second from the game time
                 this.durationSec--
 
+                /*console.log('tick')
+                const testPayload = this.prepareGamePayload()
+                for (const puzzle of testPayload.puzzles) {
+
+                    console.log(`${puzzle.zoneName}: ${puzzle.remainingTime}`)
+
+                }*/
+
+
                 // Check if the health is 0
                 if (this.healthPoints <= 0) {
 
@@ -482,10 +493,7 @@ export default class GameLobby {
             // Set the state after 5 seconds
             setTimeout(() => { console.log("game started"); this.state = "INGAME" }, 5000)
 
-            const ruleset = {
-                lengthSec: this.durationSec,
-                puzzles: this.puzzles.active,
-            }
+            const ruleset = this.prepareGamePayload()
 
             // Resolve with the ruleset payload
             return res(ruleset);
