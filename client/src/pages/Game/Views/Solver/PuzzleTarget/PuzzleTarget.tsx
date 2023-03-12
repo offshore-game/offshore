@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styles from './PuzzleTarget.module.css'
-import solverGameStyles from '../../Game/Views/Solver/SolverGame.module.css'
-import { gameInfo, PuzzleInfo, zoneNames } from '../../../API/requests'
-import NumberCombination from '../../../Puzzles/NumberCombination/NumberCombination'
-import { AuthProp } from '../../../utils/propTypes'
+import gameStyles from '../../../Game.module.css'
+import { PuzzleInfo, zoneNames } from '../../../../../API/requests'
+import NumberCombination from '../../../../../Puzzles/NumberCombination/Puzzle/NumberCombinationPuzzle'
+import { AuthProp } from '../../../../../utils/propTypes'
 
 export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
@@ -52,7 +52,7 @@ export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInf
 
                 }
 
-                activePuzzleContainer.className = solverGameStyles.activePuzzle
+                activePuzzleContainer.className = gameStyles.activePuzzle
                 shadow.style.zIndex = "999"
 
             }

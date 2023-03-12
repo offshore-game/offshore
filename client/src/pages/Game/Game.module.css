@@ -1,0 +1,89 @@
+/* Shared Styles */
+.background {
+    height: 100%;
+    width: 100%;
+    
+    background-color: white;
+}
+
+.topBar {
+
+    display: flex;
+
+    align-items: center;
+
+    height: 10%;
+    width: 100%;
+    background-color: darkblue;
+
+    max-height: 50px;
+
+}
+
+.shadow {
+
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+
+    background-color: black;
+
+    opacity: calc(75%);
+
+    /*z-index: 999; only when active*/
+    z-index: -1;
+
+}
+
+.activePuzzle {
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+
+    position: absolute;
+
+    background-color: gray;
+    z-index: 9999;
+
+    width: 50%;
+    height: 50%;
+
+    top: 25%;
+    
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    transition: top 0.8s cubic-bezier(.47, 1.64, .41, 1);
+
+}
+
+.hiddenPuzzle {
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+
+    position: absolute;
+
+    background-color: gray;
+
+    width: 50%;
+    height: 50%;
+
+    top: 100vh;
+    
+    left: 50%;
+    transform: translate(-50%, 0);
+
+    transition: top 0.8s cubic-bezier(.47, 1.64, .41, 1);
+
+}
+

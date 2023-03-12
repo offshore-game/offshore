@@ -235,8 +235,8 @@ export default class GameLobby {
                     solution: undefined,
                 }
 
-                // Include a fragment of the solutions if the player is a solver
-                if (role == "SOLVER") {
+                // Include a fragment of the solutions if the player is a reader
+                if (role == "READER") {
                     toPush.solution = puzzle.fragmentedSolutions.pop()
                 }
 

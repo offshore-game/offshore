@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { validateTokenEnums } from "../../API/types/enums";
 import { AuthProp } from "../../utils/propTypes";
-import styles from './Views/Solver/SolverGame.module.css'
+import styles from './Game.module.css'
 import SolverGame from "./Views/Solver/SolverGame";
 import { gameInfo, zoneNames } from "../../API/requests";
 import { fmtMSS } from "../../utils/SecondsConversion";
 import HealthBar from "../../components/HealthBar/HealthBar";
+import ReaderGame from "./Views/Reader/ReaderGame";
 
 export enum statusType {
     inGame = 0, // Started Game
@@ -214,7 +215,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     
                 </div>
 
-                { <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/>/*userRole == "SOLVER" ? <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/> : <div>reader</div>*/ }
+                { userRole == "SOLVER" ? <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/> : <ReaderGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/> }
             </div>
         )
 

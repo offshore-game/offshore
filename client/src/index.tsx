@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Requests from './API/requests';
 import SolverGame from './pages/Game/Views/Solver/SolverGame';
-import NumberCombination from './Puzzles/NumberCombination/NumberCombination';
+import NumberCombination from './Puzzles/NumberCombination/Puzzle/NumberCombinationPuzzle';
 import ButtonSpeed from './Puzzles/ButtonSpeed/ButtonSpeed';
 import GameSwitchPoint from './pages/Game/Game';
 
