@@ -201,13 +201,17 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("answerPuzzle", function(data: { token: string, roomCode: string, zoneName: zoneNames, puzzleType: puzzleTypes, answer: any }, callback) {
-     
+    
         if (data.puzzleType == "numberCombination") {
     
             const lobby = lobbies.get(data.roomCode)
 
             if (lobby) {
 
+                // Make sure the player is actually allowed to answer puzzles (has to be a SOLVER)
+                if (lobby.players.find(player => player.socketId == socket.id).role != "SOLVER") return callback(false);
+
+                
                 const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
 
                 // Puzzle doesn't exist
@@ -219,12 +223,17 @@ io.sockets.on("connection", function (socket) {
                 if (validated) { // Answer is Right
 
                     // Tell the lobby class the puzzle is correct and completed
-                    lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle })
+                    lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle, socket: socket })
+
+                    // Tell the client that the puzzle was answered correctly
                     return callback(true)
 
                 } else { // Answer is Wrong
 
-                    // Do nothing?
+                    // Tell the lobby class the puzzle was answered incorrectly
+                    lobby.events.emitter.emit(lobby.events.names.incorrect, { puzzle: puzzle, socket: socket })
+
+                    // Tell the client that the puzzle was answered incorrectly
                     return callback(false)
 
                 }

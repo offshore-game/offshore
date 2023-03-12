@@ -7,6 +7,7 @@ type puzzleTypes = "numberCombination" | "buttonCombination" | "buttonSpeed" | "
 export type PuzzleInfo = {
     zoneName: zoneNames,
     type: puzzleTypes,
+    remainingTime: number,
     numberCount?: number,
 }
 

@@ -4,22 +4,17 @@ import { gameInfo, zoneNames } from '../../API/requests';
 import { validateTokenEnums } from '../../API/types/enums';
 import HealthBar from '../../components/HealthBar/HealthBar';
 import { AuthProp } from '../../utils/propTypes';
+import { fmtMSS } from '../../utils/SecondsConversion';
 import styles from './Game.module.css'
 import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
 
 export enum statusType {
     inGame = 0, // Started Game
-    waitingGameEnd = 1, // Idle in lobby awaiting game end event.
+    startCutscene = 1, // Cutscene
+    successEnding = 2,
+    failEnding = 3,
+    leaderboard = 4,
 }
-
-// Events
-const newHealth = new CustomEvent("healthChange", {
-    detail: {
-        newHealth: 75
-    }
-})
-
-
 
 // To act as a switch point for different components related to the game.
 export default function Game(props: AuthProp) {
@@ -29,9 +24,14 @@ export default function Game(props: AuthProp) {
 
     const { state } = useLocation()
 
-    const [ status, setStatus ] = useState(statusType.inGame);
-    const [ gameInfo, setGameInfo ] = useState(undefined as any as gameInfo);
+    const [ status, setStatus ] = useState(statusType.startCutscene);
+    const [ gameInfo, setGameInfo ] = useState(undefined as any as gameInfo); // BUG: i don't think puzzle timers are being properly updated here
     const [ activePuzzle, setActivePuzzle ] = useState({ element: undefined, zoneName: undefined } as any as { element: JSX.Element, zoneName: zoneNames | undefined })
+
+    const [ gameTimer, setGameTimer ] = useState(gameInfo ? gameInfo.lengthSec : 0)
+    const [ gameTimerCountdown, setTimerFunction ] = useState(undefined as any)
+
+    const [ coins, setCoins ] = useState(0)
 
     useEffect(() => {
 
@@ -44,7 +44,7 @@ export default function Game(props: AuthProp) {
                 
                 // We need to double check the socket is registered to game events.
                 await props.requests.rejoinLobby().catch((err) => { throw err })
-                return setStatus(statusType.inGame)
+                return setStatus(statusType.startCutscene)
 
             } else if (result == validateTokenEnums.TOKEN_INVALID) { // User doesn't have authorization for this.
                 
@@ -65,9 +65,15 @@ export default function Game(props: AuthProp) {
 
         setGameInfo(state)
 
-        // Event Listeners for Game Events \\
-        
-        props.requests.socket.on("puzzleChange", (payload: { newGameInfo: gameInfo }) => {
+        // FEATURE: Add an event listener in here to see when the game starts, so the frame can switch.
+
+    }, [])
+
+
+    // Event Listeners for Game Events \\
+    useEffect(() => {
+
+        const puzzleChangeFunction = (payload: { newGameInfo: gameInfo }) => {
 
             /*
                 1) Check if the active puzzle was changed
@@ -86,9 +92,14 @@ export default function Game(props: AuthProp) {
 
                 if (activePuzzleContainer && shadow) {
 
-                    setActivePuzzle({ element: <div/>, zoneName: undefined })
-                    activePuzzleContainer.className = styles.hiddenPuzzle
-                    shadow.style.zIndex = "-1"
+                    // Delay it only to show the correct answer animation
+                    setTimeout(() => {
+
+                        setActivePuzzle({ element: <div/>, zoneName: undefined })
+                        activePuzzleContainer.className = styles.hiddenPuzzle
+                        shadow.style.zIndex = "-1"
+
+                    }, 1000)
 
                 }
 
@@ -96,23 +107,119 @@ export default function Game(props: AuthProp) {
 
             return setGameInfo(newGameInfo);
 
-        })
+        }
+        props.requests.socket.on("puzzleChange", puzzleChangeFunction)
 
-        // FEATURE: Add an event listener in here to see when the game starts, so the frame can switch.
+        const gameOverFunction = (payload: { success: boolean, leaderboard: any[] }) => {
 
-    }, [])
+            setTimeout(() => { setStatus(payload.success ? statusType.successEnding : statusType.failEnding) }, 2000)
+
+        }
+        props.requests.socket.on("gameOver", gameOverFunction)
+
+        const pointsChangedFunction = (payload: { newPoints: number }) => {
+
+            setCoins(payload.newPoints)
+
+        }
+        props.requests.socket.on("pointsChanged", pointsChangedFunction)
+
+        const resultFunction = (event: any) => {
+
+            const zoneName = event.detail.zoneName as zoneNames
+            const correct = event.detail.result as boolean
+
+            if (activePuzzle.zoneName == zoneName) {
+                const overlay = document.getElementById('puzzleAnswerOverlay')
+                    if (!overlay) return;
+
+                // Answered Correctly
+                if (correct) {
+                    overlay.className = styles.correctAnswerOverlay
+                }
+
+                // Answered Incorrectly
+                if (!correct) {
+                    overlay.className = styles.incorrectAnswerOverlay
+                }
+
+                setTimeout(() => { overlay.className = styles.inactiveAnswerOverlay }, 1000)
+
+            }
+
+        }
+        document.addEventListener("puzzleResult", resultFunction)
+
+
+        return () => {
+
+            // Destroy event listeners
+            document.removeEventListener("puzzleResult", resultFunction)
+            props.requests.socket.off("puzzleChange", puzzleChangeFunction)
+            props.requests.socket.off("gameOver", gameOverFunction)
+            props.requests.socket.off("pointsChanged", pointsChangedFunction)
+
+        }
+
+    })
+    
+    // Game Timer
+    useEffect(() => {
+
+        if (status == statusType.inGame) {
+
+            setTimerFunction(setInterval(() => {
+                setGameTimer(prevTime => prevTime - 1)
+            }, 1000))
+
+        } else {
+
+            clearInterval(gameTimerCountdown)
+            setTimerFunction(undefined)
+
+        }
+
+    }, [status])
+
+    
+    function getStageNumber() {
+
+        if (gameTimer <= 60) {
+            
+            return 5
+
+        } else if (gameTimer <= 120) {
+
+            return 4
+
+        } else if (gameTimer <= 180) {
+
+            return 3
+
+        } else if (gameTimer <= 240) {
+
+            return 2
+
+        } else {
+
+            return 1
+
+        }
+
+    }
+
     
 
     // The game has started; show the game window.
     if (status == statusType.inGame) {
 
-        if (!gameInfo) {console.log('no game info'); return (<div/>)}
+        if (!gameInfo) return (<div/>)
 
         // TESTING \\
         const puzzleTargetSamples = []
         for (const puzzle of gameInfo.puzzles) {
-            
-            puzzleTargetSamples.push(<PuzzleTarget active={true} zoneName={puzzle.zoneName} gameInfo={gameInfo} setActivePuzzle={setActivePuzzle} requests={props.requests}/>)
+            console.log(`time of puzzle at ${puzzle.zoneName}: ${puzzle.remainingTime}`)
+            puzzleTargetSamples.push(<PuzzleTarget active={true} puzzle={puzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/>)
 
         }
 
@@ -138,17 +245,15 @@ export default function Game(props: AuthProp) {
 
                     }}/>
 
-                    SECONDS LENGTH: { gameInfo.lengthSec }
-                    {/* My test cube :) */}
-                    <div style={{height: "25px", width: "25px", backgroundColor: "black", position: "absolute", right: "10px", margin: "10px"}} onClick={() => {
-
-                        document.dispatchEvent(newHealth)
-
-                    }}/>
+                    SECONDS LENGTH: { fmtMSS(gameTimer) }
+                    <br/>
+                    STAGE: Stage {getStageNumber()}
+                    <br/>
+                    COINS: { coins }
 
                     <div className={styles.topBar}>
 
-                        <HealthBar percentage={100}/>
+                        <HealthBar percentage={100} requests={props.requests}/>
 
                     </div>
 
@@ -159,6 +264,8 @@ export default function Game(props: AuthProp) {
 
 
                     <div id="activePuzzleContainer" className={styles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
+
+                        <div id="puzzleAnswerOverlay" className={styles.inactiveAnswerOverlay /* inactiveAnswerOverlay, correctAnswerOverlay, incorrectAnswerOverlay */}/>
 
                         <div className={styles.exitCube} onClick={() => {
                             // Animate the "activePuzzle" div out
@@ -187,6 +294,39 @@ export default function Game(props: AuthProp) {
 
         }
         
+    }
+
+    // The game is at the start cutscene; display it.
+    if (status == statusType.startCutscene) {
+
+        // After 5 seconds, set it to the game
+        setTimeout(() => { setGameTimer(gameInfo.lengthSec); setStatus(statusType.inGame) }, 5000)
+
+        return (
+            <div style={{height: "100vh", width: "100vw", backgroundColor: "black"}}/>
+        )
+
+    }
+
+    // The game is at the good ending cutscene; display it.
+    if (status == statusType.successEnding) {
+
+        // After 5 seconds, show the leaderboard
+        setTimeout(() => { setStatus(statusType.leaderboard) }, 5000)
+
+        return (
+            <div style={{height: "100vh", width: "100vw", backgroundColor: "green"}}/>
+        )
+
+    }
+
+    // The game is at the failed ending cutscene; display it.
+    if (status == statusType.failEnding) {
+
+        return (
+            <div style={{height: "100vh", width: "100vw", backgroundColor: "red"}}/>
+        )
+
     }
 
     return (<div/>) // Error suppresion.

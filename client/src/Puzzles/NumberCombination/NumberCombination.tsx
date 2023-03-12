@@ -64,7 +64,15 @@ export default function NumberCombination(props: { count: number, zoneName: zone
                 // API Call
                 console.log(combinationPayload)
                 const result = await props.requests.sendAnswer(props.zoneName, "numberCombination", combinationPayload)
-                console.log("result:", result)
+                
+                // Tell the game component the result
+                const resultEvent = new CustomEvent("puzzleResult", {
+                    detail: {
+                        zoneName: props.zoneName,
+                        result: result
+                    }
+                })
+                document.dispatchEvent(resultEvent)
                 
 
             }} style={{margin: "4vh", minHeight: "45px"}}/>
