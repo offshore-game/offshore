@@ -3,13 +3,14 @@ import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import makeLobbyId from '../../generators/LobbyId';
 import randomNumber from '../../generators/randomNumber';
+import ButtonCombination from '../../puzzles/ButtonCombination';
 import NumberCombination from '../../puzzles/NumberCombination';
 import Puzzle, { puzzleTypeArray, puzzleTypes } from '../../puzzles/Puzzle';
 import Player from '../Player';
 
 export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
 
-type Puzzles = NumberCombination & Puzzle
+type Puzzles = Puzzle & NumberCombination | ButtonCombination
 
 type puzzleArrayPayload = {
     zoneName: zoneNames,
@@ -165,6 +166,11 @@ export default class GameLobby {
             // FEATURE: Digit Count and Duration are Arbitrary for now
             generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
 
+        } else if (randomlySelectedPuzzleType == "buttonCombination") {
+
+            // FEATURE: Button Count and Duration are Arbitrary for now
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
+
         } else {
 
             // FEATURE: add more puzzle types!
@@ -226,7 +232,7 @@ export default class GameLobby {
                         zoneName: puzzle.zoneName,
                         type: puzzle.type,
                         remainingTime: puzzle.remainingTime,
-                        numberCount: puzzle.digitCount,
+                        numberCount: (puzzle as NumberCombination).digitCount,
                         solution: undefined,
                     }
     
