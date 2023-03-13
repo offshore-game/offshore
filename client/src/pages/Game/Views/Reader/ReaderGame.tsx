@@ -10,7 +10,7 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     for (const puzzle of props.gameInfo.puzzles) {
         // A solution is provided for this player
         if (puzzle.solution) {
-            puzzleAnswerSamples.push(<ManualTarget active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
+            puzzleAnswerSamples.push(<ManualTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
         }
 
     }

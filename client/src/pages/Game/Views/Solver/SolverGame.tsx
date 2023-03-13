@@ -51,6 +51,7 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     const puzzleTargetSamples = []
     for (const puzzle of props.gameInfo.puzzles) {
         // Bug Fix https://reactjs.org/docs/lists-and-keys.html
+        // It's very possible this may be still bugged in rare circumstances, it would need to be tested.
         puzzleTargetSamples.push(<PuzzleTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
     }
 
