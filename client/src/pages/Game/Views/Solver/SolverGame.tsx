@@ -50,7 +50,8 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     // TESTING \\
     const puzzleTargetSamples = []
     for (const puzzle of props.gameInfo.puzzles) {
-        puzzleTargetSamples.push(<PuzzleTarget active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
+        // Bug Fix https://reactjs.org/docs/lists-and-keys.html
+        puzzleTargetSamples.push(<PuzzleTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
     }
 
     // Solver Game Panel \\

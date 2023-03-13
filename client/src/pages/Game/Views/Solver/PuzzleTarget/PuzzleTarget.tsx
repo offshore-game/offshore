@@ -7,13 +7,11 @@ import { AuthProp } from '../../../../../utils/propTypes'
 
 export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
-    const [ remainingTime, setRemainingTime ] = useState(0) // There's a react bug here causing it to not update properly on puzzle list re-render..?
+    const [ remainingTime, setRemainingTime ] = useState(props.puzzle.remainingTime) // This default value is broken, for some reason... it likes to synchronize when the component is re-made
     const [ timerFunction, setTimerFunction ] = useState(undefined as any)
 
     // Expiry Timer
     useEffect(() => { // the bug is in here... not the server and not the parent passing wrong information // there is a major desynchronization issue here
-
-        setRemainingTime(props.puzzle.remainingTime)
 
         setTimerFunction(setInterval(() => {
             setRemainingTime(prevTime => prevTime - 1)
@@ -21,7 +19,7 @@ export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInf
 
         return () => {
 
-            console.log('clear interval')
+            console.log(`clear interval for ${props.puzzle.zoneName}`)
             clearInterval(timerFunction)
 
         }
