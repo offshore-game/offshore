@@ -3,6 +3,7 @@ import { zoneNames } from '../../../API/requests'
 import Button from '../../../components/Button/Button'
 import { AuthProp } from '../../../utils/propTypes'
 import styles from './ButtonCombinationPuzzle.module.css'
+import CombinationButton from './CombinationButton'
 
 export default function ButtonCombinationPuzzle(props: { count: number, zoneName: zoneNames } & AuthProp) {
 
@@ -13,41 +14,7 @@ export default function ButtonCombinationPuzzle(props: { count: number, zoneName
         setButtonElems([]) // Prevent a duplication bug on component reset.
 
         for (let i = 0; i < props.count; i++) { // WARNING: Internally base 0
-            setButtonElems(entries => [...entries, <div key={i} className={styles.button} onClick={() => {
-
-                    const keys = []
-                    
-                    for (const key of Object.keys(combinationPayload)) {
-
-                        // some undefined
-                        if (!key) continue;
-
-                        keys.push(parseInt(key))
-
-                    }
-
-                    let nextKey
-                    if (keys.length > 0) {
-
-                        // Sort the array in order from least to greatest (i dont trust javascript)
-                        keys.sort((a, b) => {
-                            return a - b;
-                        })
-
-                        nextKey = keys[keys.length - 1] + 1
-                        
-
-                    } else { // No other keys; first one
-
-                        nextKey = 0
-
-                    }
-                    
-                    combinationPayload[`${nextKey}`] = i
-
-                }}>{i+1}</div> // WARNING: Externally (Visually) base 1
-            
-            ])
+            setButtonElems(entries => [ ...entries, <CombinationButton index={i} combinationPayload={combinationPayload} setCombinationPayload={setCombinationPayload}/> ])
         }
     }, [combinationPayload])
 
