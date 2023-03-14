@@ -228,48 +228,44 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("answerPuzzle", function(data: { token: string, roomCode: string, zoneName: zoneNames, puzzleType: puzzleTypes, answer: any }, callback) {
     
-        if (data.puzzleType == "numberCombination") {
-    
-            const lobby = lobbies.get(data.roomCode)
+        const lobby = lobbies.get(data.roomCode)
 
-            if (lobby) {
+        if (lobby) {
 
-                // Make sure the player is actually allowed to answer puzzles (has to be a SOLVER)
-                if (lobby.players.find(player => player.socketId == socket.id).role != "SOLVER") return callback(false);
+            // Make sure the player is actually allowed to answer puzzles (has to be a SOLVER)
+            if (lobby.players.find(player => player.socketId == socket.id).role != "SOLVER") return callback(false);
 
-                
-                const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
+            
+            const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
 
-                // Puzzle doesn't exist
-                if (puzzleIndex == -1)  { console.warn("puzzle not found"); return callback(false) }
+            // Puzzle doesn't exist
+            if (puzzleIndex == -1)  { console.warn("puzzle not found"); return callback(false) }
 
-                const puzzle = lobby.puzzles.active[puzzleIndex]
+            const puzzle = lobby.puzzles.active[puzzleIndex]
 
-                const validated = puzzle.validate(data.answer)
-                if (validated) { // Answer is Right
+            const validated = puzzle.validate(data.answer)
+            if (validated) { // Answer is Right
 
-                    // Tell the lobby class the puzzle is correct and completed
-                    lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle, socket: socket })
+                // Tell the lobby class the puzzle is correct and completed
+                lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle, socket: socket })
 
-                    // Tell the client that the puzzle was answered correctly
-                    return callback(true)
+                // Tell the client that the puzzle was answered correctly
+                return callback(true)
 
-                } else { // Answer is Wrong
+            } else { // Answer is Wrong
 
-                    // Tell the lobby class the puzzle was answered incorrectly
-                    lobby.events.emitter.emit(lobby.events.names.incorrect, { puzzle: puzzle, socket: socket })
+                // Tell the lobby class the puzzle was answered incorrectly
+                lobby.events.emitter.emit(lobby.events.names.incorrect, { puzzle: puzzle, socket: socket })
 
-                    // Tell the client that the puzzle was answered incorrectly
-                    return callback(false)
-
-                }
-
-            } else {
-
-                // Lobby doesn't exist.
-                return callback(globalErrors.ROOM_INVALID)
+                // Tell the client that the puzzle was answered incorrectly
+                return callback(false)
 
             }
+
+        } else {
+
+            // Lobby doesn't exist.
+            return callback(globalErrors.ROOM_INVALID)
 
         }
 

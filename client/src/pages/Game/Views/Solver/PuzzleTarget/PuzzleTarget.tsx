@@ -48,7 +48,7 @@ export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInf
                 } else if (props.puzzle.type == "buttonCombination") {
                     
                     props.setActivePuzzle({
-                        element: <ButtonCombinationPuzzle count={props.puzzle.numberCount!} zoneName={props.puzzle.zoneName} requests={props.requests}/>,
+                        element: <ButtonCombinationPuzzle count={props.puzzle.buttonCount!} zoneName={props.puzzle.zoneName} requests={props.requests}/>,
                         zoneName: props.puzzle.zoneName,
                     })
                     // etc...

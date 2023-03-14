@@ -39,8 +39,8 @@ export default class ButtonCombination extends Puzzle {
 
         for (let i = 0; i < buttonCount; i++) {
 
-            // The puzzle is between numbers 0 and 9
-            generatedSolution[i] = randomNumber(0, 9)
+            // The puzzle is between how many buttons there are
+            generatedSolution[i] = randomNumber(0, buttonCount - 1 /* 0-based index */)
 
         }
 
@@ -92,23 +92,26 @@ export default class ButtonCombination extends Puzzle {
     validate(answer: ButtonCombinationAnswer): boolean {
 
         console.debug('start validate')
-        console.debug(this.solution)
+        console.debug('solution:', this.solution)
+        console.debug('answer:', answer)
 
-        let pass = true
+        // First check for identical length; prevent a bug where empty answers jump to true
+        if (Object.entries(answer).length != Object.entries(this.solution).length) return false;
+
+        // Assuming same length, loop through and make sure they are identical
         for (const [key, value] of Object.entries(answer)) {
 
             if (value != this.solution[key]) {
+
                 console.debug('incorrect solution at', key)
-                pass = false
-                return;
+                return false;
 
             }
 
         }
 
-        console.debug("pass: ", pass)
-
-        return pass;
+        // Pass if nothing trips
+        return true;
 
     }
 

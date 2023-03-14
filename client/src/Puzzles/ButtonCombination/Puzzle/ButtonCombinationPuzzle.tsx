@@ -12,7 +12,7 @@ export default function ButtonCombinationPuzzle(props: { count: number, zoneName
     useEffect(() => {
         setButtonElems([]) // Prevent a duplication bug on component reset.
 
-        for (let i = 0; i <= props.count; i++) { // WARNING: Internally base 0
+        for (let i = 0; i < props.count; i++) { // WARNING: Internally base 0
             setButtonElems(entries => [...entries, <div key={i} className={styles.button} onClick={() => {
 
                     const keys = []
@@ -60,9 +60,24 @@ export default function ButtonCombinationPuzzle(props: { count: number, zoneName
 
             </div>
 
-            <Button text={"Submit"} onClick={() => {
+            <Button text={"Submit"} onClick={async () => {
 
-                // (FEATURE) Insert API Call here
+                const result = await props.requests.sendAnswer(props.zoneName, "buttonCombination", combinationPayload)
+
+                // Reset the game if it's answered incorrectly
+                if (!result) setCombinationPayload({})
+
+                // Tell the game component the result
+                const resultEvent = new CustomEvent("puzzleResult", {
+                    detail: {
+                        zoneName: props.zoneName,
+                        result: result
+                    }
+                })
+                document.dispatchEvent(resultEvent)
+
+
+
                 console.log(combinationPayload)
 
             }} style={{margin: "4vh", minHeight: "45px"}}/>
