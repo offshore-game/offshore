@@ -1,25 +1,20 @@
 import { useEffect, useState } from "react"
 import designs from '../Puzzle/ButtonCombinationPuzzle.module.css'
 
-type solutionType = { digitIndex: string, digitValue: number }[]
+type solutionType = { buttonOrder: string, buttonIndex: number }[]
 
-export default function NumberCombinationManual(props: { solution: solutionType }) {
+export default function ButtonCombinationManual(props: { solution: solutionType }) {
 
-    console.log(props.solution)
+    console.log(props.solution) //i forgor the structure of this
 
-    const [numberElems, setNumberElems] = useState([] as any[])
+    const [ buttonElems, setButtonElems ] = useState([] as any[])
 
     useEffect(() => {
-        setNumberElems([]) // Prevent a duplication bug on component reset.
 
-        for (let i = 0; i < props.solution.length; i++) {
-            setNumberElems(entries => [...entries, <div key={i} className={designs.button}>
-
-                { (props.solution[i].digitIndex == `${i}`) ? props.solution[i].digitValue : "" }
-
-            
-            </div>])
+        for (let i = 0; i < Object.keys(props.solution).length; i++) { // WARNING: Internally base 0
+            setButtonElems(entries => [...entries, <div key={i} className={designs.button}>{parseInt(props.solution.find(solution => solution.buttonIndex == i)?.buttonOrder!) + 1}</div>])
         }
+        
     }, [])
 
     return (
@@ -27,9 +22,10 @@ export default function NumberCombinationManual(props: { solution: solutionType 
 
             <div className={designs.buttonContainer}>
                 
-                { numberElems }
+                { buttonElems }
 
             </div>
+
         </div>
     )
 

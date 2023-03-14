@@ -4,6 +4,7 @@ import NumberCombinationManual from "../../../../../Puzzles/NumberCombination/Ma
 import { AuthProp } from "../../../../../utils/propTypes";
 import styles from './ManualTarget.module.css'
 import gameStyles from '../../../Game.module.css'
+import ButtonCombinationManual from "../../../../../Puzzles/ButtonCombination/Manual/ButtonCombinationManual";
 
 export default function ManualTarget(props: { active: boolean, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
@@ -49,7 +50,10 @@ export default function ManualTarget(props: { active: boolean, puzzle: PuzzleInf
 
                 } else if (props.puzzle.type == "buttonCombination") {
 
-                    // etc...
+                    props.setActivePuzzle({ 
+                        element: <ButtonCombinationManual solution={props.puzzle.solution!.fragments}/>,
+                        zoneName: props.puzzle.zoneName 
+                    })
 
                 }
 

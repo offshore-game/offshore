@@ -34,13 +34,26 @@ export default class ButtonCombination extends Puzzle {
 
         this.buttonCount = buttonCount
 
-        // Generate the solution
+        // Start to generate the solution
         const generatedSolution: ButtonCombinationAnswer = {}
 
+        // I don't want duplicate indexes
+        const allowedIndexes = [] // it's all NaN
+        for (let i = 0; i < buttonCount; i++) {
+
+            allowedIndexes.push(i)
+
+        }
+
+        // Generate the actual solution
         for (let i = 0; i < buttonCount; i++) {
 
             // The puzzle is between how many buttons there are
-            generatedSolution[i] = randomNumber(0, buttonCount - 1 /* 0-based index */)
+            let randomIndex = randomNumber(0, allowedIndexes.length - 1 /* 0-based index */)
+            generatedSolution[i] = allowedIndexes[randomIndex]
+
+            // Remove from the allowedIndexes
+            allowedIndexes.splice(randomIndex, 1)
 
         }
 

@@ -521,10 +521,9 @@ export default class GameLobby {
                     console.debug(`${this.puzzles.active.length} puzzles active; ${requiredActive} needed`)
                     
                     const differential = requiredActive - this.puzzles.active.length
-                    console.debug('diff:', differential)
     
                     for (let i = 0; i < differential; i++) {
-                        console.debug('new puzzle made')
+
                         // Generate another puzzle (with a timeout)
                         this.generatePuzzle(true)
         
