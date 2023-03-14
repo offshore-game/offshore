@@ -4,6 +4,7 @@ import { AuthProp } from '../../../../utils/propTypes';
 import gameStyles from '../../Game.module.css'
 import styles from './SolverGame.module.css'
 import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
+import { ReactComponent as Boat } from '../../../../assets/Game/Boat.svg';
 
 
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
@@ -59,7 +60,12 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     return (
         <React.Fragment>
         
-            { puzzleTargetSamples }
+            { /*puzzleTargetSamples*/ }
+            <div className={styles.boatContainer}>
+                <Boat style={{position: 'absolute'}}/> {/* may i suggest img instead https://stackoverflow.com/questions/27253263/position-div-inside-a-image-responsive */}
+                <div style={{backgroundColor: 'red', width: '10px', height: '10px', zIndex: "99999999999"}}>a</div>
+            </div>
+
 
             <div id="activePuzzleContainer" className={gameStyles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
 
