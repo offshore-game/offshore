@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AuthProp } from '../../utils/propTypes'
+import { AiOutlineHeart } from 'react-icons/ai'
 import styles from './HealthBar.module.css'
 
 export default function HealthBar(props: { percentage: number } & AuthProp) {
@@ -24,6 +25,8 @@ export default function HealthBar(props: { percentage: number } & AuthProp) {
 
     return (
         <div className={styles.base}>
+
+            <AiOutlineHeart className={styles.heart}/>
 
             <div className={styles.green} style={{width: `${health}%`}}> 
             

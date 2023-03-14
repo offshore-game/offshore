@@ -8,13 +8,14 @@
 
 .topBar {
 
+    position: relative;
     display: flex;
 
     align-items: center;
 
     height: 10%;
     width: 100%;
-    background-color: darkblue;
+    background-color: #401C18;
 
     max-height: 50px;
 
@@ -87,3 +88,86 @@
 
 }
 
+.centerInfo {
+
+    position: absolute;
+
+    left: 50%;
+
+    color: white;
+}
+
+.rightInfo {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    position: absolute;
+
+    right: 0;
+    margin: 1%;
+    height: 100%;
+    
+
+}
+
+.coinContainer {
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 80%;
+    width: 100%;
+
+    min-width: 75px;
+
+    background-color: #8C6046;
+
+    border-radius: 5px;
+
+    box-shadow: inset 0px 0px 3px 1px;
+
+}
+
+.coinIcon {
+
+    color: gold;
+    height: 100%;
+    width: 25%;
+
+    margin-left: 5%;
+    margin-right: 20%;
+
+}
+
+.timeContainer {
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 80%;
+    width: 100%;
+
+    min-width: 75px;
+
+    background-color: #8C6046;
+
+    border-radius: 5px;
+
+    box-shadow: inset 0px 0px 3px 1px;
+    
+}
+
+.clockIcon {
+
+    color: black;
+    height: 100%;
+    width: 25%;
+
+    margin-left: 5%;
+    margin-right: 20%;
+
+}

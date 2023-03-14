@@ -8,6 +8,8 @@ import { gameInfo, PuzzleInfo, zoneNames } from "../../API/requests";
 import { fmtMSS } from "../../utils/SecondsConversion";
 import HealthBar from "../../components/HealthBar/HealthBar";
 import ReaderGame from "./Views/Reader/ReaderGame";
+import { BiCoinStack } from 'react-icons/bi'
+import { TbClock } from 'react-icons/tb'
 
 export enum statusType {
     inGame = 0, // Started Game
@@ -202,15 +204,33 @@ export default function GameSwitchPoint(props: AuthProp) {
     
                 }}/>
     
-                SECONDS LENGTH: { fmtMSS(gameTimer) }
-                <br/>
-                STAGE: Stage {getStageNumber()}
-                <br/>
-                COINS: { coins }
-    
+
                 <div className={styles.topBar}>
     
                     <HealthBar percentage={100} requests={props.requests}/>
+
+                    <div className={styles.centerInfo}>
+
+                        Stage {getStageNumber()}
+
+                    </div>
+
+                    <div className={styles.rightInfo}>
+
+                        <div className={styles.timeContainer}>
+                            <TbClock className={styles.clockIcon}/>
+                            { fmtMSS(gameTimer) }
+                        </div>
+
+                        <div className={styles.coinContainer}>
+                            <BiCoinStack className={styles.coinIcon}/>
+                            { coins }
+                        </div>
+
+
+                        
+                    </div>
+
     
                 </div>
 
