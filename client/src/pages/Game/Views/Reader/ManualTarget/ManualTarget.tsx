@@ -4,14 +4,15 @@ import NumberCombinationManual from "../../../../../Puzzles/NumberCombination/Ma
 import { AuthProp } from "../../../../../utils/propTypes";
 import styles from './ManualTarget.module.css'
 import gameStyles from '../../../Game.module.css'
+import ButtonCombinationManual from "../../../../../Puzzles/ButtonCombination/Manual/ButtonCombinationManual";
 
 export default function ManualTarget(props: { active: boolean, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
-    const [ remainingTime, setRemainingTime ] = useState(0) // There's a react bug here causing it to not update properly on puzzle list re-render..?
+    const [ remainingTime, setRemainingTime ] = useState(0)
     const [ timerFunction, setTimerFunction ] = useState(undefined as any)
 
     // Expiry Timer
-    useEffect(() => { // the bug is in here... not the server and not the parent passing wrong information // there is a major desynchronization issue here
+    useEffect(() => {
 
         setRemainingTime(props.puzzle.remainingTime)
 
@@ -49,7 +50,10 @@ export default function ManualTarget(props: { active: boolean, puzzle: PuzzleInf
 
                 } else if (props.puzzle.type == "buttonCombination") {
 
-                    // etc...
+                    props.setActivePuzzle({ 
+                        element: <ButtonCombinationManual solution={props.puzzle.solution!.fragments}/>,
+                        zoneName: props.puzzle.zoneName 
+                    })
 
                 }
 

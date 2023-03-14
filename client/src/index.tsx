@@ -5,10 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Requests from './API/requests';
-import SolverGame from './pages/Game/Views/Solver/SolverGame';
-import NumberCombination from './Puzzles/NumberCombination/Puzzle/NumberCombinationPuzzle';
-import ButtonSpeed from './Puzzles/ButtonSpeed/ButtonSpeed';
 import GameSwitchPoint from './pages/Game/Game';
+import ButtonCombinationPuzzle from './Puzzles/ButtonCombination/Puzzle/ButtonCombinationPuzzle';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -29,7 +27,7 @@ root.render(
 
             <Route path="/lobby/:id" element={ <Home requests={Connection} gameLobby={true}/> } />
             <Route path="/game/:id" element={ <GameSwitchPoint requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}
-            <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><NumberCombination count={4} zoneName={"a"} requests={Connection}/></div> } />
+            <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><ButtonCombinationPuzzle count={4} zoneName={"a"} requests={Connection}/></div> } />
           </Routes>
         </BrowserRouter>
       </div>

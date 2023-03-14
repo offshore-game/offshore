@@ -3,13 +3,14 @@ import { Server, Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import makeLobbyId from '../../generators/LobbyId';
 import randomNumber from '../../generators/randomNumber';
+import ButtonCombination from '../../puzzles/ButtonCombination';
 import NumberCombination from '../../puzzles/NumberCombination';
 import Puzzle, { puzzleTypeArray, puzzleTypes } from '../../puzzles/Puzzle';
 import Player from '../Player';
 
 export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
 
-type Puzzles = NumberCombination & Puzzle
+type Puzzles = Puzzle & NumberCombination | ButtonCombination
 
 type puzzleArrayPayload = {
     zoneName: zoneNames,
@@ -165,10 +166,15 @@ export default class GameLobby {
             // FEATURE: Digit Count and Duration are Arbitrary for now
             generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
 
+        } else if (randomlySelectedPuzzleType == "buttonCombination") {
+
+            // FEATURE: Button Count and Duration are Arbitrary for now
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
+
         } else {
 
             // FEATURE: add more puzzle types!
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
 
         }
 
@@ -220,36 +226,41 @@ export default class GameLobby {
             const puzzleInfo = []
             for (const puzzle of this.puzzles.active) {
     
-                if (puzzle.type == "numberCombination") {
-                    
-                    let toPush = {
-                        zoneName: puzzle.zoneName,
-                        type: puzzle.type,
-                        remainingTime: puzzle.remainingTime,
-                        numberCount: puzzle.digitCount,
-                        solution: undefined,
-                    }
-    
-                    // Include a fragment of the solution if the player is a READER
-                    if (player.role == "READER") {
-    
-                        let selectedFragment
-                        
-                        const findAlreadyAssigned = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == player.socketId)[0]
-                        const findUnusedFragment = selectedFragment = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == undefined)[0]
-                        if (findAlreadyAssigned) {
-                            selectedFragment = findAlreadyAssigned
-                        } else if (findUnusedFragment) {
-                            selectedFragment = findUnusedFragment
-                        }
-
-                        toPush.solution = selectedFragment
-    
-                    }
-    
-                    puzzleInfo.push(toPush)
-    
+                let toPush = {
+                    zoneName: puzzle.zoneName,
+                    type: puzzle.type,
+                    remainingTime: puzzle.remainingTime,
+                    numberCount: undefined,
+                    buttonCount: undefined,
+                    solution: undefined,
                 }
+
+                // Include a fragment of the solution if the player is a READER
+                if (player.role == "READER") {
+
+                    let selectedFragment
+                    
+                    const findAlreadyAssigned = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == player.socketId)[0]
+                    const findUnusedFragment = selectedFragment = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == undefined)[0]
+                    if (findAlreadyAssigned) {
+                        selectedFragment = findAlreadyAssigned
+                    } else if (findUnusedFragment) {
+                        selectedFragment = findUnusedFragment
+                    }
+
+                    toPush.solution = selectedFragment
+
+                }
+
+                // Puzzle-specific additions
+                if (puzzle.type == "numberCombination") {
+                    toPush.numberCount = (puzzle as NumberCombination).digitCount
+                } else if (puzzle.type == "buttonCombination") {
+                    toPush.buttonCount = (puzzle as ButtonCombination).buttonCount
+                }
+
+                // Push to array
+                puzzleInfo.push(toPush)
     
             }
 
@@ -510,10 +521,9 @@ export default class GameLobby {
                     console.debug(`${this.puzzles.active.length} puzzles active; ${requiredActive} needed`)
                     
                     const differential = requiredActive - this.puzzles.active.length
-                    console.debug('diff:', differential)
     
                     for (let i = 0; i < differential; i++) {
-                        console.debug('new puzzle made')
+
                         // Generate another puzzle (with a timeout)
                         this.generatePuzzle(true)
         

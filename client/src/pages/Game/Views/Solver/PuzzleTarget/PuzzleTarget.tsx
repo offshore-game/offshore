@@ -4,14 +4,15 @@ import gameStyles from '../../../Game.module.css'
 import { PuzzleInfo, zoneNames } from '../../../../../API/requests'
 import NumberCombination from '../../../../../Puzzles/NumberCombination/Puzzle/NumberCombinationPuzzle'
 import { AuthProp } from '../../../../../utils/propTypes'
+import ButtonCombinationPuzzle from '../../../../../Puzzles/ButtonCombination/Puzzle/ButtonCombinationPuzzle'
 
 export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
-    const [ remainingTime, setRemainingTime ] = useState(props.puzzle.remainingTime) // This default value is broken, for some reason... it likes to synchronize when the component is re-made
+    const [ remainingTime, setRemainingTime ] = useState(props.puzzle.remainingTime)
     const [ timerFunction, setTimerFunction ] = useState(undefined as any)
 
     // Expiry Timer
-    useEffect(() => { // the bug is in here... not the server and not the parent passing wrong information // there is a major desynchronization issue here
+    useEffect(() => {
 
         setTimerFunction(setInterval(() => {
             setRemainingTime(prevTime => prevTime - 1)
@@ -45,7 +46,11 @@ export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInf
                     })
 
                 } else if (props.puzzle.type == "buttonCombination") {
-
+                    
+                    props.setActivePuzzle({
+                        element: <ButtonCombinationPuzzle count={props.puzzle.buttonCount!} zoneName={props.puzzle.zoneName} requests={props.requests}/>,
+                        zoneName: props.puzzle.zoneName,
+                    })
                     // etc...
 
                 }

@@ -64,3 +64,17 @@
     filter: brightness(65%);
 
 }
+
+.inactiveButton {
+
+    composes: button;
+    filter: brightness(50%);
+
+}
+
+.inactiveButton:hover {
+
+    filter: brightness(50%);
+    cursor: auto;
+
+}
