@@ -9,15 +9,14 @@
 .topBar {
 
     position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 
     align-items: center;
 
     height: 10%;
     width: 100%;
     background-color: #401C18;
-
-    max-height: 50px;
 
 }
 
@@ -90,11 +89,14 @@
 
 .centerInfo {
 
-    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    left: 50%;
+    grid-column: 2;
 
     color: white;
+
 }
 
 .rightInfo {
@@ -103,22 +105,21 @@
     flex-direction: row;
     align-items: center;
 
-    position: absolute;
+    grid-column: 3;
 
-    right: 0;
     margin: 1%;
     height: 100%;
     
 
 }
 
-.coinContainer {
+.rightInfoContainer {
 
     display: flex;
     justify-content: flex-start;
     align-items: center;
 
-    height: 80%;
+    height: 50%;
     width: 100%;
 
     min-width: 75px;
@@ -140,25 +141,6 @@
     margin-left: 5%;
     margin-right: 20%;
 
-}
-
-.timeContainer {
-
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-
-    height: 80%;
-    width: 100%;
-
-    min-width: 75px;
-
-    background-color: #8C6046;
-
-    border-radius: 5px;
-
-    box-shadow: inset 0px 0px 3px 1px;
-    
 }
 
 .clockIcon {

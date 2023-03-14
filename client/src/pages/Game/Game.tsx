@@ -217,12 +217,12 @@ export default function GameSwitchPoint(props: AuthProp) {
 
                     <div className={styles.rightInfo}>
 
-                        <div className={styles.timeContainer}>
+                        <div className={styles.rightInfoContainer}>
                             <TbClock className={styles.clockIcon}/>
                             { fmtMSS(gameTimer) }
                         </div>
 
-                        <div className={styles.coinContainer}>
+                        <div className={styles.rightInfoContainer}>
                             <BiCoinStack className={styles.coinIcon}/>
                             { coins }
                         </div>
