@@ -48,7 +48,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
 
 
     return (
-        <div ref={target} className={pointPos[props.className]} style={{ zIndex: "99999" }} onClick={() => {
+        <div ref={target} className={pointPos[props.className]} style={{ zIndex: "999", cursor: "pointer" }} onClick={() => {
 
             console.log('clicked')
 
@@ -78,7 +78,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
                 }
 
                 activePuzzleContainer.className = gameStyles.activePuzzle
-                shadow.style.zIndex = "999"
+                shadow.style.zIndex = "9999"
 
             }
 
