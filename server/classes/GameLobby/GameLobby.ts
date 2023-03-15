@@ -113,7 +113,7 @@ export default class GameLobby {
         */
         
         // Find what puzzle types aren't in use yet
-        let unusedPuzzles: puzzleTypes[] = ['numberCombination', 'buttonCombination']//[...puzzleTypeArray]
+        let unusedPuzzles: puzzleTypes[] = [...puzzleTypeArray]
         for (const puzzle of [...this.puzzles.active, ...this.puzzles.awaiting]) { // For every puzzle active and about to be active...
             
             // Find it's name in the unused array and delete it if it exists
