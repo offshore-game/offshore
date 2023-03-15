@@ -113,7 +113,7 @@ export default class GameLobby {
         */
         
         // Find what puzzle types aren't in use yet
-        let unusedPuzzles: puzzleTypes[] = puzzleTypeArray
+        let unusedPuzzles: puzzleTypes[] = ['numberCombination', 'buttonCombination']//[...puzzleTypeArray]
         for (const puzzle of [...this.puzzles.active, ...this.puzzles.awaiting]) { // For every puzzle active and about to be active...
             
             // Find it's name in the unused array and delete it if it exists
@@ -153,7 +153,7 @@ export default class GameLobby {
 
         // Select a random zone
         const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
-            if (!randomlySelectedZone) return null; // bug prevention
+            if (!randomlySelectedZone) return null; // terminate the generation: bug prevention
 
         let generatedPuzzle: Puzzles
 
