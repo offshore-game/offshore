@@ -3,8 +3,9 @@ import { gameInfo, zoneNames } from '../../../../API/requests';
 import { AuthProp } from '../../../../utils/propTypes';
 import gameStyles from '../../Game.module.css'
 import styles from './SolverGame.module.css'
+import pointPos from './Points.module.css'
 import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
-import { ReactComponent as Boat } from '../../../../assets/Game/Boat.svg';
+import boat from '../../../../assets/Game/Boat.svg';
 
 
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
@@ -62,8 +63,21 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
         
             { /*puzzleTargetSamples*/ }
             <div className={styles.boatContainer}>
-                <Boat style={{position: 'absolute'}}/> {/* may i suggest img instead https://stackoverflow.com/questions/27253263/position-div-inside-a-image-responsive */}
-                <div style={{backgroundColor: 'red', width: '10px', height: '10px', zIndex: "99999999999"}}>a</div>
+
+                <img src={boat} style={{position: 'absolute'}}/>
+
+                {/* All of the zone target points */}
+                <div className={pointPos.frontMastPoint}/>
+                <div className={pointPos.backMastPoint}/>
+                <div className={pointPos.controlRoomPoint}/>
+                <div className={pointPos.engineRoomPoint}/>
+                <div className={pointPos.captainDeckPoint}/>
+                <div className={pointPos.secondaryDeckPoint}/>
+                <div className={pointPos.crewmateDeckPoint}/>
+                <div className={pointPos.emergencyDeckPoint}/>
+                <div className={pointPos.operationCenterPoint}/>
+                <div className={pointPos.entertainmentRoomPoint}/>
+
             </div>
 
 

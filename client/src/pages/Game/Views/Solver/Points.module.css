@@ -1,0 +1,106 @@
+.basePoint {
+
+    position: absolute;
+        
+    left: 50%;
+    top: 50%;
+
+    width: 2%;
+    aspect-ratio: 1/1;
+
+    background-color: black;
+    border-radius: 50px;
+
+    z-index: 9999999999999;
+
+}
+
+.frontMastPoint {
+
+    composes: basePoint;
+
+    left: 60.5%;
+    top: 24.8%;
+
+}
+
+.backMastPoint {
+
+    composes: basePoint;
+
+    left: 25%;
+    top: 24.8%;
+
+}
+
+.controlRoomPoint {
+
+    composes: basePoint;
+
+    left: 37%;
+    top: 35%;
+
+}
+
+.engineRoomPoint {
+
+    composes: basePoint;
+
+    left: 50%;
+    top: 38%;
+
+}
+
+.captainDeckPoint {
+
+    composes: basePoint;
+
+    left: 72%;
+    top: 42%;
+
+}
+
+.secondaryDeckPoint {
+
+    composes: basePoint;
+
+    left: 63.8%;
+    top: 53%;
+
+}
+
+.crewmateDeckPoint {
+
+    composes: basePoint;
+
+    left: 43.5%;
+    top: 50%;
+
+}
+
+.emergencyDeckPoint {
+
+    composes: basePoint;
+
+    left: 24%;
+    top: 52%;
+
+}
+
+.operationCenterPoint {
+
+    composes: basePoint;
+
+    left: 27.5%;
+    top: 70%;
+
+}
+
+.entertainmentRoomPoint {
+
+    composes: basePoint;
+
+    left: 59%;
+    top: 70%;
+
+}
