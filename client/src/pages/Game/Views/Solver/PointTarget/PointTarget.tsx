@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import styles from './PuzzleTarget.module.css'
+import React, { useEffect, useRef, useState } from "react";
+import { PuzzleInfo, zoneNames } from "../../../../../API/requests";
+import { AuthProp } from "../../../../../utils/propTypes";
+import NumberCombinationPuzzle from "../../../../../Puzzles/NumberCombination/Puzzle/NumberCombinationPuzzle";
+import ButtonCombinationPuzzle from "../../../../../Puzzles/ButtonCombination/Puzzle/ButtonCombinationPuzzle";
 import gameStyles from '../../../Game.module.css'
-import { PuzzleInfo, zoneNames } from '../../../../../API/requests'
-import NumberCombination from '../../../../../Puzzles/NumberCombination/Puzzle/NumberCombinationPuzzle'
-import { AuthProp } from '../../../../../utils/propTypes'
-import ButtonCombinationPuzzle from '../../../../../Puzzles/ButtonCombination/Puzzle/ButtonCombinationPuzzle'
+import pointPos from './Points.module.css'
 
-export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
+export default function PointTarget(props: { className: string, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
     const [ remainingTime, setRemainingTime ] = useState(props.puzzle.remainingTime)
     const [ timerFunction, setTimerFunction ] = useState(undefined as any)
+    const [ nextColor, setNextColor ] = useState('red' as ('black' | 'red'))
+    const target = useRef(undefined as any as HTMLDivElement)
 
     // Expiry Timer
     useEffect(() => {
@@ -27,8 +29,28 @@ export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInf
 
     }, [])
 
+
+    // Blinking Timer
+    useEffect(() => {
+
+        setTimeout(() => {
+
+            if (target.current) {
+
+                target.current.style.backgroundColor = nextColor
+                nextColor == 'black' ? setNextColor('red') : setNextColor('black')
+
+            }
+
+        }, 1000)
+
+    }, [nextColor])
+
+
     return (
-        <div className={styles.testButton} style={{backgroundColor: props.active ? "skyblue" : "gray"}} onClick={() => {
+        <div ref={target} className={pointPos[props.className]} style={{ zIndex: "99999" }} onClick={() => {
+
+            console.log('clicked')
 
             // Animate the "activePuzzle" div in
             const activePuzzleContainer = document.getElementById('activePuzzleContainer')
@@ -41,7 +63,7 @@ export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInf
                 if (props.puzzle.type == "numberCombination") {
 
                     props.setActivePuzzle({ 
-                        element: <NumberCombination count={props.puzzle.numberCount!} zoneName={props.puzzle.zoneName} requests={props.requests}/>,
+                        element: <NumberCombinationPuzzle count={props.puzzle.numberCount!} zoneName={props.puzzle.zoneName} requests={props.requests}/>,
                         zoneName: props.puzzle.zoneName 
                     })
 
@@ -61,8 +83,7 @@ export default function PuzzleTarget(props: { active: boolean, puzzle: PuzzleInf
             }
 
         }}>
-            Click me to see the puzzle at zone {props.puzzle.zoneName}
-            Remaining Time: { remainingTime }
+            { remainingTime }
         </div>
     )
 

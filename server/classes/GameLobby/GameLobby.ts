@@ -8,7 +8,7 @@ import NumberCombination from '../../puzzles/NumberCombination';
 import Puzzle, { puzzleTypeArray, puzzleTypes } from '../../puzzles/Puzzle';
 import Player from '../Player';
 
-export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
+export type zoneNames = "frontMast" | "backMast" | "controlRoom" | "engineRoom" | "captainDeck" | "secondaryDeck" | "crewmateDeck" | "emergencyDeck" | "operationCenter" | "entertainmentRoom"
 
 type Puzzles = Puzzle & NumberCombination | ButtonCombination
 
@@ -62,7 +62,7 @@ export default class GameLobby {
     }
 
 
-    zones = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"] as zoneNames[]
+    zones = ["frontMast", "backMast", "controlRoom", "engineRoom", "captainDeck", "secondaryDeck", "crewmateDeck", "emergencyDeck", "operationCenter", "entertainmentRoom"] as zoneNames[]
 
     emitToAllPlayers(eventName: string, individualPlayerContents: { socketId: string, payload: any }[]) {
 

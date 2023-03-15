@@ -3,9 +3,9 @@ import { gameInfo, zoneNames } from '../../../../API/requests';
 import { AuthProp } from '../../../../utils/propTypes';
 import gameStyles from '../../Game.module.css'
 import styles from './SolverGame.module.css'
-import pointPos from './Points.module.css'
-import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
+import pointPos from './PointTarget/Points.module.css'
 import boat from '../../../../assets/Game/Boat.svg';
+import PointTarget from './PointTarget/PointTarget';
 
 
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
@@ -50,11 +50,12 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     })
     
     // TESTING \\
-    const puzzleTargetSamples = []
+    const puzzleTargets = []
     for (const puzzle of props.gameInfo.puzzles) {
         // Bug Fix https://reactjs.org/docs/lists-and-keys.html
         // It's very possible this may be still bugged in rare circumstances, it would need to be tested.
-        puzzleTargetSamples.push(<PuzzleTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
+        puzzleTargets.push(<PointTarget key={`${puzzle.zoneName}`} className={`${puzzle.zoneName}Point`} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
+        //puzzleTargetSamples.push(<PuzzleTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
     }
 
     // Solver Game Panel \\
@@ -65,6 +66,9 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
             <div className={styles.boatContainer}>
 
                 <img src={boat} style={{position: 'absolute'}}/>
+
+                {/* Display Active Overlays */}
+                { puzzleTargets }
 
                 {/* All of the zone target points */}
                 <div className={pointPos.frontMastPoint}/>
