@@ -557,7 +557,14 @@ export default class GameLobby {
 
         if (success) {
 
-            this.io.in(this.id).emit("gameOver", { success: true, leaderboard: [{ username: "a", coins: 100 }] })
+            const leaderboard = []
+            for (const player of this.players){
+
+            this.io.in(this.id).emit("gameOver", { success: true, leaderboard: leaderboard })
+
+        
+          
+        }
 
         } else {
 
