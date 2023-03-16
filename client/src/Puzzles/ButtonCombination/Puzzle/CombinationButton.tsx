@@ -23,8 +23,6 @@ export default function CombinationButton(props: { index: number, combinationPay
 
     })
 
-    console.log(props.index, clickable)
-
     return (
         <div key={props.index} className={clickable ? styles.button : styles.inactiveButton} onClick={() => {
 

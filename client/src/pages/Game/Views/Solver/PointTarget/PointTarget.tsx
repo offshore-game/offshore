@@ -3,8 +3,9 @@ import { PuzzleInfo, zoneNames } from "../../../../../API/requests";
 import { AuthProp } from "../../../../../utils/propTypes";
 import NumberCombinationPuzzle from "../../../../../Puzzles/NumberCombination/Puzzle/NumberCombinationPuzzle";
 import ButtonCombinationPuzzle from "../../../../../Puzzles/ButtonCombination/Puzzle/ButtonCombinationPuzzle";
-import gameStyles from '../../../Game.module.css'
-import pointPos from './Points.module.css'
+import gameStyles from '../../../Game.module.css';
+import pointPos from './Points.module.css';
+import stopwatch from '../../../../../assets/Game/Stopwatch.svg';
 
 export default function PointTarget(props: { className: string, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
@@ -48,7 +49,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
 
 
     return (
-        <div ref={target} className={pointPos[props.className]} style={{ zIndex: "999", cursor: "pointer" }} onClick={() => {
+        <div className={`${pointPos.stopwatch} ${pointPos[props.className]}`} onClick={() => {
 
             console.log('clicked')
 
@@ -83,7 +84,11 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
             }
 
         }}>
-            { remainingTime }
+
+            <img src={stopwatch}/>
+            <div style={{position: "absolute"}}>{ remainingTime }</div>
+            
+
         </div>
     )
 

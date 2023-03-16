@@ -14,7 +14,7 @@ export default function ButtonCombinationPuzzle(props: { count: number, zoneName
         setButtonElems([]) // Prevent a duplication bug on component reset.
 
         for (let i = 0; i < props.count; i++) { // WARNING: Internally base 0
-            setButtonElems(entries => [ ...entries, <CombinationButton index={i} combinationPayload={combinationPayload} setCombinationPayload={setCombinationPayload}/> ])
+            setButtonElems(entries => [ ...entries, <CombinationButton key={i} index={i} combinationPayload={combinationPayload} setCombinationPayload={setCombinationPayload}/> ])
         }
     }, [combinationPayload])
 

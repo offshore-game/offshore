@@ -104,3 +104,20 @@
     top: 70%;
 
 }
+
+.stopwatch {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: transparent;
+    width: 5%;
+    z-index: 999;
+    cursor: pointer;
+
+    transform: translate(-27%, -45%);
+
+    font-size: 80%;
+
+}
