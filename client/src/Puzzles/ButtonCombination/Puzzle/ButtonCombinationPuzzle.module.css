@@ -7,6 +7,7 @@
 
     border-radius: 10px;
     
+    max-height: 100%;
     width: 85%;
 
     background-color: darkslategray;
@@ -22,6 +23,24 @@
 
     height: 100%;
     width: 100%;
+}
+
+.controlContainer {
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+
+}
+
+.controlButton {
+
+    margin: 10px;
+    padding: 10%;
+    min-width: 50px;
+
 }
 
 .button {
@@ -40,8 +59,7 @@
     width: 10%;
     aspect-ratio: 1/1;
 
-    margin: 2vw;
-    margin-bottom: 0;
+    margin: 2%;
 
     color: white;
 
