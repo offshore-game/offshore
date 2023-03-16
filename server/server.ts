@@ -3,6 +3,7 @@ import { globalErrors } from './types/enums'
 import GameLobby, { zoneNames } from './classes/GameLobby/GameLobby'
 import Player from './classes/Player'
 import { puzzleTypes } from './puzzles/Puzzle'
+import randomNumber from './generators/randomNumber'
 
 // https://socket.io/docs/v4/rooms/
 
@@ -15,7 +16,16 @@ const io = new Server(8080, {
 
 
 const lobbies = new Map<string, GameLobby>()
-Array.from(lobbies.keys())
+
+function destroyLobby(lobby: GameLobby) {
+
+    // Clear the game tick loop
+    clearInterval(lobby.gameLifecycleLoop)
+
+    lobbies.delete(lobby.id)
+
+}
+
 io.sockets.on("connection", function (socket) {
 
     console.debug("client connected")
@@ -55,7 +65,7 @@ io.sockets.on("connection", function (socket) {
         console.debug(`New lobby made with ID ${lobby.id}`)
 
         const player = await lobby.addPlayer(data.username, socket, true).catch((err) => { 
-            lobbies.delete(lobby.id) // Destroy the lobby; bad player.
+            destroyLobby(lobby) // Destroy the lobby; bad player.
             console.debug(`Deleted lobby with ID ${lobby.id}`)
             return callback(err);
         })
@@ -76,9 +86,6 @@ io.sockets.on("connection", function (socket) {
             const otherPlayers: string[] = []
             for (const player of lobby.players) {
                 otherPlayers.push(player.username)
-            }
-            if (lobby.players.length >= 10) {
-                return callback(false);
             }
 
             const player = await lobby.addPlayer(data.username, socket).catch((err) => { return callback(err) })
@@ -160,13 +167,47 @@ io.sockets.on("connection", function (socket) {
                 const result = await lobby.startGame()
                     if (!result) return callback(globalErrors.TOKEN_INVALID);
 
-                // Signal to the clients the game started, with all the puzzles
-                io.in(lobby.id).emit("gameStart", result)
+                // Assigns a random role to the player 
+                for (let i = 0; i < lobby.players.length; i++) {
 
-                console.debug('sending owner:', result)
+                    const otherRoles = []
+                    for (const player of lobby.players) {
+                        if (player.role) {
+                            otherRoles.push(player.role)
+                        }
+                    }
+
+                    const solverCount = otherRoles.filter(otherRole => otherRole == "SOLVER").length
+                    const readerCount = otherRoles.filter(otherRole => otherRole == "READER").length
+                    
+                    if (solverCount <= readerCount) { // LESS or EQUAL solvers than readers
+
+                        // We need more solvers than readers
+                        lobby.players[i].role = "SOLVER"
+                        
+                        // Signal to each individual client the game started, with all the puzzles AND their role
+                        lobby.players[i].socket.emit("gameStart", {
+                            ...result,
+                            role: "SOLVER",
+                        })
+
+                    } else { // MORE solvers than readers
+
+                        // We need to keep it even
+                        lobby.players[i].role = "READER"
+
+                        // Signal to each individual client the game started, with all the puzzles AND their role
+                        lobby.players[i].socket.emit("gameStart", {
+                            ...result,
+                            role: "READER",
+                        })
+
+                    }
+                    
+                }
 
                 // Return a success
-                return callback(result);
+                return callback({...result, role: player.role });
 
             // Player is not the owner of the lobby
             } else {
@@ -186,40 +227,45 @@ io.sockets.on("connection", function (socket) {
     })
 
     socket.on("answerPuzzle", function(data: { token: string, roomCode: string, zoneName: zoneNames, puzzleType: puzzleTypes, answer: any }, callback) {
-     
-        if (data.puzzleType == "numberCombination") {
     
-            const lobby = lobbies.get(data.roomCode)
+        const lobby = lobbies.get(data.roomCode)
 
-            if (lobby) {
+        if (lobby) {
 
-                const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
+            // Make sure the player is actually allowed to answer puzzles (has to be a SOLVER)
+            if (lobby.players.find(player => player.socketId == socket.id).role != "SOLVER") return callback(false);
 
-                // Puzzle doesn't exist
-                if (puzzleIndex == -1)  { console.warn("puzzle not found"); return callback(false) }
+            
+            const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
 
-                const puzzle = lobby.puzzles.active[puzzleIndex]
+            // Puzzle doesn't exist
+            if (puzzleIndex == -1)  { console.warn("puzzle not found"); return callback(false) }
 
-                const validated = puzzle.validate(data.answer)
-                if (validated) { // Answer is Right
+            const puzzle = lobby.puzzles.active[puzzleIndex]
 
-                    // Tell the lobby class the puzzle is correct and completed
-                    lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle })
-                    return callback(true)
+            const validated = puzzle.validate(data.answer)
+            if (validated) { // Answer is Right
 
-                } else { // Answer is Wrong
+                // Tell the lobby class the puzzle is correct and completed
+                lobby.events.emitter.emit(lobby.events.names.complete, { puzzle: puzzle, socket: socket })
 
-                    // Do nothing?
-                    return callback(false)
+                // Tell the client that the puzzle was answered correctly
+                return callback(true)
 
-                }
+            } else { // Answer is Wrong
 
-            } else {
+                // Tell the lobby class the puzzle was answered incorrectly
+                lobby.events.emitter.emit(lobby.events.names.incorrect, { puzzle: puzzle, socket: socket })
 
-                // Lobby doesn't exist.
-                return callback(globalErrors.ROOM_INVALID)
+                // Tell the client that the puzzle was answered incorrectly
+                return callback(false)
 
             }
+
+        } else {
+
+            // Lobby doesn't exist.
+            return callback(globalErrors.ROOM_INVALID)
 
         }
 
@@ -253,7 +299,7 @@ io.sockets.adapter.on("leave-room", async (roomId, socketId) => {
                 io.in(roomId).emit("lobbyClose")
 
                 // Delete the lobby
-                lobbies.delete(roomId)
+                destroyLobby(lobby)
 
                 console.debug(`Room of ID ${roomId} destroyed due to inactivity.`)
 
@@ -264,7 +310,10 @@ io.sockets.adapter.on("leave-room", async (roomId, socketId) => {
         // Clear lobby if no connected players remain.
         const connectedPlayers = lobby.players.filter(player => player.connected == true)
         if (connectedPlayers.length == 0) {
-            lobbies.delete(roomId)
+            
+            // Delete the lobby
+            destroyLobby(lobby)
+            
         }
 
     }
