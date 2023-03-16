@@ -38,8 +38,14 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
 
             if (target.current) {
 
-                target.current.style.backgroundColor = nextColor
-                nextColor == 'black' ? setNextColor('red') : setNextColor('black')
+                if (nextColor == 'red') {
+                    target.current.className = `${pointPos.redwatch} ${pointPos[props.className]}`
+                    setNextColor('black')
+                } else if (nextColor == 'black') {
+                    target.current.className = `${pointPos.stopwatch} ${pointPos[props.className]}`
+                    setNextColor('red')
+                }
+                
 
             }
 
@@ -49,7 +55,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
 
 
     return (
-        <div className={`${pointPos.stopwatch} ${pointPos[props.className]}`} onClick={() => {
+        <div ref={target} className={`${pointPos.stopwatch} ${pointPos[props.className]}`} onClick={() => {
 
             console.log('clicked')
 
