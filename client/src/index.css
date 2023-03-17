@@ -1,3 +1,19 @@
+:root {
+
+  --blue-1: #2D3340;
+  --blue-2: #596780;
+  --blue-3: #869ABF;
+  --blue-4: #A1B9E6;
+  --blue-5: #B2CDFF;
+
+  --brown-1: #401C18;
+  --brown-2: #592C22;
+  --brown-3: #8C6046;
+  --brown-4: #D9AE89;
+  --brown-5: #A67F5D;
+
+}
+
 #sizingContainer {
   height: 100vh;
   width: 100vw;
