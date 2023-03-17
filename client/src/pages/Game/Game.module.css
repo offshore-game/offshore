@@ -49,7 +49,7 @@
 
     position: absolute;
 
-    background-color: var(--blue-1);
+    background-color: var(--brown-2);
     border-radius: 10px;
     box-shadow: -6px 7px black;
 
@@ -81,7 +81,7 @@
 
     position: absolute;
 
-    background-color: var(--blue-1);
+    background-color: var(--brown-1);
     border-radius: 10px;
 
     width: 50%;
@@ -120,6 +120,7 @@
     color: white;
 
     margin: 15px;
+    top: 0;
     right: 0;
 
     cursor: pointer;
