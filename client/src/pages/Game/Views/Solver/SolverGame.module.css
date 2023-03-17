@@ -1,28 +1,3 @@
-.exitIcon {
-
-    position: absolute;
-
-    height: 15px;
-    width: 15px;
-
-    color: white;
-
-    right: 0;
-    top: 0;
-    margin: 15px;
-
-    cursor: pointer;
-
-    transition: color 0.2s cubic-bezier(.47, 1.64, .41, 1);
-
-}
-.exitIcon:hover {
-    color: gray;
-}
-.exitIcon:active {
-    color: black;
-}
-
 .stopwatch {
 
     position: absolute;

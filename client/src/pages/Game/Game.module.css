@@ -96,6 +96,44 @@
 
 }
 
+.activeTopControls {
+
+    margin-top: 10px;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+}
+
+.exitIcon {
+
+    position: absolute;
+
+    height: 15px;
+    width: 15px;
+
+    color: white;
+
+    margin: 15px;
+    right: 0;
+
+    cursor: pointer;
+
+    transition: color 0.2s cubic-bezier(.47, 1.64, .41, 1);
+
+}
+.exitIcon:hover {
+    color: gray;
+}
+.exitIcon:active {
+    color: black;
+}
+
 .zoneHeader {
 
     color: white;

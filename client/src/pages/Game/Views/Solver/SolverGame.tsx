@@ -90,24 +90,30 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                 <div id="puzzleAnswerOverlay" className={styles.inactiveAnswerOverlay /* inactiveAnswerOverlay, correctAnswerOverlay, incorrectAnswerOverlay */}/>
 
-                <div className={gameStyles.zoneHeader}>
-                    { toVisualZoneName(props.activePuzzle.zoneName!) }
+                <div className={gameStyles.activeTopControls}>
+
+                    <div className={gameStyles.zoneHeader}>
+                        { toVisualZoneName(props.activePuzzle.zoneName!) }
+                    </div>
+
+                    <ImCross className={gameStyles.exitIcon} onClick={() => {
+                        // Animate the "activePuzzle" div out
+                        const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+                        const shadow = document.getElementById('shadow')
+
+                        if (activePuzzleContainer && shadow) {
+
+                            props.setActivePuzzle({ element: <div/>, zoneName: undefined })
+                            activePuzzleContainer.className = gameStyles.hiddenPuzzle
+                            shadow.style.zIndex = "-1"
+
+                        }
+
+                    }}/>
+
                 </div>
 
-                <ImCross className={styles.exitIcon} onClick={() => {
-                    // Animate the "activePuzzle" div out
-                    const activePuzzleContainer = document.getElementById('activePuzzleContainer')
-                    const shadow = document.getElementById('shadow')
 
-                    if (activePuzzleContainer && shadow) {
-
-                        props.setActivePuzzle({ element: <div/>, zoneName: undefined })
-                        activePuzzleContainer.className = gameStyles.hiddenPuzzle
-                        shadow.style.zIndex = "-1"
-
-                    }
-
-                }}/>
                 { props.activePuzzle.element }
                 
 
