@@ -1,0 +1,138 @@
+.basePoint {
+
+    position: absolute;
+        
+    left: 50%;
+    top: 50%;
+
+    width: 2%;
+    aspect-ratio: 1/1;
+
+    background-color: black;
+    border-radius: 50px;
+
+    z-index: 99;
+
+}
+
+.frontMastPoint {
+
+    composes: basePoint;
+
+    left: 60.5%;
+    top: 24.8%;
+
+}
+
+.backMastPoint {
+
+    composes: basePoint;
+
+    left: 25%;
+    top: 24.8%;
+
+}
+
+.controlRoomPoint {
+
+    composes: basePoint;
+
+    left: 37%;
+    top: 35%;
+
+}
+
+.engineRoomPoint {
+
+    composes: basePoint;
+
+    left: 50%;
+    top: 38%;
+
+}
+
+.captainDeckPoint {
+
+    composes: basePoint;
+
+    left: 72%;
+    top: 42%;
+
+}
+
+.secondaryDeckPoint {
+
+    composes: basePoint;
+
+    left: 63.8%;
+    top: 53%;
+
+}
+
+.crewmateDeckPoint {
+
+    composes: basePoint;
+
+    left: 43.5%;
+    top: 50%;
+
+}
+
+.emergencyDeckPoint {
+
+    composes: basePoint;
+
+    left: 24%;
+    top: 52%;
+
+}
+
+.operationCenterPoint {
+
+    composes: basePoint;
+
+    left: 27.5%;
+    top: 70%;
+
+}
+
+.entertainmentRoomPoint {
+
+    composes: basePoint;
+
+    left: 59%;
+    top: 70%;
+
+}
+
+.timeText {
+
+    position: absolute;
+    transform: translateY(0.2em);
+
+}
+
+.stopwatch {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: transparent;
+    width: 5%;
+    z-index: 999;
+    cursor: pointer;
+
+    transform: translate(-27%, -45%);
+
+    font-size: 80%;
+
+    aspect-ratio: auto;
+}
+
+.redwatch {
+
+    composes: stopwatch;
+    filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(300deg);
+
+}

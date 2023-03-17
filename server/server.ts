@@ -82,6 +82,13 @@ io.sockets.on("connection", function (socket) {
 
         if (lobby) {
             
+            if (lobby.players.length >= 10) {
+
+                // Don't allow the player to join if we've reached max capacity
+                return callback(false);
+
+            }
+
             // Make an array of all other player usernames (before we add the new player)
             const otherPlayers: string[] = []
             for (const player of lobby.players) {

@@ -18,6 +18,8 @@
     width: 100%;
     background-color: #401C18;
 
+    box-shadow: 0px 3px 10px 2px black;
+
 }
 
 .shadow {
@@ -47,11 +49,17 @@
 
     position: absolute;
 
-    background-color: gray;
+    background-color: #401C18;
+    border-radius: 10px;
+    box-shadow: -6px 7px black;
+
     z-index: 9999;
 
-    width: 50%;
-    height: 50%;
+    min-width: 60%;
+    min-height: 50%;
+
+    max-width: 80%;
+    max-height: 70%;
 
     top: 25%;
     
@@ -73,7 +81,8 @@
 
     position: absolute;
 
-    background-color: gray;
+    background-color: #401C18;
+    border-radius: 10px;
 
     width: 50%;
     height: 50%;
@@ -84,6 +93,53 @@
     transform: translate(-50%, 0);
 
     transition: top 0.8s cubic-bezier(.47, 1.64, .41, 1);
+
+}
+
+.activeTopControls {
+
+    margin-top: 10px;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+}
+
+.exitIcon {
+
+    position: absolute;
+
+    height: 15px;
+    width: 15px;
+
+    color: white;
+
+    margin: 15px;
+    right: 0;
+
+    cursor: pointer;
+
+    transition: color 0.2s cubic-bezier(.47, 1.64, .41, 1);
+
+}
+.exitIcon:hover {
+    color: gray;
+}
+.exitIcon:active {
+    color: black;
+}
+
+.zoneHeader {
+
+    color: white;
+    font-weight: 500;
+    font-size: 20px;
+    margin: 10px;
 
 }
 

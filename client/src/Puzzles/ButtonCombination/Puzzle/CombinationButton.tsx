@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './ButtonCombinationPuzzle.module.css'
 
 type combinationPayloadType = { [key: number]: number /* Order the button was pressed in: index of the button pressed */ }
@@ -13,17 +13,17 @@ export default function CombinationButton(props: { index: number, combinationPay
 
         if (find) {
             
+            // Disable Button
             setClickable(false)
         
         } else {
 
+            // Enable Button
             setClickable(true)
-
         }
-
+        
+        
     })
-
-    console.log(props.index, clickable)
 
     return (
         <div key={props.index} className={clickable ? styles.button : styles.inactiveButton} onClick={() => {
@@ -62,7 +62,7 @@ export default function CombinationButton(props: { index: number, combinationPay
 
             setClickable(false)
 
-        }}>{props.index+1}</div> // WARNING: Externally (Visually) base 1
+        }}/> // WARNING: Externally (Visually) base 1
     )
 
 }

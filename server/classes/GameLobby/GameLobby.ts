@@ -8,7 +8,7 @@ import NumberCombination from '../../puzzles/NumberCombination';
 import Puzzle, { puzzleTypeArray, puzzleTypes } from '../../puzzles/Puzzle';
 import Player from '../Player';
 
-export type zoneNames = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
+export type zoneNames = "frontMast" | "backMast" | "controlRoom" | "engineRoom" | "captainDeck" | "secondaryDeck" | "crewmateDeck" | "emergencyDeck" | "operationCenter" | "entertainmentRoom"
 
 type Puzzles = Puzzle & NumberCombination | ButtonCombination
 
@@ -62,7 +62,7 @@ export default class GameLobby {
     }
 
 
-    zones = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"] as zoneNames[]
+    zones = ["frontMast", "backMast", "controlRoom", "engineRoom", "captainDeck", "secondaryDeck", "crewmateDeck", "emergencyDeck", "operationCenter", "entertainmentRoom"] as zoneNames[]
 
     emitToAllPlayers(eventName: string, individualPlayerContents: { socketId: string, payload: any }[]) {
 
@@ -113,7 +113,7 @@ export default class GameLobby {
         */
         
         // Find what puzzle types aren't in use yet
-        let unusedPuzzles: puzzleTypes[] = puzzleTypeArray
+        let unusedPuzzles: puzzleTypes[] = [...puzzleTypeArray]
         for (const puzzle of [...this.puzzles.active, ...this.puzzles.awaiting]) { // For every puzzle active and about to be active...
             
             // Find it's name in the unused array and delete it if it exists
@@ -149,11 +149,12 @@ export default class GameLobby {
 
 
         // Select a random type of puzzle
-        const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
+        //const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
+        const randomlySelectedPuzzleType = "numberCombination"
 
         // Select a random zone
         const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
-            if (!randomlySelectedZone) return null; // bug prevention
+            if (!randomlySelectedZone) return null; // terminate the generation: bug prevention
 
         let generatedPuzzle: Puzzles
 
@@ -557,7 +558,14 @@ export default class GameLobby {
 
         if (success) {
 
-            this.io.in(this.id).emit("gameOver", { success: true, leaderboard: [{ username: "a", coins: 100 }] })
+            const leaderboard = []
+            for (const player of this.players){
+
+            this.io.in(this.id).emit("gameOver", { success: true, leaderboard: leaderboard })
+
+        
+          
+        }
 
         } else {
 

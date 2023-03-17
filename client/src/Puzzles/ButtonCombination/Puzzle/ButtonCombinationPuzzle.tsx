@@ -14,7 +14,7 @@ export default function ButtonCombinationPuzzle(props: { count: number, zoneName
         setButtonElems([]) // Prevent a duplication bug on component reset.
 
         for (let i = 0; i < props.count; i++) { // WARNING: Internally base 0
-            setButtonElems(entries => [ ...entries, <CombinationButton index={i} combinationPayload={combinationPayload} setCombinationPayload={setCombinationPayload}/> ])
+            setButtonElems(entries => [ ...entries, <CombinationButton key={i} index={i} combinationPayload={combinationPayload} setCombinationPayload={setCombinationPayload}/> ])
         }
     }, [combinationPayload])
 
@@ -27,33 +27,38 @@ export default function ButtonCombinationPuzzle(props: { count: number, zoneName
 
             </div>
 
-            <Button text={"Submit"} onClick={async () => {
+            <div className={styles.controlContainer}>
 
-                const result = await props.requests.sendAnswer(props.zoneName, "buttonCombination", combinationPayload)
+                <Button className={styles.controlButton} text={"Submit"} onClick={async () => {
 
-                // Reset the game if it's answered incorrectly
-                if (!result) setCombinationPayload({})
+                    const result = await props.requests.sendAnswer(props.zoneName, "buttonCombination", combinationPayload)
 
-                // Tell the game component the result
-                const resultEvent = new CustomEvent("puzzleResult", {
-                    detail: {
-                        zoneName: props.zoneName,
-                        result: result
-                    }
-                })
-                document.dispatchEvent(resultEvent)
+                    // Reset the game if it's answered incorrectly
+                    if (!result) setCombinationPayload({})
+
+                    // Tell the game component the result
+                    const resultEvent = new CustomEvent("puzzleResult", {
+                        detail: {
+                            zoneName: props.zoneName,
+                            result: result
+                        }
+                    })
+                    document.dispatchEvent(resultEvent)
 
 
 
-                console.log(combinationPayload)
+                    console.log(combinationPayload)
 
-            }} style={{margin: "4vh", minHeight: "45px"}}/>
+                }} style={{minHeight: "25px"}}/>
 
-            <Button text={"Restart"} onClick={() => {
+                <Button className={styles.controlButton} text={"Restart"} onClick={() => {
 
-                setCombinationPayload({})
+                    setCombinationPayload({})
 
-            }} style={{margin: "4vh", minHeight: "45px"}}/>
+                }} style={{minHeight: "25px"}}/>
+
+            </div>
+
             
         </div>
     )

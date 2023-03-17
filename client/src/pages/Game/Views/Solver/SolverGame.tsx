@@ -3,8 +3,11 @@ import { gameInfo, zoneNames } from '../../../../API/requests';
 import { AuthProp } from '../../../../utils/propTypes';
 import gameStyles from '../../Game.module.css'
 import styles from './SolverGame.module.css'
-import PuzzleTarget from './PuzzleTarget/PuzzleTarget';
-
+import pointPos from './PointTarget/Points.module.css'
+import boat from '../../../../assets/Game/Boat.svg';
+import PointTarget from './PointTarget/PointTarget';
+import { ImCross } from 'react-icons/im'
+import toVisualZoneName from '../../../../utils/zoneNameConversion';
 
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
 
@@ -48,37 +51,69 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     })
     
     // TESTING \\
-    const puzzleTargetSamples = []
+    const puzzleTargets = []
     for (const puzzle of props.gameInfo.puzzles) {
         // Bug Fix https://reactjs.org/docs/lists-and-keys.html
         // It's very possible this may be still bugged in rare circumstances, it would need to be tested.
-        puzzleTargetSamples.push(<PuzzleTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
+        puzzleTargets.push(<PointTarget key={`${puzzle.zoneName}`} className={`${puzzle.zoneName}Point`} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
+        //puzzleTargetSamples.push(<PuzzleTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
     }
 
     // Solver Game Panel \\
     return (
         <React.Fragment>
         
-            { puzzleTargetSamples }
+            { /*puzzleTargetSamples*/ }
+            <div className={styles.boatContainer}>
+
+                <img src={boat} style={{position: 'absolute'}}/>
+
+                {/* Display Active Overlays */}
+                { puzzleTargets }
+
+                {/* All of the zone target points */}
+                <div className={pointPos.frontMastPoint}/>
+                <div className={pointPos.backMastPoint}/>
+                <div className={pointPos.controlRoomPoint}/>
+                <div className={pointPos.engineRoomPoint}/>
+                <div className={pointPos.captainDeckPoint}/>
+                <div className={pointPos.secondaryDeckPoint}/>
+                <div className={pointPos.crewmateDeckPoint}/>
+                <div className={pointPos.emergencyDeckPoint}/>
+                <div className={pointPos.operationCenterPoint}/>
+                <div className={pointPos.entertainmentRoomPoint}/>
+
+            </div>
+
 
             <div id="activePuzzleContainer" className={gameStyles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
 
                 <div id="puzzleAnswerOverlay" className={styles.inactiveAnswerOverlay /* inactiveAnswerOverlay, correctAnswerOverlay, incorrectAnswerOverlay */}/>
 
-                <div className={styles.exitCube} onClick={() => {
-                    // Animate the "activePuzzle" div out
-                    const activePuzzleContainer = document.getElementById('activePuzzleContainer')
-                    const shadow = document.getElementById('shadow')
+                <div className={gameStyles.activeTopControls}>
 
-                    if (activePuzzleContainer && shadow) {
+                    <div className={gameStyles.zoneHeader}>
+                        { toVisualZoneName(props.activePuzzle.zoneName!) }
+                    </div>
 
-                        props.setActivePuzzle({ element: <div/>, zoneName: undefined })
-                        activePuzzleContainer.className = gameStyles.hiddenPuzzle
-                        shadow.style.zIndex = "-1"
+                    <ImCross className={gameStyles.exitIcon} onClick={() => {
+                        // Animate the "activePuzzle" div out
+                        const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+                        const shadow = document.getElementById('shadow')
 
-                    }
+                        if (activePuzzleContainer && shadow) {
 
-                }}/>
+                            props.setActivePuzzle({ element: <div/>, zoneName: undefined })
+                            activePuzzleContainer.className = gameStyles.hiddenPuzzle
+                            shadow.style.zIndex = "-1"
+
+                        }
+
+                    }}/>
+
+                </div>
+
+
                 { props.activePuzzle.element }
                 
 
