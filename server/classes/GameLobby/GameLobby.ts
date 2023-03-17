@@ -149,8 +149,8 @@ export default class GameLobby {
 
 
         // Select a random type of puzzle
-        //const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
-        const randomlySelectedPuzzleType = "numberCombination"
+        const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
+        //const randomlySelectedPuzzleType = "numberCombination" // for testing
 
         // Select a random zone
         const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
