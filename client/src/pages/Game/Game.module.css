@@ -49,7 +49,7 @@
 
     position: absolute;
 
-    background-color: #401C18;
+    background-color: var(--blue-1);
     border-radius: 10px;
     box-shadow: -6px 7px black;
 
@@ -81,7 +81,7 @@
 
     position: absolute;
 
-    background-color: #401C18;
+    background-color: var(--blue-1);
     border-radius: 10px;
 
     width: 50%;

@@ -56,7 +56,7 @@ export default function NumberCombinationPuzzle(props: { count: number, zoneName
 
             </div>
 
-            <Button text={`Submit`} onClick={async () => {
+            <Button className={styles.submit} text={`Submit`} onClick={async () => {
 
                 const combinationPayload: { [key: string]: number } = {}
 
