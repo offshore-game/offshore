@@ -92,7 +92,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
         }}>
 
             <img src={stopwatch}/>
-            <div style={{position: "absolute"}}>{ remainingTime }</div>
+            <div className={pointPos.timeText}>{ remainingTime }</div>
             
 
         </div>

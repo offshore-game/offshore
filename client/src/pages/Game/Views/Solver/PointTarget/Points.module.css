@@ -105,6 +105,13 @@
 
 }
 
+.timeText {
+
+    position: absolute;
+    transform: translateY(0.2em);
+
+}
+
 .stopwatch {
 
     display: flex;
@@ -120,6 +127,7 @@
 
     font-size: 80%;
 
+    aspect-ratio: auto;
 }
 
 .redwatch {
