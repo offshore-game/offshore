@@ -6,7 +6,8 @@ import styles from './SolverGame.module.css'
 import pointPos from './PointTarget/Points.module.css'
 import boat from '../../../../assets/Game/Boat.svg';
 import PointTarget from './PointTarget/PointTarget';
-
+import { ImCross } from 'react-icons/im'
+import toVisualZoneName from '../../../../utils/zoneNameConversion';
 
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
 
@@ -89,7 +90,11 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                 <div id="puzzleAnswerOverlay" className={styles.inactiveAnswerOverlay /* inactiveAnswerOverlay, correctAnswerOverlay, incorrectAnswerOverlay */}/>
 
-                <div className={styles.exitCube} onClick={() => {
+                <div className={gameStyles.zoneHeader}>
+                    { toVisualZoneName(props.activePuzzle.zoneName!) }
+                </div>
+
+                <ImCross className={styles.exitIcon} onClick={() => {
                     // Animate the "activePuzzle" div out
                     const activePuzzleContainer = document.getElementById('activePuzzleContainer')
                     const shadow = document.getElementById('shadow')

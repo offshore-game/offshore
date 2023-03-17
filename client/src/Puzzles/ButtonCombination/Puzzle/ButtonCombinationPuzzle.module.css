@@ -8,9 +8,7 @@
     border-radius: 10px;
     
     max-height: 100%;
-    width: 85%;
-
-    background-color: darkslategray;
+    width: 100%;
 }
 
 .buttonContainer {
@@ -38,8 +36,12 @@
 .controlButton {
 
     margin: 10px;
-    padding: 10%;
-    min-width: 50px;
+    padding: 5%;
+
+    max-height: 25%;
+    min-width: 50%;
+
+    background-color: #8C6046;
 
 }
 
@@ -51,12 +53,15 @@
     flex-direction: column;
 
     border-radius: 100%;
-    background-color: gray;
+    background-color: #D9AE89;
 
     border-color: black;
-    border-width: 10px;
+    border-width: 2%;
+    border-style: solid;
 
-    width: 10%;
+    box-shadow: 0px 6px  black;
+
+    width: 50%;
     aspect-ratio: 1/1;
 
     margin: 2%;
@@ -74,12 +79,16 @@
     
     filter: brightness(75%);
     cursor: pointer;
-
+    transform: translateY(2px);
+    box-shadow: 0px 4px black;
+    
 }
 
 .button:active {
 
     filter: brightness(65%);
+    transform: translateY(4px);
+    box-shadow: 0px 2px black;
 
 }
 
@@ -94,5 +103,8 @@
 
     filter: brightness(50%);
     cursor: auto;
+
+    transform: translateY(0px);
+    box-shadow: 0px 6px black;
 
 }

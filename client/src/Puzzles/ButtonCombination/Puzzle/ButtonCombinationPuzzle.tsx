@@ -49,13 +49,13 @@ export default function ButtonCombinationPuzzle(props: { count: number, zoneName
 
                     console.log(combinationPayload)
 
-                }} style={{margin: "2%", minHeight: "25px"}}/>
+                }} style={{minHeight: "25px"}}/>
 
                 <Button className={styles.controlButton} text={"Restart"} onClick={() => {
 
                     setCombinationPayload({})
 
-                }} style={{margin: "2%", minHeight: "25px"}}/>
+                }} style={{minHeight: "25px"}}/>
 
             </div>
 

@@ -25,10 +25,10 @@
 }
 
 .button:hover {
+
     filter: brightness(85%);
     cursor: pointer;
 
-    /*box-shadow: -2.5px 5px  black;*/
 }
 
 .button:active {

@@ -50,10 +50,16 @@
     position: absolute;
 
     background-color: #401C18;
+    border-radius: 10px;
+    box-shadow: -6px 7px black;
+
     z-index: 9999;
 
-    width: 50%;
-    height: 50%;
+    min-width: 60%;
+    min-height: 50%;
+
+    max-width: 80%;
+    max-height: 70%;
 
     top: 25%;
     
@@ -76,6 +82,7 @@
     position: absolute;
 
     background-color: #401C18;
+    border-radius: 10px;
 
     width: 50%;
     height: 50%;
@@ -86,6 +93,15 @@
     transform: translate(-50%, 0);
 
     transition: top 0.8s cubic-bezier(.47, 1.64, .41, 1);
+
+}
+
+.zoneHeader {
+
+    color: white;
+    font-weight: 500;
+    font-size: 20px;
+    margin: 10px;
 
 }
 
