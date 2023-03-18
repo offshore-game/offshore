@@ -237,16 +237,9 @@ export default class ButtonSpeed extends Puzzle {
 
         const fragmentedSolutions = []
 
-        const individualEntrySolutions = [] as { buttonOrder: string, buttonIndex: number }[]
-        for (const key of Object.keys(this.solution)) {
-
-            individualEntrySolutions.push({
-
-                buttonOrder: key,
-                buttonIndex: this.solution[key]
-
-            })
-
+        const individualEntrySolutions = [] as number[]
+        for (const poisonIndex of this.solution) {
+            individualEntrySolutions.push(poisonIndex)
         }
 
         const centerIndex = Math.ceil(individualEntrySolutions.length / solutionCount)
