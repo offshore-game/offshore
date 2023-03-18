@@ -1,20 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { gameInfo, zoneNames } from '../../../../API/requests'
 import ButtonCombinationManual from '../../../../Puzzles/ButtonCombination/Manual/ButtonCombinationManual'
 import { AuthProp } from '../../../../utils/propTypes'
-import ManualTarget from './ManualTarget/ManualTarget'
+import toVisualZoneName from '../../../../utils/zoneNameConversion'
 import styles from './ReaderGame.module.css'
+import { RxTriangleLeft, RxTriangleRight } from 'react-icons/rx'
 
-export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
+export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo> } & AuthProp) {
 
-    const answerPages = []
+    //console.log(props.gameInfo)
+
+    const [ activePage, setActivePage ] = useState({ number: 0, zoneName: "ZONE HERE" }) // Internally Base 0
+
+    const answerPages = [] as { element: JSX.Element, zoneName: zoneNames }[]
     for (const puzzle of props.gameInfo.puzzles) {
         // A solution is provided for this player
         if (puzzle.solution) {
-
+            //console.log(puzzle.solution)
             if (puzzle.type == "buttonCombination") {
-
-                answerPages.push(<ButtonCombinationManual/>)
+                
+                answerPages.push({ element: <ButtonCombinationManual key={puzzle.zoneName} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
 
             }
             // Add more puzzles!
@@ -22,14 +27,69 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
     }
 
-    return (
-        <div className={styles.container}>
 
-            <div>
+    if (answerPages.length > 0) {  // Bug Fix
 
-            </div>
+        // Check if the activePage still exists
+        const result = props.gameInfo.puzzles.find(puzzle => puzzle.zoneName == activePage.zoneName)
+        if (!result) { // Does not exist anymore
 
-        </div>
-    )
+            console.log('ceased to exist')
+
+            // Reset to the first page
+            setActivePage({ number: 0, zoneName: answerPages[0].zoneName})
+
+        }
+
+        return (
+
+            <React.Fragment>
+    
+                <div className={styles.container}>
+    
+                    <div className={styles.pageBase}>
+                        <div style={{ margin: "5%" }}>{ toVisualZoneName(activePage.zoneName as any)?.toUpperCase() }</div>
+                        { answerPages[activePage.number] ? answerPages[activePage.number].element : "" }
+                    </div>
+
+                    <div className={styles.controls}>
+
+                        <RxTriangleLeft className={styles.arrow} onClick={() => {
+
+                            if (activePage.number - 1 >= 0) { // Check if it's within range
+                                setActivePage({ number: activePage.number - 1, zoneName: answerPages[activePage.number - 1].zoneName })
+                            }
+                            
+
+                        }}/>
+                        { `${activePage.number + 1}/${answerPages.length}` }
+                        <RxTriangleRight className={styles.arrow} onClick={() => {
+
+                            if (activePage.number + 1 < answerPages.length) { // Check if it's within range
+                                setActivePage({ number: activePage.number + 1, zoneName: answerPages[activePage.number + 1].zoneName })
+                            }
+                            
+
+                        }}/>
+
+                    </div>
+                    
+                </div>
+
+
+    
+            </React.Fragment>
+    
+        )
+
+    } else {
+
+        return (
+            <div className={styles.container}/> // On load create the background at least
+        )
+
+    }
+
+
 
 }

@@ -234,7 +234,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     
                 </div>
 
-                { userRole == "SOLVER" ? <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/> : <ReaderGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/> }
+                { userRole == "SOLVER" ? <SolverGame gameInfo={gameInfo} setGameInfo={setGameInfo} activePuzzle={activePuzzle} setActivePuzzle={setActivePuzzle} requests={props.requests}/> : <ReaderGame gameInfo={gameInfo} setGameInfo={setGameInfo} requests={props.requests}/> }
             </div>
         )
 
