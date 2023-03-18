@@ -126,6 +126,9 @@ export default function SpeedButton(props: { index: number, timings: number[], p
                 // Poison button; invalid
                 if (isPoison) {
 
+                    // Reset the game
+                    props.reset(true);
+
                     // do a little animation
                     button.current.style.backgroundColor = "green"
                     await sleep(500)
@@ -136,9 +139,8 @@ export default function SpeedButton(props: { index: number, timings: number[], p
                     button.current.style.backgroundColor = "red"
                     await sleep(500)
 
-                    // Reset the game
-                    return props.reset(true);
-
+                    return;
+                    
                 }
 
                 // return gray

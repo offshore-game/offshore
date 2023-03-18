@@ -66,7 +66,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
                 10: [ 2, 5, 15 ],
             },
 
-            poisonTiming: {
+            poisonTiming: { // If a button is poison, it CANNOT be a normal button as well.
 
                 5: [ 7 ]
 
@@ -143,7 +143,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
                 timeouts.current = [...timeouts.current, gameEndTimeout]
 
 
-            }, 1000) // Wait one second before resetting
+            }, 2000) // Wait two seconds before resetting
 
         }
 
