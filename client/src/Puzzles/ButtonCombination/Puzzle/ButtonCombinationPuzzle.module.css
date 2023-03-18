@@ -41,7 +41,7 @@
     max-height: 25%;
     min-width: 50%;
 
-    background-color: #8C6046;
+    background-color: var(--brown-3);
 
 }
 
@@ -53,7 +53,7 @@
     flex-direction: column;
 
     border-radius: 100%;
-    background-color: #D9AE89;
+    background-color: var(--blue-3);
 
     border-color: black;
     border-width: 2%;

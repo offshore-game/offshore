@@ -31,7 +31,7 @@
     flex-direction: column;
 
     border-radius: 15px;
-    background-color: #8C6046;
+    background-color: var(--blue-3);
 
     border-color: black;
     border-width: 10px;
@@ -44,20 +44,27 @@
     margin: 2%;
     margin-bottom: 0;
 
-    color: white;
+    font-weight: 650;
+    color: black;
 
     z-index: 1;
 
     user-select: none;
 }
 
+.submit {
+
+    background-color: var(--brown-3);
+
+}
+
 .arrow {
+
     color: black;
 
     font-size: 8vh;
 
 }
-
 .arrow:hover {
 
     color: white;
@@ -65,7 +72,6 @@
     transition: 0.1s;
 
 }
-
 .arrow:active {
 
     filter: brightness(85%);
