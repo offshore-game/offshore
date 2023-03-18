@@ -4,12 +4,24 @@ import { validateTokenEnums } from "./types/enums";
 export type zoneNames = "frontMast" | "backMast" | "controlRoom" | "engineRoom" | "captainDeck" | "secondaryDeck" | "crewmateDeck" | "emergencyDeck" | "operationCenter" | "entertainmentRoom"
 type puzzleTypes = "numberCombination" | "buttonCombination" | "buttonSpeed" | "wireConnect" | "wireCut"
 
+type timings = {
+    // Button Index: Intervals (in seconds) to Light Up
+    [key: number]: number[]
+}
+
 export type PuzzleInfo = {
     zoneName: zoneNames,
     type: puzzleTypes,
     remainingTime: number,
     numberCount?: number,
     buttonCount?: number,
+    buttonGridDimensions?: { rows: number, columns: number },
+    buttonGridTimings?: {
+        standard: timings,
+        poison: timings,
+        duration: number,
+        timeToHit: number,
+    },
     solution?: {
         fragments: any[], // The fragmented solution provided only if the player has the READER role.
     },

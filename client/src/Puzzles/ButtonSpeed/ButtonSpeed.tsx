@@ -1,30 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { PuzzleInfo } from '../../API/requests'
+import Button from '../../components/Button/Button'
 import styles from './ButtonSpeed.module.css'
 import SpeedButton from './SpeedButton'
 
-type buttonSpeedPayloadType = {
-        
-    layout: {
-        rows: number,
-        columns: number,
-    },
+export default function ButtonSpeed(props: { layout: { rows: number, columns: number }, timings: PuzzleInfo["buttonGridTimings"] }) {
 
-    timings: {
-        [key: string]: number[]
-    },
-
-    poisonTimings: {
-        [key: string]: number[]
-    }
-
-    gameDuration: number,
-
-    timeToHit: number,
-
-}
-
-
-export default function ButtonSpeed(props: { layout: { rows: number, columns: number } }) {
+    console.log(props)
 
     const [ buttonsInfo, setButtonsInfo ] = useState([] as any[])
 
@@ -53,31 +35,6 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
         root.style.setProperty('--buttonSpeed-Rows', `${props.layout.rows}`)
         root.style.setProperty('--buttonSpeed-Columns', `${props.layout.columns}`)
 
-        const buttonSpeedPayload: buttonSpeedPayloadType = {
-
-            layout: props.layout,
-    
-            timings: {
-                0: [ 2, 5, 10 ], // At 2, 5, and 10 seconds after start
-                1: [ 3, 6, 11 ],
-                2: [ 3, 6, 9 ],
-                3: [ 6, 9, 12 ],
-                4: [ 6, 9, 12 ],
-                10: [ 2, 5, 15 ],
-            },
-
-            poisonTimings: { // If a button is poison, it CANNOT be a normal button as well.
-
-                5: [ 7 ]
-
-            },
-    
-            gameDuration: 15, // The time the game goes on
-    
-            timeToHit: 2, // NOTE: At minimum there must be a 1 second buffer + timeToHit between buttons lighting up
-    
-        }
-
         const tempInfo = []
         for (let i = 0; i < totalCount; i++) {
 
@@ -85,9 +42,9 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
             tempInfo.push({
                 index: i,
-                timings: buttonSpeedPayload.timings[i] ? buttonSpeedPayload.timings[i] : [],
-                poisonTimings: buttonSpeedPayload.poisonTimings[i] ? buttonSpeedPayload.poisonTimings[i]: [],
-                timeToHit: buttonSpeedPayload.timeToHit
+                timings: props.timings!.standard[i] ? props.timings!.standard[i] : [],
+                poisonTimings: props.timings!.poison[i] ? props.timings!.poison[i]: [],
+                timeToHit: props.timings!.timeToHit
             })
 
         }
@@ -98,10 +55,10 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
             console.warn("Game Finished!")
 
-        }, buttonSpeedPayload.gameDuration + 1 * 10000)
+        }, props.timings!.duration + 1 * 10000) // Q: wait why is this 10000 lol?
 
         setButtonsInfo(tempInfo) // Reset the state
-        setButtonsPayload(buttonSpeedPayload) // Share the payload
+        setButtonsPayload(props.timings) // Share the payload
         timeouts.current = [...timeouts.current, gameEndTimeout]
 
     }, []) // you get the payload once
@@ -155,9 +112,15 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
             <div ref={buttonGrid} className={styles.buttonContainer}>
                 
-                {buttonsInfo.map((info) => <SpeedButton key={info.index} /*????*/ index={info.index} timings={ info.timings } poisonTimings={ info.poisonTimings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} timeouts={timeouts} />)}
+                {buttonsInfo.map((info) => <SpeedButton key={info.index} /*Q: ????*/ index={info.index} timings={ info.timings } poisonTimings={ info.poisonTimings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} timeouts={timeouts} />)}
 
             </div>
+
+            <Button text="Start" onClick={() => {
+                
+                // Start the game!
+
+            }}/>
             
         </div>
     )

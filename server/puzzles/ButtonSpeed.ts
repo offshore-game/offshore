@@ -8,12 +8,12 @@ export type buttonSpeedPayload = {
     layout: { rows: number, columns: number },
 
     timings: {
-        // Button Index: Seconds to Light Up
+        // Button Index: Intervals (in seconds) to Light Up
         [ key: number ]: number[]
     },
 
     poisonTimings: {
-        // Button Index: Seconds to Light Up
+        // Button Index: Intervals (in seconds) to Light Up
         [ key: number ]: number[]
     },
 
@@ -41,14 +41,14 @@ export default class ButtonSpeed extends Puzzle {
     dimensions: { rows: number, columns: number }
     timings: buttonSpeedPayload["timings"]
     poisonTimings: buttonSpeedPayload["poisonTimings"]
-    buttonCount: number
+    standardCount: number
     poisonCount: number
     gameDuration: number
     timeToHit: number
 
-    constructor(lobby: GameLobby, zoneName: zoneNames, dimensions: { rows: number, columns: number }, buttonCount: number, poisonCount: number, puzzleDurationSec: number, spawnDelaySec: number, fragmentCount: number) {
+    constructor(lobby: GameLobby, zoneName: zoneNames, dimensions: { rows: number, columns: number }, standardCount: number, poisonCount: number, puzzleDurationSec: number, spawnDelaySec: number, fragmentCount: number) {
         
-        super(lobby, zoneName, "buttonCombination", puzzleDurationSec, spawnDelaySec)
+        super(lobby, zoneName, "buttonSpeed", puzzleDurationSec, spawnDelaySec)
 
 
         this.dimensions = dimensions
@@ -56,7 +56,7 @@ export default class ButtonSpeed extends Puzzle {
         this.timings = {}
         this.poisonTimings = {}
 
-        this.buttonCount = buttonCount
+        this.standardCount = standardCount
         this.poisonCount = poisonCount
 
         this.gameDuration = 20 // 20 Seconds of Buttons
@@ -84,13 +84,17 @@ export default class ButtonSpeed extends Puzzle {
 
             }
 
-            poisonIndexes.push(selectUniqueIndex())
+            const index = selectUniqueIndex()
+            poisonIndexes.push(index)
+
+            // Initialize the Array
+            this.poisonTimings[index] = []
             
         }
 
         // Select Regular Indexes
         const buttonIndexes: number[] = []
-        for (let i = 0; i < this.buttonCount; i++) {
+        for (let i = 0; i < this.standardCount; i++) {
 
             function selectUniqueIndex() {
 
@@ -108,7 +112,11 @@ export default class ButtonSpeed extends Puzzle {
 
             }
 
-            buttonIndexes.push(selectUniqueIndex())
+            const index = selectUniqueIndex()
+            buttonIndexes.push(index)
+
+            // Initialize the Array
+            this.timings[index] = []
 
         }
 
