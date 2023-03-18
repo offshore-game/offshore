@@ -4,13 +4,14 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import makeLobbyId from '../../generators/LobbyId';
 import randomNumber from '../../generators/randomNumber';
 import ButtonCombination from '../../puzzles/ButtonCombination';
+import ButtonSpeed from '../../puzzles/ButtonSpeed';
 import NumberCombination from '../../puzzles/NumberCombination';
 import Puzzle, { puzzleTypeArray, puzzleTypes } from '../../puzzles/Puzzle';
 import Player from '../Player';
 
 export type zoneNames = "frontMast" | "backMast" | "controlRoom" | "engineRoom" | "captainDeck" | "secondaryDeck" | "crewmateDeck" | "emergencyDeck" | "operationCenter" | "entertainmentRoom"
 
-type Puzzles = Puzzle & NumberCombination | ButtonCombination
+type Puzzles = Puzzle & NumberCombination | ButtonCombination | ButtonSpeed
 
 type puzzleArrayPayload = {
     zoneName: zoneNames,
@@ -172,7 +173,12 @@ export default class GameLobby {
             // FEATURE: Button Count and Duration are Arbitrary for now
             generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
 
-        } else {
+        } else if (randomlySelectedPuzzleType == "buttonSpeed") {
+
+            // FEATURE: Button Count and Duration are Arbitrary for now
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 16, 500, addTimeout ? 2 : 0, readerCount)
+
+        } else{
 
             // FEATURE: add more puzzle types!
             generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
@@ -233,6 +239,8 @@ export default class GameLobby {
                     remainingTime: puzzle.remainingTime,
                     numberCount: undefined,
                     buttonCount: undefined,
+                    buttonGridDimensions: undefined,
+                    buttonGridTimings: undefined,
                     solution: undefined,
                 }
 
@@ -258,6 +266,23 @@ export default class GameLobby {
                     toPush.numberCount = (puzzle as NumberCombination).digitCount
                 } else if (puzzle.type == "buttonCombination") {
                     toPush.buttonCount = (puzzle as ButtonCombination).buttonCount
+                } else if (puzzle.type == "buttonSpeed") {
+
+                    const buttonSpeedPuzzle = puzzle as ButtonSpeed
+
+                    // Add dimensional information
+                    toPush.buttonGridDimensions = buttonSpeedPuzzle.dimensions
+
+                    // Add timings info
+                    toPush.buttonGridTimings = {
+
+                        standard: buttonSpeedPuzzle.timings,
+                        poison: buttonSpeedPuzzle.poisonTimings,
+                        duration: buttonSpeedPuzzle.gameDuration,
+                        timeToHit: buttonSpeedPuzzle.timeToHit,
+
+                    }
+
                 }
 
                 // Push to array

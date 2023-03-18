@@ -38,7 +38,7 @@ export default class ButtonCombination extends Puzzle {
         const generatedSolution: ButtonCombinationAnswer = {}
 
         // I don't want duplicate indexes
-        const allowedIndexes = [] // it's all NaN
+        const allowedIndexes = []
         for (let i = 0; i < buttonCount; i++) {
 
             allowedIndexes.push(i)

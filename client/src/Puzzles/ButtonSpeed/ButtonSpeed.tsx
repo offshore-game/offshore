@@ -9,11 +9,11 @@ type buttonSpeedPayloadType = {
         columns: number,
     },
 
-    timing: {
+    timings: {
         [key: string]: number[]
     },
 
-    poisonTiming: {
+    poisonTimings: {
         [key: string]: number[]
     }
 
@@ -57,7 +57,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
             layout: props.layout,
     
-            timing: {
+            timings: {
                 0: [ 2, 5, 10 ], // At 2, 5, and 10 seconds after start
                 1: [ 3, 6, 11 ],
                 2: [ 3, 6, 9 ],
@@ -66,7 +66,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
                 10: [ 2, 5, 15 ],
             },
 
-            poisonTiming: { // If a button is poison, it CANNOT be a normal button as well.
+            poisonTimings: { // If a button is poison, it CANNOT be a normal button as well.
 
                 5: [ 7 ]
 
@@ -85,8 +85,8 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
             tempInfo.push({
                 index: i,
-                timings: buttonSpeedPayload.timing[i] ? buttonSpeedPayload.timing[i] : [],
-                poisonTimings: buttonSpeedPayload.poisonTiming[i] ? buttonSpeedPayload.poisonTiming[i]: [],
+                timings: buttonSpeedPayload.timings[i] ? buttonSpeedPayload.timings[i] : [],
+                poisonTimings: buttonSpeedPayload.poisonTimings[i] ? buttonSpeedPayload.poisonTimings[i]: [],
                 timeToHit: buttonSpeedPayload.timeToHit
             })
 
