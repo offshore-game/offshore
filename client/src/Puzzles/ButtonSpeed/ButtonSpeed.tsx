@@ -13,6 +13,10 @@ type buttonSpeedPayloadType = {
         [key: string]: number[]
     },
 
+    poisonTiming: {
+        [key: string]: number[]
+    }
+
     gameDuration: number,
 
     timeToHit: number,
@@ -56,15 +60,21 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
             timing: {
                 0: [ 2, 5, 10 ], // At 2, 5, and 10 seconds after start
                 1: [ 3, 6, 11 ],
-                2: [ 3, 5, 7 ],
-                3: [ 6, 8, 11 ],
-                4: [ 8, 6, 11 ],
-                10: [ 2, 4, 15 ],
+                2: [ 3, 6, 9 ],
+                3: [ 6, 9, 12 ],
+                4: [ 6, 9, 12 ],
+                10: [ 2, 5, 15 ],
+            },
+
+            poisonTiming: {
+
+                5: [ 7 ]
+
             },
     
             gameDuration: 15, // The time the game goes on
     
-            timeToHit: 1, // NOTE: At minimum there must be a 1 second buffer + timeToHit between buttons lighting up
+            timeToHit: 2, // NOTE: At minimum there must be a 1 second buffer + timeToHit between buttons lighting up
     
         }
 
@@ -76,6 +86,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
             tempInfo.push({
                 index: i,
                 timings: buttonSpeedPayload.timing[i] ? buttonSpeedPayload.timing[i] : [],
+                poisonTimings: buttonSpeedPayload.poisonTiming[i] ? buttonSpeedPayload.poisonTiming[i]: [],
                 timeToHit: buttonSpeedPayload.timeToHit
             })
 
@@ -144,7 +155,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
             <div ref={buttonGrid} className={styles.buttonContainer}>
                 
-                {buttonsInfo.map((info) => <SpeedButton index={info.index} timings={ info.timings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} timeouts={timeouts} />)}
+                {buttonsInfo.map((info) => <SpeedButton key={info.index} /*????*/ index={info.index} timings={ info.timings } poisonTimings={ info.poisonTimings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} timeouts={timeouts} />)}
 
             </div>
             

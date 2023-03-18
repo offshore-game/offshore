@@ -7,6 +7,7 @@ import Home from './pages/Home/Home'
 import Requests from './API/requests';
 import GameSwitchPoint from './pages/Game/Game';
 import ButtonCombinationPuzzle from './Puzzles/ButtonCombination/Puzzle/ButtonCombinationPuzzle';
+import ButtonSpeed from './Puzzles/ButtonSpeed/ButtonSpeed';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -27,7 +28,7 @@ root.render(
 
             <Route path="/lobby/:id" element={ <Home requests={Connection} gameLobby={true}/> } />
             <Route path="/game/:id" element={ <GameSwitchPoint requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}
-            <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><ButtonCombinationPuzzle count={4} zoneName={"captainDeck"} requests={Connection}/></div> } />
+            <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><ButtonSpeed layout={ { rows: 4, columns: 4 } }/></div> } />
           </Routes>
         </BrowserRouter>
       </div>

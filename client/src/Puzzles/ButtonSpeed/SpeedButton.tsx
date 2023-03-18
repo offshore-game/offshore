@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from "react"
 import styles from './ButtonSpeed.module.css'
 
-export default function SpeedButton(props: { index: number, timings: number[], timeToHit: number, reset: React.Dispatch<boolean>, timeouts: React.MutableRefObject<any[]>, resetEvent: Event }) {
+const sleep = async (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+export default function SpeedButton(props: { index: number, timings: number[], poisonTimings: number[], timeToHit: number, reset: React.Dispatch<boolean>, timeouts: React.MutableRefObject<any[]>, resetEvent: Event }) {
     
     const button = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
+    const [ isPoison, setIsPoison ] = useState(false)
 
     useEffect(() => {
 
@@ -43,6 +48,42 @@ export default function SpeedButton(props: { index: number, timings: number[], t
 
         }
 
+        for (const poisonTiming of props.poisonTimings) {
+
+            const changeAtTime = setTimeout(() => {
+
+                // Change color time
+                button.current.style.backgroundColor = "blue"
+
+                // Change state to poison
+                setIsPoison(true)
+
+                const expiration = setTimeout(() => {
+
+                    if (button.current.style.backgroundColor == "gray") {
+
+                        // Pressed, all good
+
+                    }
+
+                    if (button.current.style.backgroundColor == "blue") {
+
+                        // Is poison, so miss is good.
+                        button.current.style.backgroundColor = "gray"
+
+
+                    }
+
+                }, props.timeToHit * 1000)
+
+                timeouts.push(expiration)
+
+            }, poisonTiming * 1000 /* S --> MS */)
+
+            timeouts.push(changeAtTime)
+
+        }
+
         props.timeouts.current = [...props.timeouts.current, ...timeouts]
 
     }) /* 
@@ -63,7 +104,7 @@ export default function SpeedButton(props: { index: number, timings: number[], t
 
 
     return (
-        <div id={`speedBtn${props.index}`} ref={button} className={styles.button} onClick={() => {
+        <div id={`speedBtn${props.index}`} ref={button} className={styles.button} onClick={async () => {
 
             const color = button.current.style.backgroundColor
             console.log("button's self color:", color)
@@ -77,10 +118,28 @@ export default function SpeedButton(props: { index: number, timings: number[], t
             }
 
             
-            // Don't care if it's Red
+            // (Don't care if it's Red) \\
 
 
             if (color == "blue") {
+
+                // Poison button; invalid
+                if (isPoison) {
+
+                    // do a little animation
+                    button.current.style.backgroundColor = "green"
+                    await sleep(500)
+                    button.current.style.backgroundColor = "red"
+                    await sleep(500)
+                    button.current.style.backgroundColor = "green"
+                    await sleep(500)
+                    button.current.style.backgroundColor = "red"
+                    await sleep(500)
+
+                    // Reset the game
+                    return props.reset(true);
+
+                }
 
                 // return gray
                 button.current.style.backgroundColor = "gray"
