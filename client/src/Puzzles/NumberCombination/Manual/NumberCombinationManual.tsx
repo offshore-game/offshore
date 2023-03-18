@@ -1,42 +1,33 @@
 import { useEffect, useState } from "react"
-import designs from '../Puzzle/NumberCombinationPuzzle.module.css'
+import styles from './NumberCombinationManual.module.css'
 
-type solutionType = { digitIndex: string, digitValue: number }[]
+type solutionType = { fragments: { digitIndex: string, digitValue: number }[] }
 
 export default function NumberCombinationManual(props: { solution: solutionType }) {
 
-    console.log(props.solution)
-
-    const [numberElems, setNumberElems] = useState([] as any[])
+    const [ numberElems, setNumberElems ] = useState([] as any[])
 
     useEffect(() => {
         setNumberElems([]) // Prevent a duplication bug on component reset.
 
-        for (let i = 0; i < props.solution.length; i++) {
-            setNumberElems(entries => [...entries, <div key={i} className={designs.button}>
-
-                { (props.solution[i].digitIndex == `${i}`) ? props.solution[i].digitValue : "" }
-
-            
-            </div>])
+        for (let i = 0; i < props.solution.fragments.length; i++) { // WARNING: Internally base 0
+            setNumberElems(entries => [...entries, <div key={i} className={styles.button}>{props.solution.fragments.find(solution => parseInt(solution.digitIndex) == i)?.digitValue!}</div>])
         }
+
     }, [])
 
     return (
-        <div className={designs.container}>
+        <div className={styles.container}>
 
-            <div className={designs.buttonContainer}>
-                
+            <div className={styles.answerContainer}>
+                        
                 { numberElems }
-
+                
             </div>
+
+            Enter this combination...
+
         </div>
     )
-
-    /*return (
-        <div>
-            { `${props.solution[0].digitIndex}: ${props.solution[0].digitValue}` }
-        </div>
-    )*/
 
 }

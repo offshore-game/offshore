@@ -5,10 +5,9 @@ import { AuthProp } from '../../../../utils/propTypes'
 import toVisualZoneName from '../../../../utils/zoneNameConversion'
 import styles from './ReaderGame.module.css'
 import { RxTriangleLeft, RxTriangleRight } from 'react-icons/rx'
+import NumberCombinationManual from '../../../../Puzzles/NumberCombination/Manual/NumberCombinationManual'
 
 export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo> } & AuthProp) {
-
-    //console.log(props.gameInfo)
 
     const [ activePage, setActivePage ] = useState({ number: 0, zoneName: "ZONE HERE" }) // Internally Base 0
 
@@ -16,10 +15,14 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     for (const puzzle of props.gameInfo.puzzles) {
         // A solution is provided for this player
         if (puzzle.solution) {
-            //console.log(puzzle.solution)
+
             if (puzzle.type == "buttonCombination") {
                 
                 answerPages.push({ element: <ButtonCombinationManual key={puzzle.zoneName} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
+
+            } else if (puzzle.type == "numberCombination") {
+
+                answerPages.push({ element: <NumberCombinationManual key={puzzle.zoneName} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
 
             }
             // Add more puzzles!
@@ -33,8 +36,6 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
         // Check if the activePage still exists
         const result = props.gameInfo.puzzles.find(puzzle => puzzle.zoneName == activePage.zoneName)
         if (!result) { // Does not exist anymore
-
-            console.log('ceased to exist')
 
             // Reset to the first page
             setActivePage({ number: 0, zoneName: answerPages[0].zoneName})
