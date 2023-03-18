@@ -120,6 +120,7 @@ export default class ButtonSpeed extends Puzzle {
             4) For a given (second + timeToHit), only a certain number of concurrent buttons can be active
         */
 
+        // General Functions \\
         const allTimingsSeconds = (): number[] => {
             let allTimings = []
             for (const [index, timing] of Object.entries(this.timings)) {
@@ -132,16 +133,12 @@ export default class ButtonSpeed extends Puzzle {
             return allTimings;
         }
 
-        const lightCount = 3 // Buttons can light up a maximum of three times per game
-        const concurrentCount = 4 // Only four buttons can light up at a time
-
-        // Generate Timings for Poison Buttons
-        for (const index of poisonIndexes) {
-
-            let pass = true
+        const makeTiming = (groupArray: buttonSpeedPayload["timings"], buttonIndex: number): number | false => {
 
             // Choose a timestamp
             const timestamp = randomNumber(0, this.gameDuration - (this.timeToHit + 1)) // The roof has to have a limit so the button is pressable within the time allotted
+
+            let pass: number | false = timestamp
 
             // (1) Check how many times this button is to light up
             const allTimings = allTimingsSeconds()
@@ -152,13 +149,13 @@ export default class ButtonSpeed extends Puzzle {
 
 
             // (2) Check for an overlapping timings on this button
-            const duplicateTiming = this.poisonTimings[index].find(timing => timing == timestamp)
+            const duplicateTiming = groupArray[buttonIndex].find(timing => timing == timestamp)
             if (duplicateTiming) {
                 pass = false
             }
 
             // (3) Check for spacing (minimum timeToHit + 1 apart)
-            for (const timing of this.poisonTimings[index]) {
+            for (const timing of groupArray[buttonIndex]) {
 
                 // Not enough distance between the timestamp and existing timings
                 if (Math.abs(timestamp - timing) < this.timeToHit + 1) {
@@ -174,13 +171,54 @@ export default class ButtonSpeed extends Puzzle {
                 pass = false
             }
 
-            // if pass == false, regenerate
+            return pass
+
+        }
+
+        // Config/Balancing Variables \\
+        const lightCount = 3 // Buttons can light up a maximum of three times per game
+        const concurrentCount = 4 // Only four buttons can light up at a time
+
+        // Generate Timings for Poison Buttons
+        for (const index of poisonIndexes) {
+
+            const timing = (): number => {
+
+                const pass = makeTiming(this.poisonTimings, index)
+                if (!pass) {
+                    return timing() // Recursive
+                }
+
+                if (pass) {
+                    return pass
+                }
+
+            }
+
+            this.poisonTimings[index].push(timing())
 
         }
 
 
         // Generate Timings for Standard Buttons
+        for (const index of buttonIndexes) {
 
+            const timing = (): number => {
+
+                const pass = makeTiming(this.timings, index)
+                if (!pass) {
+                    return timing() // Recursive
+                }
+
+                if (pass) {
+                    return pass
+                }
+
+            }
+
+            this.timings[index].push(timing())
+
+        }
 
 
         // Save the generated solution as a whole
