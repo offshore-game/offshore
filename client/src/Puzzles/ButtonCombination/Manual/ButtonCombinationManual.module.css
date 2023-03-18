@@ -42,10 +42,8 @@
     color: black;
 
     border-color: black;
-    border-width: 2%;
+    border-width: 2px;
     border-style: solid;
-
-    box-shadow: 0px 6px  black;
 
     width: 50%;
     aspect-ratio: 1/1;
