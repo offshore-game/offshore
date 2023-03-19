@@ -5,7 +5,7 @@ const sleep = async (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export default function SpeedButton(props: { index: number, timings: number[], poisonTimings: number[], timeToHit: number, reset: React.Dispatch<boolean>, timeouts: React.MutableRefObject<any[]>, resetEvent: Event }) {
+export default function SpeedButton(props: { index: number, inactive?: boolean, timings: number[], poisonTimings: number[], timeToHit: number, reset: React.Dispatch<boolean>, timeouts: React.MutableRefObject<any[]>, resetEvent: Event }) {
     
     const button = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
     const [ isPoison, setIsPoison ] = useState(false)
@@ -105,6 +105,8 @@ export default function SpeedButton(props: { index: number, timings: number[], p
 
     return (
         <div id={`speedBtn${props.index}`} ref={button} className={styles.button} onClick={async () => {
+            
+            if (props.inactive) return; // inactive button
 
             const color = button.current.style.backgroundColor
             console.log("button's self color:", color)
