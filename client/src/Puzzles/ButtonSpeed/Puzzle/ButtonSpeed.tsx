@@ -92,6 +92,7 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
                 // Wait for the game to finish (again)
                 const gameEndTimeout = setTimeout(() => {
                     
+                    props.requests.sendAnswer(props.zoneName, "buttonSpeed", true)
                     const resultEvent = new CustomEvent("puzzleResult", {
                         detail: {
                             zoneName: props.zoneName,
