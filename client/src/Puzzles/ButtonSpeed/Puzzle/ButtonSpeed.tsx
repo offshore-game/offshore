@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { PuzzleInfo } from '../../API/requests'
-import Button from '../../components/Button/Button'
+import { PuzzleInfo, zoneNames } from '../../../API/requests'
+import Button from '../../../components/Button/Button'
+import { AuthProp } from '../../../utils/propTypes'
 import styles from './ButtonSpeed.module.css'
 import SpeedButton from './SpeedButton'
 
-export default function ButtonSpeed(props: { layout: { rows: number, columns: number }, timings: PuzzleInfo["buttonGridTimings"] }) {
+export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows: number, columns: number }, timings: PuzzleInfo["buttonGridTimings"] } & AuthProp) {
 
     console.log(props)
 
@@ -72,7 +73,16 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
                 clearTimeout(timeout)
     
             }
-    
+            
+            props.requests.sendAnswer(props.zoneName, "buttonSpeed", false)
+            const resultEvent = new CustomEvent("puzzleResult", {
+                detail: {
+                    zoneName: props.zoneName,
+                    result: false // This is a reset, so it occurs on fail
+                }
+            })
+            document.dispatchEvent(resultEvent)
+
             setTimeout(() => {
                 
                 // Tell the buttons to reset
@@ -82,7 +92,13 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
                 // Wait for the game to finish (again)
                 const gameEndTimeout = setTimeout(() => {
                     
-                    console.warn("Game Finished (remake!")
+                    const resultEvent = new CustomEvent("puzzleResult", {
+                        detail: {
+                            zoneName: props.zoneName,
+                            result: true // Game success
+                        }
+                    })
+                    document.dispatchEvent(resultEvent)
 
                 }, (props.timings!.duration + 1) * 1000)
 
@@ -92,6 +108,7 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
 
 
             }, 2000) // Wait two seconds before resetting
+
 
         }
 
@@ -132,7 +149,14 @@ export default function ButtonSpeed(props: { layout: { rows: number, columns: nu
                 // Wait for the game to end, then send a true response to the server
                 const gameEndTimeout = setTimeout(() => {
                     
-                    console.warn("Game Finished!")
+                    props.requests.sendAnswer(props.zoneName, "buttonSpeed", true)
+                    const resultEvent = new CustomEvent("puzzleResult", {
+                        detail: {
+                            zoneName: props.zoneName,
+                            result: true // Game success
+                        }
+                    })
+                    document.dispatchEvent(resultEvent)
         
                 }, (props.timings!.duration + 1) * 1000)
 

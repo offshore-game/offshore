@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home/Home'
 import Requests from './API/requests';
 import GameSwitchPoint from './pages/Game/Game';
-import ButtonSpeed from './Puzzles/ButtonSpeed/ButtonSpeed';
+import ButtonSpeed from './Puzzles/ButtonSpeed/Puzzle/ButtonSpeed';
 
 const buttonSpeedPayload = { // testing purposes only
 
@@ -50,7 +50,7 @@ root.render(
 
             <Route path="/lobby/:id" element={ <Home requests={Connection} gameLobby={true}/> } />
             <Route path="/game/:id" element={ <GameSwitchPoint requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}
-            <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><ButtonSpeed layout={ { rows: 4, columns: 4 } } timings={buttonSpeedPayload} /></div> } />
+            <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><ButtonSpeed zoneName="captainDeck" layout={ { rows: 4, columns: 4 } } timings={buttonSpeedPayload} requests={Connection}/></div> } />
           </Routes>
         </BrowserRouter>
       </div>

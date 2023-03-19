@@ -174,6 +174,8 @@ export default class Requests {
             const token = localStorage.getItem("token")
             const roomCode = localStorage.getItem("roomCode")
 
+            //console.log('event:', `{ zoneName: ${zoneName}, puzzleType: ${puzzleType}, answer: ${answer} }`)
+
             this.socket.emit("answerPuzzle", { token: token!, roomCode: roomCode!, zoneName: zoneName, puzzleType: puzzleType, answer: answer }, (result: boolean) => {
 
                 return res(result) // Resolves with if the answer is right or wrong

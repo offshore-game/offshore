@@ -101,7 +101,7 @@ export default class ButtonSpeed extends Puzzle {
                 let randomIndex = randomNumber(0, totalButtonCount - 1 /* 0-based index */)
                 
                 // Index is already chosen
-                if (buttonIndexes.find(index => index == randomIndex) || poisonIndexes.find(index => index == randomIndex)) {
+                if (buttonIndexes.includes(randomIndex) || poisonIndexes.includes(randomIndex)) {
     
                     // Recursive Function
                     randomIndex = selectUniqueIndex()

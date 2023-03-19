@@ -6,7 +6,7 @@ import ButtonCombinationPuzzle from "../../../../../Puzzles/ButtonCombination/Pu
 import gameStyles from '../../../Game.module.css';
 import pointPos from './Points.module.css';
 import stopwatch from '../../../../../assets/Game/Stopwatch.svg';
-import ButtonSpeed from "../../../../../Puzzles/ButtonSpeed/ButtonSpeed";
+import ButtonSpeed from "../../../../../Puzzles/ButtonSpeed/Puzzle/ButtonSpeed";
 
 export default function PointTarget(props: { className: string, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
@@ -85,7 +85,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
                 } else if (props.puzzle.type == "buttonSpeed") {
 
                     props.setActivePuzzle({
-                        element: <ButtonSpeed layout={props.puzzle.buttonGridDimensions!} timings={props.puzzle.buttonGridTimings!} />,
+                        element: <ButtonSpeed zoneName={props.puzzle.zoneName} layout={props.puzzle.buttonGridDimensions!} timings={props.puzzle.buttonGridTimings!} requests={props.requests}/>,
                         zoneName: props.puzzle.zoneName,
                     })
                     // etc...
