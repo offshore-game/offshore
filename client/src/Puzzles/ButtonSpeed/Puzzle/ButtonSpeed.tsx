@@ -118,55 +118,61 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
     return (
         <div className={styles.container}>
+            
+            <div className={styles.buttonContainer}>
+                <div ref={buttonGrid} className={styles.buttonGrid}>
+                    
+                    {buttonsInfo.map((info) => <SpeedButton key={info.index} inactive={info.inactive} index={info.index} timings={ info.timings } poisonTimings={ info.poisonTimings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} timeouts={timeouts} />)}
 
-            <div ref={buttonGrid} className={styles.buttonContainer}>
-                
-                {buttonsInfo.map((info) => <SpeedButton key={info.index} inactive={info.inactive} index={info.index} timings={ info.timings } poisonTimings={ info.poisonTimings } timeToHit={info.timeToHit} reset={setResetTrigger} resetEvent={reset} timeouts={timeouts} />)}
-
+                </div>
             </div>
 
-            <Button text="Start" onClick={() => {
-                
-                const totalCount = props.layout.rows * props.layout.columns
 
-                // Start the game!
-                const tempInfo = []
-                for (let i = 0; i < totalCount; i++) {
-        
-                    // Push the data for each button (index and timing)
-        
-                    tempInfo.push({
-                        index: i,
-                        timings: props.timings!.standard[i] ? props.timings!.standard[i] : [],
-                        poisonTimings: props.timings!.poison[i] ? props.timings!.poison[i]: [],
-                        timeToHit: props.timings!.timeToHit
-                    })
-        
-                }
-        
-                if (!buttonsInfo[0].inactive) return; // prevent a bug with spamming start
-        
-
-                // Wait for the game to end, then send a true response to the server
-                const gameEndTimeout = setTimeout(() => {
+            <div className={styles.controlContainer}>
+                <Button className={styles.controlButton} text="Start" onClick={() => {
                     
-                    props.requests.sendAnswer(props.zoneName, "buttonSpeed", true)
-                    const resultEvent = new CustomEvent("puzzleResult", {
-                        detail: {
-                            zoneName: props.zoneName,
-                            result: true // Game success
-                        }
-                    })
-                    document.dispatchEvent(resultEvent)
-        
-                }, (props.timings!.duration + 1) * 1000)
+                    const totalCount = props.layout.rows * props.layout.columns
 
-                
-                setButtonsInfo(tempInfo) // Reset the state
-                setButtonsPayload(props.timings) // Share the payload
-                timeouts.current.push(gameEndTimeout)
+                    // Start the game!
+                    const tempInfo = []
+                    for (let i = 0; i < totalCount; i++) {
+            
+                        // Push the data for each button (index and timing)
+            
+                        tempInfo.push({
+                            index: i,
+                            timings: props.timings!.standard[i] ? props.timings!.standard[i] : [],
+                            poisonTimings: props.timings!.poison[i] ? props.timings!.poison[i]: [],
+                            timeToHit: props.timings!.timeToHit
+                        })
+            
+                    }
+            
+                    if (!buttonsInfo[0].inactive) return; // prevent a bug with spamming start
+            
 
-            }}/>
+                    // Wait for the game to end, then send a true response to the server
+                    const gameEndTimeout = setTimeout(() => {
+                        
+                        props.requests.sendAnswer(props.zoneName, "buttonSpeed", true)
+                        const resultEvent = new CustomEvent("puzzleResult", {
+                            detail: {
+                                zoneName: props.zoneName,
+                                result: true // Game success
+                            }
+                        })
+                        document.dispatchEvent(resultEvent)
+            
+                    }, (props.timings!.duration + 1) * 1000)
+
+                    
+                    setButtonsInfo(tempInfo) // Reset the state
+                    setButtonsPayload(props.timings) // Share the payload
+                    timeouts.current.push(gameEndTimeout)
+
+                }}/>
+            </div>
+
             
         </div>
     )

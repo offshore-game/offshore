@@ -1,35 +1,73 @@
 @import './gridDimensionVars.css';
 
 .container {
+
     display: flex;
     justify-content: center;
     align-items: center;
 
     flex-direction: column;
-
-    border-radius: 10px;
     
-    width: 85%;
+    height: 100%;
+    width: 100%;
 
-    background-color: darkslategray;
 }
 
 .buttonContainer {
+    
+    height: 45vh;
+    width: 45vh;
+
+}
+
+.buttonGrid {
+    
+    width: 100%;
+    height: 100%;
+
     display: grid;
-    grid-template-columns: repeat(var(--buttonSpeed-Columns), 1fr);
-    grid-template-rows: repeat(var(--buttonSpeed-Rows), 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
+    grid-template-columns: repeat(var(--buttonSpeed-Columns), auto);
+    grid-template-rows: repeat(var(--buttonSpeed-Rows), auto);
+
 }
 
 .button {
 
-    height: 30px;
-    width: 30px;
+    min-height: 30px;
+    min-width: 30px;
+
+    height: 80%;
+    width: 80%;
 
     background-color: gray;
     border-radius: 50px;
 
-    margin: 10px;
+}
+
+.controlContainer {
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+}
+
+.controlButton {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 5%;
+    
+    height: 5%;
+    width: 20%;
+
+
+    background-color: var(--brown-3);
 
 }
