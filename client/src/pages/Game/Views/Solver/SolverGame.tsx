@@ -98,6 +98,14 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                     if (activePuzzleContainer && shadow) {
 
+                        // Tell any games that require timers to stop
+                        const puzzleCloseEvent = new CustomEvent("puzzleClosed", {
+                            detail: {
+                                zoneName: props.activePuzzle.zoneName,
+                            }
+                        })
+                        document.dispatchEvent(puzzleCloseEvent)
+
                         props.setActivePuzzle({ element: <div/>, zoneName: undefined })
                         activePuzzleContainer.className = gameStyles.hiddenPuzzle
                         shadow.style.zIndex = "-1"

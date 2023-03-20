@@ -53,7 +53,29 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
         
         setButtonsInfo(tempInfo) // Display the state
 
-    }, []) // you get the payload once
+        // Prevent a False Pass (Bug Fix)
+        const closedCallback = (event: any) => {
+            const zoneName = event.detail.zoneName
+            if (zoneName == props.zoneName) {
+
+                // Kill all the timers
+                for (const timeout of timeouts.current) {
+                    // Destroy each timer
+                    clearTimeout(timeout)
+                }
+
+            }
+        }
+        document.addEventListener("puzzleClosed", closedCallback)
+
+        // Destroy event listeners
+        return () => {
+
+            document.removeEventListener("puzzleClosed", closedCallback)
+
+        }
+
+    }, [] /* you get the payload once */)
 
 
     // Game needs to reset/setup

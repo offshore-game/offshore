@@ -95,6 +95,8 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
 
         document.addEventListener('onBtnSpeedReset', () => {
 
+            if (!button.current) return; // Error Supression
+            
             // Reset color on a reset request
             button.current.style.backgroundColor = "gray"
 

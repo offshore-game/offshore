@@ -19,7 +19,6 @@ export enum statusType {
     leaderboard = 4,
 }
 
-
 // To act as a switch point for different components related to the game.
 export default function GameSwitchPoint(props: AuthProp) {
 
@@ -97,6 +96,14 @@ export default function GameSwitchPoint(props: AuthProp) {
 
                     // Delay it only to show the correct answer animation
                     setTimeout(() => {
+
+                        // Tell any games that require timers to stop
+                        const puzzleCloseEvent = new CustomEvent("puzzleClosed", {
+                            detail: {
+                                zoneName: activePuzzle.zoneName,
+                            }
+                        })
+                        document.dispatchEvent(puzzleCloseEvent)
 
                         setActivePuzzle({ element: <div/>, zoneName: undefined })
                         activePuzzleContainer.className = styles.hiddenPuzzle
@@ -195,8 +202,17 @@ export default function GameSwitchPoint(props: AuthProp) {
                     const shadow = document.getElementById('shadow')
     
                     if (activePuzzleContainer && shadow) {
-    
+                        
+                        // Tell any games that require timers to stop
+                        const puzzleCloseEvent = new CustomEvent("puzzleClosed", {
+                            detail: {
+                                zoneName: activePuzzle.zoneName,
+                            }
+                        })
+                        document.dispatchEvent(puzzleCloseEvent)
+
                         setActivePuzzle({ element: <div/>, zoneName: undefined })
+
                         activePuzzleContainer.className = styles.hiddenPuzzle
                         shadow.style.zIndex = "-1"
     
