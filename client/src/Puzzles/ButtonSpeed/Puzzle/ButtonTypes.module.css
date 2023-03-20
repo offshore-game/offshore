@@ -1,3 +1,4 @@
+/* Base Class */
 .button {
 
     min-height: 30px;
@@ -9,8 +10,23 @@
     background-color: gray;
     border-radius: 50px;
 
+    box-shadow: 0px 6px  black;
+
+}
+.button:hover {
+
+    filter: brightness(85%);
+    cursor: pointer;
+
+}
+.button:active {
+    filter: brightness(65%);
+    transform: translateY(4px);
+    box-shadow: 0px 2px black;
 }
 
+
+/* Active Subset */
 .active {
 
     composes: button;
@@ -18,23 +34,33 @@
 
 }
 
-.inactive {
-
-    composes: button;
-    filter: brightness(50%);
-
-}
-
 .invalid {
 
-    composes: button;
+    composes: active;
     background-color: red;
 
 }
 
 .poison {
 
-    composes: button;
+    composes: active;
     background-color: green;
+
+}
+
+/* Inactive Subset */
+.inactive {
+
+    min-height: 30px;
+    min-width: 30px;
+
+    height: 80%;
+    width: 80%;
+
+    background-color: gray;
+    border-radius: 50px;
+
+    box-shadow: 0px 2px black;
+    filter: brightness(50%);
 
 }
