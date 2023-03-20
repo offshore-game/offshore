@@ -1,0 +1,40 @@
+.button {
+
+    min-height: 30px;
+    min-width: 30px;
+
+    height: 80%;
+    width: 80%;
+
+    background-color: gray;
+    border-radius: 50px;
+
+}
+
+.active {
+
+    composes: button;
+    background-color: blue;
+
+}
+
+.inactive {
+
+    composes: button;
+    filter: brightness(50%);
+
+}
+
+.invalid {
+
+    composes: button;
+    background-color: red;
+
+}
+
+.poison {
+
+    composes: button;
+    background-color: green;
+
+}

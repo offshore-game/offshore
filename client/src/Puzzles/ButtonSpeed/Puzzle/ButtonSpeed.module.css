@@ -31,19 +31,6 @@
 
 }
 
-.button {
-
-    min-height: 30px;
-    min-width: 30px;
-
-    height: 80%;
-    width: 80%;
-
-    background-color: gray;
-    border-radius: 50px;
-
-}
-
 .controlContainer {
 
     display: flex;

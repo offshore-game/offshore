@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import styles from './ButtonSpeed.module.css'
+import buttonTypes from './ButtonTypes.module.css'
 
 const sleep = async (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
@@ -18,20 +19,20 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
             const changeAtTime = setTimeout(() => {
 
                 // Change color time
-                button.current.style.backgroundColor = "blue"
+                button.current.className = buttonTypes.active
 
                 const expiration = setTimeout(() => {
 
-                    if (button.current.style.backgroundColor == "gray") {
+                    if (button.current.className == buttonTypes.button) {
 
                         // Pressed, all good
 
                     }
 
-                    if (button.current.style.backgroundColor == "blue") {
+                    if (button.current.className == buttonTypes.active) {
 
                         // Not pressed, missed
-                        button.current.style.backgroundColor = "red"
+                        button.current.className = buttonTypes.invalid
 
                         // Reset the game
                         return props.reset(true);
@@ -53,23 +54,23 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
             const changeAtTime = setTimeout(() => {
 
                 // Change color time
-                button.current.style.backgroundColor = "blue"
+                button.current.className = buttonTypes.active
 
                 // Change state to poison
                 setIsPoison(true)
 
                 const expiration = setTimeout(() => {
 
-                    if (button.current.style.backgroundColor == "gray") {
+                    /*if (button.current.style.backgroundColor == "gray") {
 
                         // Pressed, all good
 
-                    }
+                    }*/
 
-                    if (button.current.style.backgroundColor == "blue") {
+                    if (button.current.className == buttonTypes.active) {
 
                         // Is poison, so miss is good.
-                        button.current.style.backgroundColor = "gray"
+                        button.current.className = buttonTypes.button
 
 
                     }
@@ -96,9 +97,9 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
         document.addEventListener('onBtnSpeedReset', () => {
 
             if (!button.current) return; // Error Supression
-            
+
             // Reset color on a reset request
-            button.current.style.backgroundColor = "gray"
+            button.current.className = buttonTypes.button
 
         })
 
@@ -106,17 +107,17 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
 
 
     return (
-        <div id={`speedBtn${props.index}`} ref={button} className={styles.button} onClick={async () => {
+        <div id={`speedBtn${props.index}`} ref={button} className={props.inactive ? buttonTypes.inactive : buttonTypes.button} onClick={async () => {
             
             if (props.inactive) return; // inactive button
 
-            const color = button.current.style.backgroundColor
-            console.log("button's self color:", color)
+            const currentClass = button.current.className
+            console.log("button's class:", currentClass)
 
-            if (color == "gray" || color == "") { // default value is ""
+            if (currentClass == buttonTypes.button || currentClass == "") { // default value is ""
 
-                // Inactive button; invalid
-                button.current.style.backgroundColor = "red"
+                // Dormant button; invalid
+                button.current.className = buttonTypes.invalid
                 return props.reset(true);
 
             }
@@ -125,7 +126,7 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
             // (Don't care if it's Red) \\
 
 
-            if (color == "blue") {
+            if (currentClass == buttonTypes.active) {
 
                 // Poison button; invalid
                 if (isPoison) {
@@ -134,13 +135,13 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
                     props.reset(true);
 
                     // do a little animation
-                    button.current.style.backgroundColor = "green"
+                    button.current.className = buttonTypes.poison
                     await sleep(500)
-                    button.current.style.backgroundColor = "red"
+                    button.current.className = buttonTypes.invalid
                     await sleep(500)
-                    button.current.style.backgroundColor = "green"
+                    button.current.className = buttonTypes.poison
                     await sleep(500)
-                    button.current.style.backgroundColor = "red"
+                    button.current.className = buttonTypes.invalid
                     await sleep(500)
 
                     return;
@@ -148,13 +149,12 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
                 }
 
                 // return gray
-                button.current.style.backgroundColor = "gray"
+                button.current.className = buttonTypes.button
 
             }
 
-        }}>
-            {props.index}
-        </div>
+        }}/>
+
     )
 
 }
