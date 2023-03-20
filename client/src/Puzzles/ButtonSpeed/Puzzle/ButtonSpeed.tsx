@@ -7,8 +7,6 @@ import SpeedButton from './SpeedButton'
 
 export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows: number, columns: number }, timings: PuzzleInfo["buttonGridTimings"] } & AuthProp) {
 
-    console.log(props)
-
     const [ buttonsInfo, setButtonsInfo ] = useState([] as any[])
 
     const [ buttonsPayload, setButtonsPayload ] = useState(undefined as any)
@@ -55,6 +53,7 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
         // Prevent a False Pass (Bug Fix)
         const closedCallback = (event: any) => {
+            
             const zoneName = event.detail.zoneName
             if (zoneName == props.zoneName) {
 
@@ -81,6 +80,8 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
     // Game needs to reset/setup
     useEffect(() => {
 
+        const localTimeouts: any[] = []
+
         /* 
             1) Destroy all timers
             2) Remake all buttons
@@ -105,36 +106,57 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
             })
             document.dispatchEvent(resultEvent)
 
-            setTimeout(() => {
+            // Wait for the game to finish (again)
+            const gameEndTimeout = setTimeout(() => {
+    
+                props.requests.sendAnswer(props.zoneName, "buttonSpeed", true)
+                const resultEvent = new CustomEvent("puzzleResult", {
+                    detail: {
+                        zoneName: props.zoneName,
+                        result: true // Game success
+                    }
+                })
+                document.dispatchEvent(resultEvent)
+
+            }, (props.timings!.duration + 3 /* 1 for buffer + 2 for the "wait two second reset delay" */) * 1000)
+
+            setResetTrigger(false) // Toggle the trigger
+            timeouts.current.push(gameEndTimeout)
+            localTimeouts.push(gameEndTimeout)
+
+            const resetTimeout = setTimeout(() => {
                 
                 // Tell the buttons to reset
-        
                 document.dispatchEvent(reset)
 
-                // Wait for the game to finish (again)
-                const gameEndTimeout = setTimeout(() => {
-                    
-                    props.requests.sendAnswer(props.zoneName, "buttonSpeed", true)
-                    const resultEvent = new CustomEvent("puzzleResult", {
-                        detail: {
-                            zoneName: props.zoneName,
-                            result: true // Game success
-                        }
-                    })
-                    document.dispatchEvent(resultEvent)
-
-                }, (props.timings!.duration + 1) * 1000)
-
-                console.log('trigger change')
-                setResetTrigger(false) // Toggle the trigger
-                timeouts.current.push(gameEndTimeout)
-
-
             }, 2000) // Wait two seconds before resetting
+            timeouts.current.push(resetTimeout)
+            localTimeouts.push(resetTimeout)
 
 
         }
 
+        // Prevent a False Pass (Bug Fix)
+        const closedCallback = (event: any) => {
+    
+            const zoneName = event.detail.zoneName
+            if (zoneName == props.zoneName) {
+
+                // Kill all the timers
+                for (const timeout of localTimeouts) {
+                    // Destroy each timer
+                    clearTimeout(timeout)
+                }
+
+            }
+        }
+        document.addEventListener("puzzleClosed", closedCallback)
+
+        return () => {
+
+            document.removeEventListener("puzzleClosed", closedCallback)
+
+        }
         
     }, [resetTrigger])
 
