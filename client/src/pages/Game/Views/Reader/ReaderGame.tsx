@@ -6,8 +6,11 @@ import toVisualZoneName from '../../../../utils/zoneNameConversion'
 import styles from './ReaderGame.module.css'
 import { RxTriangleLeft, RxTriangleRight } from 'react-icons/rx'
 import NumberCombinationManual from '../../../../Puzzles/NumberCombination/Manual/NumberCombinationManual'
+import ButtonSpeedManual from '../../../../Puzzles/ButtonSpeed/Manual/ButtonSpeedManual'
 
 export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo> } & AuthProp) {
+
+    console.log(props.gameInfo)
 
     const [ activePage, setActivePage ] = useState({ number: 0, zoneName: "ZONE HERE" }) // Internally Base 0
 
@@ -23,6 +26,10 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
             } else if (puzzle.type == "numberCombination") {
 
                 answerPages.push({ element: <NumberCombinationManual key={puzzle.zoneName} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
+
+            } else if (puzzle.type == "buttonSpeed") {
+
+                answerPages.push({ element: <ButtonSpeedManual key={puzzle.zoneName} layout={puzzle.buttonGridDimensions!} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
 
             }
             // Add more puzzles!
