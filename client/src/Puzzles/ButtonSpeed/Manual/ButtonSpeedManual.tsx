@@ -16,7 +16,7 @@ export default function ButtonSpeedManual(props: { layout: { rows: number, colum
 
         for (let i = 0; i < (props.layout.rows * props.layout.columns); i++) { // WARNING: Internally base 0
 
-            setButtonElems(entries => [...entries, <div key={i} className={styles.button}>{props.solution.fragments.includes(i) ? "!!" : "" }</div>])
+            setButtonElems(entries => [...entries, <div className={styles.buttonWrapper}><div key={i} className={styles.button}>{props.solution.fragments.includes(i) ? "!!" : "" }</div></div>])
             
         }
         
@@ -26,11 +26,14 @@ export default function ButtonSpeedManual(props: { layout: { rows: number, colum
 
         <div className={styles.container}>
 
-            <div className={styles.buttonGrid}>
-                        
-                { buttonElems }
-                
+            <div className={styles.buttonContainer}>
+                <div className={styles.buttonGrid}>
+                            
+                    { buttonElems }
+                    
+                </div>
             </div>
+
 
             Avoid !!
 
