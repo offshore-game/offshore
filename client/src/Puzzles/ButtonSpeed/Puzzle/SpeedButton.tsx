@@ -120,18 +120,26 @@ export default function SpeedButton(props: { index: number, zoneName: zoneNames,
 
     useEffect(() => {
 
-        document.addEventListener('onBtnSpeedReset', () => {
+        const resetCallback = () => {
+
+            console.log('button received reset')
 
             if (!button.current) return; // Error Supression
 
             // Reset color on a reset request
             button.current.className = buttonTypes.inactive
 
-        })
+        }
+
+        document.addEventListener('onBtnSpeedReset', resetCallback)
+
+        return () => {
+
+            document.removeEventListener('onBtnSpeedReset', resetCallback)
+
+        }
 
     }, [])
-
-    console.log(props.inactive)
 
     return (
         <div id={`speedBtn${props.index}`} ref={button} className={props.inactive ? buttonTypes.inactive : buttonTypes.button} onClick={async () => {

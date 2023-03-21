@@ -29,6 +29,8 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
     // Init \\
     useEffect(() => {
 
+        console.log('init')
+
         const totalCount = props.layout.rows * props.layout.columns
         
         // Visual display
@@ -73,6 +75,7 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
         // Listen for end game requests
         const endCallback = (event: any) => {
             console.log('game end requested')
+
             // Handle resetting the game
             setActive(false);
 
@@ -93,16 +96,23 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
     // Trigger Watch \\
     useEffect(() => {
 
+        // Destroy Timers Between States
+        for (const timeout of timeouts.current) {
+
+            // Destroy each timer
+            clearTimeout(timeout)
+
+        }
+
+        console.log('active changed to', active)
+
         const root = document.querySelector(':root')! as HTMLElement
         root.style.setProperty('--buttonSpeed-Rows', `${props.layout.rows}`)
         root.style.setProperty('--buttonSpeed-Columns', `${props.layout.columns}`)
 
-
-
-
+        // Game was told to start
         if (active) {
 
-            // Game was told to start
             // Add the buttons
             const totalCount = props.layout.rows * props.layout.columns
         
@@ -141,22 +151,11 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
         }
 
+        // Game was told to deactivate
         if (!active) {
 
-            // Game was told to deactivate
+            const deactivateTimeout = setTimeout(() => {
 
-            // Destroy Timers
-            for (const timeout of timeouts.current) {
-
-                // Destroy each timer
-                clearTimeout(timeout)
-    
-            }
-
-            setTimeout(() => {
-
-                // Tell all the buttons to reset
-                //document.dispatchEvent(reset)
                 const totalCount = props.layout.rows * props.layout.columns
         
                 // Visual display
@@ -177,6 +176,7 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
                 setButtonsInfo(tempInfo) // Display the state
 
             }, 2000)
+            timeouts.current.push(deactivateTimeout)
 
         }
 
@@ -197,6 +197,9 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
             <div className={styles.controlContainer}>
                 <Button className={styles.controlButton} text="Start" onClick={() => {
                     
+                    // Unpressable while active
+                    if (active) return;
+
                     // Activate the game
                     return setActive(true);
 
