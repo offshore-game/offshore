@@ -242,6 +242,7 @@ export default class GameLobby {
                     buttonGridDimensions: undefined,
                     buttonGridTimings: undefined,
                     solution: undefined,
+                    numberOfFragments: undefined,
                 }
 
                 // Include a fragment of the solution if the player is a READER
@@ -259,6 +260,10 @@ export default class GameLobby {
 
                     toPush.solution = selectedFragment
 
+                    if (puzzle.type == "buttonSpeed" && player.role == "READER"){
+                        const numberOfFragments = puzzle.fragmentedSolutions.length
+                        toPush.numberOfFragments
+                    }
                 }
 
                 // Puzzle-specific additions
