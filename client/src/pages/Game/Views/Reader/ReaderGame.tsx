@@ -52,7 +52,9 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
         return (
 
             <React.Fragment>
-    
+                
+                <div>
+
                 <div className={styles.container}>
     
                     <div className={styles.pageBase}>
@@ -81,8 +83,11 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
                         }}/>
 
                     </div>
-                    
+                
                 </div>
+
+                </div>
+
 
 
     
