@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { zoneNames } from "../../../API/requests"
 import styles from './ButtonSpeed.module.css'
 import buttonTypes from './ButtonTypes.module.css'
 
@@ -6,10 +7,36 @@ const sleep = async (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-export default function SpeedButton(props: { index: number, inactive?: boolean, timings: number[], poisonTimings: number[], timeToHit: number, reset: React.Dispatch<boolean>, timeouts: React.MutableRefObject<any[]>, resetEvent: Event }) {
+export default function SpeedButton(props: { index: number, zoneName: zoneNames, inactive?: boolean, timings: number[], poisonTimings: number[], timeToHit: number, timeouts: React.MutableRefObject<any[]>, endGameEvent: Event }) {
     
     const button = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
     const [ isPoison, setIsPoison ] = useState(false)
+
+    const resetGame = async (poison?: boolean) => {
+        // signal to the main component to reset the buttons
+        document.dispatchEvent(props.endGameEvent)
+
+        // Choose the animation
+        if (poison) {
+            
+            // do a little animation
+            button.current.className = buttonTypes.poison
+            await sleep(500)
+            button.current.className = buttonTypes.invalid
+            await sleep(500)
+            button.current.className = buttonTypes.poison
+            await sleep(500)
+            button.current.className = buttonTypes.invalid
+            await sleep(500)
+
+        } else {
+
+            // standard fail animation
+            button.current.className = buttonTypes.invalid
+
+        }
+
+    }
 
     useEffect(() => {
 
@@ -32,10 +59,9 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
                     if (button.current.className == buttonTypes.active) {
 
                         // Not pressed, missed
-                        button.current.className = buttonTypes.invalid
-
+                        
                         // Reset the game
-                        return props.reset(true);
+                        return resetGame(false);
 
                     }
 
@@ -99,12 +125,13 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
             if (!button.current) return; // Error Supression
 
             // Reset color on a reset request
-            button.current.className = buttonTypes.button
+            button.current.className = buttonTypes.inactive
 
         })
 
     }, [])
 
+    console.log(props.inactive)
 
     return (
         <div id={`speedBtn${props.index}`} ref={button} className={props.inactive ? buttonTypes.inactive : buttonTypes.button} onClick={async () => {
@@ -112,13 +139,11 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
             if (props.inactive) return; // inactive button
 
             const currentClass = button.current.className
-            console.log("button's class:", currentClass)
 
             if (currentClass == buttonTypes.button || currentClass == "") { // default value is ""
 
                 // Dormant button; invalid
-                button.current.className = buttonTypes.invalid
-                return props.reset(true);
+                return resetGame(false);
 
             }
 
@@ -132,23 +157,11 @@ export default function SpeedButton(props: { index: number, inactive?: boolean, 
                 if (isPoison) {
 
                     // Reset the game
-                    props.reset(true);
-
-                    // do a little animation
-                    button.current.className = buttonTypes.poison
-                    await sleep(500)
-                    button.current.className = buttonTypes.invalid
-                    await sleep(500)
-                    button.current.className = buttonTypes.poison
-                    await sleep(500)
-                    button.current.className = buttonTypes.invalid
-                    await sleep(500)
-
-                    return;
+                    return resetGame(true);
                     
                 }
 
-                // return gray
+                // Standard Button; return gray
                 button.current.className = buttonTypes.button
 
             }
