@@ -84,18 +84,20 @@ export default function GameSwitchPoint(props: AuthProp) {
             */
 
             const newPuzzles = payload.puzzles
+     
+            // Wipe and Close the activePuzzle module
+            const activePuzzleContainer = document.getElementById('activePuzzleContainer')
+            const shadow = document.getElementById('shadow')
 
-            // If ACTIVE puzzle is not found in the new puzzle array
-            if (newPuzzles.findIndex(puzzle => activePuzzle.zoneName == puzzle.zoneName) == -1) {
-                
-                // Wipe and Close the activePuzzle module
-                const activePuzzleContainer = document.getElementById('activePuzzleContainer')
-                const shadow = document.getElementById('shadow')
+            if (activePuzzleContainer && shadow) {
 
-                if (activePuzzleContainer && shadow) {
+                // If ACTIVE puzzle is not found in the new puzzle array
+                if (newPuzzles.findIndex(puzzle => activePuzzle.zoneName == puzzle.zoneName) == -1) {
 
                     // Delay it only to show the correct answer animation
-                    setTimeout(() => {
+                    let timeout = setTimeout(() => {
+
+                        // Logic Issue: what if the active puzzle changes though
 
                         // Tell any games that require timers to stop
                         const puzzleCloseEvent = new CustomEvent("puzzleClosed", {
@@ -105,12 +107,22 @@ export default function GameSwitchPoint(props: AuthProp) {
                         })
                         document.dispatchEvent(puzzleCloseEvent)
 
+                        // Related to a visual bug fix
+                        document.removeEventListener("puzzleClosed", killTimeout)
+
                         setActivePuzzle({ element: <div/>, zoneName: undefined })
                         activePuzzleContainer.className = styles.hiddenPuzzle
                         shadow.style.zIndex = "-1"
-
+                            
                     }, 1000)
 
+                    // Related to a visual bug fix
+                    const killTimeout = () => {
+                        clearTimeout(timeout)
+                    }
+                    document.addEventListener("puzzleClosed", killTimeout)
+
+                
                 }
 
             }
@@ -196,7 +208,7 @@ export default function GameSwitchPoint(props: AuthProp) {
             <div className={styles.background}>
                 
                 <div id="shadow" className={styles.shadow} onClick={() => {
-    
+
                     // Animate the "activePuzzle" div out
                     const activePuzzleContainer = document.getElementById('activePuzzleContainer')
                     const shadow = document.getElementById('shadow')
@@ -212,7 +224,6 @@ export default function GameSwitchPoint(props: AuthProp) {
                         document.dispatchEvent(puzzleCloseEvent)
 
                         setActivePuzzle({ element: <div/>, zoneName: undefined })
-
                         activePuzzleContainer.className = styles.hiddenPuzzle
                         shadow.style.zIndex = "-1"
     
