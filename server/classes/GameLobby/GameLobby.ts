@@ -4,13 +4,14 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import makeLobbyId from '../../generators/LobbyId';
 import randomNumber from '../../generators/randomNumber';
 import ButtonCombination from '../../puzzles/ButtonCombination';
+import ButtonSpeed from '../../puzzles/ButtonSpeed';
 import NumberCombination from '../../puzzles/NumberCombination';
 import Puzzle, { puzzleTypeArray, puzzleTypes } from '../../puzzles/Puzzle';
 import Player from '../Player';
 
 export type zoneNames = "frontMast" | "backMast" | "controlRoom" | "engineRoom" | "captainDeck" | "secondaryDeck" | "crewmateDeck" | "emergencyDeck" | "operationCenter" | "entertainmentRoom"
 
-type Puzzles = Puzzle & NumberCombination | ButtonCombination
+type Puzzles = Puzzle & NumberCombination | ButtonCombination | ButtonSpeed
 
 type puzzleArrayPayload = {
     zoneName: zoneNames,
@@ -149,8 +150,8 @@ export default class GameLobby {
 
 
         // Select a random type of puzzle
-        const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
-        //const randomlySelectedPuzzleType = "numberCombination" // for testing
+        //const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
+        const randomlySelectedPuzzleType = "buttonSpeed" as any // for testing
 
         // Select a random zone
         const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
@@ -171,6 +172,11 @@ export default class GameLobby {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
             generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
+
+        } else if (randomlySelectedPuzzleType == "buttonSpeed") {
+
+            // FEATURE: Button Count and Duration are Arbitrary for now
+            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, 10, 3, 500, addTimeout ? 2 : 0, readerCount)
 
         } else {
 
@@ -233,7 +239,10 @@ export default class GameLobby {
                     remainingTime: puzzle.remainingTime,
                     numberCount: undefined,
                     buttonCount: undefined,
+                    buttonGridDimensions: undefined,
+                    buttonGridTimings: undefined,
                     solution: undefined,
+                    numberOfFragments: undefined,
                 }
 
                 // Include a fragment of the solution if the player is a READER
@@ -251,6 +260,10 @@ export default class GameLobby {
 
                     toPush.solution = selectedFragment
 
+                    if (puzzle.type == "buttonSpeed" && player.role == "READER"){
+                        const numberOfFragments = puzzle.fragmentedSolutions.length
+                        toPush.numberOfFragments
+                    }
                 }
 
                 // Puzzle-specific additions
@@ -258,6 +271,23 @@ export default class GameLobby {
                     toPush.numberCount = (puzzle as NumberCombination).digitCount
                 } else if (puzzle.type == "buttonCombination") {
                     toPush.buttonCount = (puzzle as ButtonCombination).buttonCount
+                } else if (puzzle.type == "buttonSpeed") {
+
+                    const buttonSpeedPuzzle = puzzle as ButtonSpeed
+
+                    // Add dimensional information
+                    toPush.buttonGridDimensions = buttonSpeedPuzzle.dimensions
+
+                    // Add timings info
+                    toPush.buttonGridTimings = {
+
+                        standard: buttonSpeedPuzzle.timings,
+                        poison: buttonSpeedPuzzle.poisonTimings,
+                        duration: buttonSpeedPuzzle.gameDuration,
+                        timeToHit: buttonSpeedPuzzle.timeToHit,
+
+                    }
+
                 }
 
                 // Push to array

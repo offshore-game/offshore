@@ -1,48 +1,108 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { gameInfo, zoneNames } from '../../../../API/requests'
+import ButtonCombinationManual from '../../../../Puzzles/ButtonCombination/Manual/ButtonCombinationManual'
 import { AuthProp } from '../../../../utils/propTypes'
-import ManualTarget from './ManualTarget/ManualTarget'
+import toVisualZoneName from '../../../../utils/zoneNameConversion'
 import styles from './ReaderGame.module.css'
+import { RxTriangleLeft, RxTriangleRight } from 'react-icons/rx'
+import NumberCombinationManual from '../../../../Puzzles/NumberCombination/Manual/NumberCombinationManual'
+import ButtonSpeedManual from '../../../../Puzzles/ButtonSpeed/Manual/ButtonSpeedManual'
 
-export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
+export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo> } & AuthProp) {
 
-    const puzzleAnswerSamples = []
+    console.log(props.gameInfo)
+
+    const [ activePage, setActivePage ] = useState({ number: 0, zoneName: "ZONE HERE" }) // Internally Base 0
+
+    const answerPages = [] as { element: JSX.Element, zoneName: zoneNames }[]
     for (const puzzle of props.gameInfo.puzzles) {
         // A solution is provided for this player
         if (puzzle.solution) {
-            puzzleAnswerSamples.push(<ManualTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
+
+            if (puzzle.type == "buttonCombination") {
+                
+                answerPages.push({ element: <ButtonCombinationManual key={puzzle.zoneName} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
+
+            } else if (puzzle.type == "numberCombination") {
+
+                answerPages.push({ element: <NumberCombinationManual key={puzzle.zoneName} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
+
+            } else if (puzzle.type == "buttonSpeed") {
+
+                answerPages.push({ element: <ButtonSpeedManual key={puzzle.zoneName} layout={puzzle.buttonGridDimensions!} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
+
+            }
+            // Add more puzzles!
         }
 
     }
 
-    return (
-        <React.Fragment>
 
-            { puzzleAnswerSamples }
+    if (answerPages.length > 0) {  // Bug Fix
 
-            <div id="activePuzzleContainer" className={styles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
+        // Check if the activePage still exists
+        const result = props.gameInfo.puzzles.find(puzzle => puzzle.zoneName == activePage.zoneName)
+        if (!result) { // Does not exist anymore
 
-                <div id="puzzleAnswerOverlay" className={styles.inactiveAnswerOverlay /* inactiveAnswerOverlay, correctAnswerOverlay, incorrectAnswerOverlay */}/>
+            // Reset to the first page
+            setActivePage({ number: 0, zoneName: answerPages[0].zoneName})
 
-                <div className={styles.exitCube} onClick={() => {
-                    // Animate the "activePuzzle" div out
-                    const activePuzzleContainer = document.getElementById('activePuzzleContainer')
-                    const shadow = document.getElementById('shadow')
+        }
 
-                    if (activePuzzleContainer && shadow) {
+        return (
 
-                        props.setActivePuzzle({ element: <div/>, zoneName: undefined })
-                        activePuzzleContainer.className = styles.hiddenPuzzle
-                        shadow.style.zIndex = "-1"
+            <React.Fragment>
+                
+                <div className={styles.background}>
 
-                    }
+                    <div className={styles.container}>
+        
+                        <div className={styles.pageBase}>
+                            <div style={{ margin: "5%" }}>{ toVisualZoneName(activePage.zoneName as any)?.toUpperCase() }</div>
+                            { answerPages[activePage.number] ? answerPages[activePage.number].element : "" }
+                        </div>
 
-                }}/>
-                { props.activePuzzle.element }
+                        <div className={styles.controls}>
 
-            </div>
+                            <RxTriangleLeft className={styles.arrow} onClick={() => {
 
-        </React.Fragment>
-    )
+                                if (activePage.number - 1 >= 0) { // Check if it's within range
+                                    setActivePage({ number: activePage.number - 1, zoneName: answerPages[activePage.number - 1].zoneName })
+                                }
+                                
+
+                            }}/>
+                            { `${activePage.number + 1}/${answerPages.length}` }
+                            <RxTriangleRight className={styles.arrow} onClick={() => {
+
+                                if (activePage.number + 1 < answerPages.length) { // Check if it's within range
+                                    setActivePage({ number: activePage.number + 1, zoneName: answerPages[activePage.number + 1].zoneName })
+                                }
+                                
+
+                            }}/>
+
+                        </div>
+                    
+                    </div>
+
+                </div>
+
+
+
+    
+            </React.Fragment>
+    
+        )
+
+    } else {
+
+        return (
+            <div className={styles.background}/> // On load create the background at least
+        )
+
+    }
+
+
 
 }

@@ -1,0 +1,60 @@
+/* Base Class */
+.button {
+
+    height: 80%;
+    width: 80%;
+
+    background-color: gray;
+    border-radius: 50px;
+
+    box-shadow: 0px 6px  black;
+
+}
+.button:hover {
+
+    filter: brightness(85%);
+    cursor: pointer;
+
+}
+.button:active {
+    filter: brightness(65%);
+    transform: translateY(4px);
+    box-shadow: 0px 2px black;
+}
+
+
+/* Active Subset */
+.active {
+
+    composes: button;
+    background-color: blue;
+
+}
+
+.invalid {
+
+    composes: active;
+    background-color: red;
+
+}
+
+.poison {
+
+    composes: active;
+    background-color: green;
+
+}
+
+/* Inactive Subset */
+.inactive {
+
+    height: 80%;
+    width: 80%;
+
+    background-color: gray;
+    border-radius: 50px;
+
+    box-shadow: 0px 2px black;
+    filter: brightness(50%);
+
+}

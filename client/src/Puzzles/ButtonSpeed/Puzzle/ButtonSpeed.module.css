@@ -1,0 +1,60 @@
+@import '../gridDimensionVars.css';
+
+.container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+    
+    height: 100%;
+    width: 100%;
+
+}
+
+.buttonContainer {
+    
+    height: 20vh;
+    width: 20vh;
+
+}
+
+.buttonGrid {
+    
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(var(--buttonSpeed-Columns), auto);
+    grid-template-rows: repeat(var(--buttonSpeed-Rows), auto);
+
+}
+
+.controlContainer {
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+}
+
+.controlButton {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 5%;
+    
+    height: 5%;
+    width: 20%;
+
+
+    background-color: var(--brown-3);
+
+}

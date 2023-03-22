@@ -1,0 +1,70 @@
+.background {
+
+    /* Top bar is 10%, so account for that */
+    height: 90%;
+    width: 100%;
+    background-color: var(--blue-1);
+
+}
+
+.container {
+
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.pageBase {
+    
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    
+    height: 100%;
+    aspect-ratio: 4/5;
+    background-color: white;
+
+    border-color: black;
+    border-style: solid;
+    border-width: 3px;
+
+    margin: 2%;
+
+    overflow: scroll;
+
+}
+
+.arrow {
+
+    color: black;
+    font-size: 300%;
+
+}
+.arrow:hover {
+
+    color: white;
+    transition: 0.1s;
+
+}
+.arrow:active {
+
+    filter: brightness(85%);
+
+}
+
+.controls {
+
+    min-height: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 10px;
+
+}

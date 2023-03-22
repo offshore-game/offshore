@@ -6,6 +6,7 @@ import ButtonCombinationPuzzle from "../../../../../Puzzles/ButtonCombination/Pu
 import gameStyles from '../../../Game.module.css';
 import pointPos from './Points.module.css';
 import stopwatch from '../../../../../assets/Game/Stopwatch.svg';
+import ButtonSpeed from "../../../../../Puzzles/ButtonSpeed/Puzzle/ButtonSpeed";
 
 export default function PointTarget(props: { className: string, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
@@ -66,7 +67,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
             if (activePuzzleContainer && shadow) {
 
                 // FEATURE: differentiate between different types of puzzles
-
+                console.log(props.puzzle.type)
                 if (props.puzzle.type == "numberCombination") {
 
                     props.setActivePuzzle({ 
@@ -78,6 +79,13 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
                     
                     props.setActivePuzzle({
                         element: <ButtonCombinationPuzzle count={props.puzzle.buttonCount!} zoneName={props.puzzle.zoneName} requests={props.requests}/>,
+                        zoneName: props.puzzle.zoneName,
+                    })
+                    
+                } else if (props.puzzle.type == "buttonSpeed") {
+
+                    props.setActivePuzzle({
+                        element: <ButtonSpeed zoneName={props.puzzle.zoneName} layout={props.puzzle.buttonGridDimensions!} timings={props.puzzle.buttonGridTimings!} requests={props.requests}/>,
                         zoneName: props.puzzle.zoneName,
                     })
                     // etc...
