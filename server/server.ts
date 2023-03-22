@@ -170,6 +170,9 @@ io.sockets.on("connection", function (socket) {
             // Player is the owner of the lobby
             if (player?.owner) {
             
+                // Check if there is a sufficient number of players
+                if (lobby.players.length < 2) return callback(false);
+
                 // Run the startGame() function
                 const result = await lobby.startGame()
                     if (!result) return callback(globalErrors.TOKEN_INVALID);
