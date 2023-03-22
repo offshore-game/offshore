@@ -76,7 +76,7 @@ export default class Requests {
         return new Promise((res, rej) => {
 
             this.socket.emit("joinLobby", { username: username, roomCode: roomCode }, (data: { token: string, otherPlayers: string[]}) => {
-                console.log(data.token)
+
                 if (data.token) {
 
                     localStorage.setItem("token", data.token)
@@ -173,8 +173,6 @@ export default class Requests {
 
             const token = localStorage.getItem("token")
             const roomCode = localStorage.getItem("roomCode")
-
-            //console.log('event:', `{ zoneName: ${zoneName}, puzzleType: ${puzzleType}, answer: ${answer} }`)
 
             this.socket.emit("answerPuzzle", { token: token!, roomCode: roomCode!, zoneName: zoneName, puzzleType: puzzleType, answer: answer }, (result: boolean) => {
 

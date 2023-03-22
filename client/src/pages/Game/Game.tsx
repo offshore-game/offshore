@@ -51,7 +51,7 @@ export default function GameSwitchPoint(props: AuthProp) {
                 
                 // We need to double check the socket is registered to game events.
                 await props.requests.rejoinLobby().catch((err) => { throw err })
-                console.log(state.role)
+                console.log("ROLE:", state.role)
                 return setUserRole(state.role) // arbitrary for now
     
             } else if (result == validateTokenEnums.TOKEN_INVALID) { // User doesn't have authorization for this.

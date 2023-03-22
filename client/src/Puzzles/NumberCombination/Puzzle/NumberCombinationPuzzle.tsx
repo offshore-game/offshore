@@ -68,7 +68,6 @@ export default function NumberCombinationPuzzle(props: { count: number, zoneName
                 }
 
                 // API Call
-                console.log(combinationPayload)
                 const result = await props.requests.sendAnswer(props.zoneName, "numberCombination", combinationPayload)
                 
                 // Tell the game component the result

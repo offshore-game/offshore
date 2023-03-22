@@ -122,8 +122,6 @@ export default function SpeedButton(props: { index: number, zoneName: zoneNames,
 
         const resetCallback = () => {
 
-            console.log('button received reset')
-
             if (!button.current) return; // Error Supression
 
             // Reset color on a reset request

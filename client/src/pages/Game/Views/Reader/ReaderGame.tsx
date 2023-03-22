@@ -10,8 +10,6 @@ import ButtonSpeedManual from '../../../../Puzzles/ButtonSpeed/Manual/ButtonSpee
 
 export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo> } & AuthProp) {
 
-    console.log(props.gameInfo)
-
     const [ activePage, setActivePage ] = useState({ number: 0, zoneName: "ZONE HERE" }) // Internally Base 0
 
     const answerPages = [] as { element: JSX.Element, zoneName: zoneNames }[]

@@ -83,7 +83,7 @@ export default class GameLobby {
 
         this.io.in(this.id).emit("healthChange", { health: this.healthPoints })
 
-        console.log('new health:', this.healthPoints)
+        console.log(`${this.id} || new health:`, this.healthPoints)
 
         // Check if the server's health has dropped to zero or (bugged) below that
         if (this.healthPoints <= 0) {
@@ -150,7 +150,6 @@ export default class GameLobby {
 
 
         // Select a random type of puzzle
-        console.log(unusedPuzzles)
         const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
         //const randomlySelectedPuzzleType = "buttonSpeed" as any // for testing
 
@@ -341,7 +340,7 @@ export default class GameLobby {
 
                 // Character IS a space
                 if (character == " ") {
-                    console.debug("character is a space")
+
                     if (!previousEntry || previousEntry == " ") {
                         
                         // // Character lacks a valid previous character; skip
@@ -513,15 +512,6 @@ export default class GameLobby {
 
                 // -1 Second from the game time
                 this.durationSec--
-
-                /*console.log('tick')
-                const testPayload = this.prepareGamePayload()
-                for (const puzzle of testPayload.puzzles) {
-
-                    console.log(`${puzzle.zoneName}: ${puzzle.remainingTime}`)
-
-                }*/
-
 
                 // Check if the health is 0
                 if (this.healthPoints <= 0) {

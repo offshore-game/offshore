@@ -104,10 +104,6 @@ export default class ButtonCombination extends Puzzle {
 
     validate(answer: ButtonCombinationAnswer): boolean {
 
-        console.debug('start validate')
-        console.debug('solution:', this.solution)
-        console.debug('answer:', answer)
-
         // First check for identical length; prevent a bug where empty answers jump to true
         if (Object.entries(answer).length != Object.entries(this.solution).length) return false;
 
@@ -116,7 +112,6 @@ export default class ButtonCombination extends Puzzle {
 
             if (value != this.solution[key]) {
 
-                console.debug('incorrect solution at', key)
                 return false;
 
             }

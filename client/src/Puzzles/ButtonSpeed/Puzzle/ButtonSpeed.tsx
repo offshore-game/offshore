@@ -29,8 +29,6 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
     // Init \\
     useEffect(() => {
 
-        console.log('init')
-
         const totalCount = props.layout.rows * props.layout.columns
         
         // Visual display
@@ -74,7 +72,6 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
         // Listen for end game requests
         const endCallback = (event: any) => {
-            console.log('game end requested')
 
             // Handle resetting the game
             setActive(false);
@@ -103,8 +100,6 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
             clearTimeout(timeout)
 
         }
-
-        console.log('active changed to', active)
 
         const root = document.querySelector(':root')! as HTMLElement
         root.style.setProperty('--buttonSpeed-Rows', `${props.layout.rows}`)

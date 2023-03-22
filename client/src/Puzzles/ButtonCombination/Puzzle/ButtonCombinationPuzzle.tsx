@@ -45,10 +45,6 @@ export default function ButtonCombinationPuzzle(props: { count: number, zoneName
                     })
                     document.dispatchEvent(resultEvent)
 
-
-
-                    console.log(combinationPayload)
-
                 }} style={{minHeight: "25px"}}/>
 
                 <Button className={styles.controlButton} text={"Restart"} onClick={() => {

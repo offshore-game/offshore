@@ -50,8 +50,6 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
         // The server has closed the lobby.
         props.requests.socket.on("lobbyClose", () => {
 
-            console.log("server has requested the lobby close")
-
             localStorage.clear()
             navigate(`/`, { replace: true })
             navigate(0) // Reload the page to wipe the socket
@@ -73,8 +71,6 @@ export default function LobbyView(props: AuthProp & LobbyProp) {
             setUsernameBoardEntries(usernameBoardEntries.filter(entry => entry.key !== username))
 
         })
-
-        console.log("socket: ", props.requests.socket)
 
         props.requests.socket.on("gameStart", (payload: gameInfo) => {
 

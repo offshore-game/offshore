@@ -58,8 +58,6 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
     return (
         <div ref={target} className={`${pointPos.stopwatch} ${pointPos[props.className]}`} onClick={() => {
 
-            console.log('clicked')
-
             // Animate the "activePuzzle" div in
             const activePuzzleContainer = document.getElementById('activePuzzleContainer')
             const shadow = document.getElementById('shadow')
@@ -67,7 +65,6 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
             if (activePuzzleContainer && shadow) {
 
                 // FEATURE: differentiate between different types of puzzles
-                console.log(props.puzzle.type)
                 if (props.puzzle.type == "numberCombination") {
 
                     props.setActivePuzzle({ 

@@ -90,22 +90,17 @@ export default class NumberCombination extends Puzzle {
 
     validate(answer: NumberCombinationAnswer): boolean {
 
-        console.debug('start validate')
-        console.debug(this.solution)
-
         let pass = true
         for (const [key, value] of Object.entries(answer)) {
 
             if (value != this.solution[key]) {
-                console.debug('incorrect solution at', key)
+                
                 pass = false
                 return;
 
             }
 
         }
-
-        console.debug("pass: ", pass)
 
         return pass;
 

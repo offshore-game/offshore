@@ -28,8 +28,6 @@ function destroyLobby(lobby: GameLobby) {
 
 io.sockets.on("connection", function (socket) {
 
-    console.debug("client connected")
-
     socket.on("rejoinLobby", async function (data: { token: string, roomCode: string }, callback) {
 
         const lobby = lobbies.get(data.roomCode)
@@ -99,7 +97,6 @@ io.sockets.on("connection", function (socket) {
             
             if (!player) return callback(false); // Return a boolean indicating a failure.
             
-            console.debug("broadcasting that a player has joined")
             // Broadcast to all players that someone has joined.
             io.in(data.roomCode).emit("playerJoin", player.username)
 
@@ -119,8 +116,6 @@ io.sockets.on("connection", function (socket) {
 
             player.socket?.leave(lobby.id) // De-register the player from the room events.
             
-            console.debug(`Player ${player.username} has left lobby ${data.roomCode}`)
-
             // Broadcast to all players that someone has left.
             io.in(data.roomCode).emit("playerLeave", player.username)
 
