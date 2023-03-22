@@ -11,9 +11,17 @@
 
     padding: 5px;
 
+    height: 100%;
+
 }
 
 .buttonContainer {
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
 
     height: 100%;
     width: 100%;
@@ -30,6 +38,12 @@
     display: grid;
     grid-template-columns: repeat(var(--buttonSpeed-Columns), auto);
     grid-template-rows: repeat(var(--buttonSpeed-Rows), auto);
+
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+
+    padding: 2px;
 
 }
 
