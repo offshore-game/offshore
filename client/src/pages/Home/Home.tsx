@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Button from '../../components/Button/Button';
-
 import { AuthProp } from '../../utils/propTypes'
 import CreateView from './CreateView/CreateView';
 import styles from './Home.module.css'
@@ -16,6 +14,15 @@ type HomeProps = {
     gameLobby?: boolean
 
 }
+
+/*
+
+New Home Framework:
+- Separate pages/links/urls
+- Similar design with the box in the middle
+- No flashy animation (please)
+
+*/
 
 export default function Home(props: AuthProp & HomeProps) {
     const navigate = useNavigate();
