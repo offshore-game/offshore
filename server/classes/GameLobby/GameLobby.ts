@@ -262,7 +262,7 @@ export default class GameLobby {
 
                     if (puzzle.type == "buttonSpeed" && player.role == "READER"){
                         const numberOfFragments = puzzle.fragmentedSolutions.length
-                        toPush.numberOfFragments
+                        toPush.numberOfFragments = numberOfFragments
                     }
                 }
 

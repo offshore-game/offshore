@@ -3,7 +3,7 @@ import styles from './ButtonSpeedManual.module.css'
 
 type solutionType = { fragments: number[] }
 
-export default function ButtonSpeedManual(props: { layout: { rows: number, columns: number }, solution: solutionType }) {
+export default function ButtonSpeedManual(props: { layout: { rows: number, columns: number }, solution: solutionType, totalFragments: number }) {
 
     const [ buttonElems, setButtonElems ] = useState([] as any[])
 
@@ -34,8 +34,14 @@ export default function ButtonSpeedManual(props: { layout: { rows: number, colum
                 </div>
             </div>
 
+            <div className={styles.instructions}>
 
-            Avoid !!
+                <span>Avoid !!</span>
+                <span>Fragment 1 of {props.totalFragments}</span>
+
+            </div>
+
+
 
         </div>
 

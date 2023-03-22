@@ -25,6 +25,7 @@ export type PuzzleInfo = {
     solution?: {
         fragments: any[], // The fragmented solution provided only if the player has the READER role.
     },
+    numberOfFragments?: number,
 }
 
 export type gameInfo = {

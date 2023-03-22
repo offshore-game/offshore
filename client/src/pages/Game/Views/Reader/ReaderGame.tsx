@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { gameInfo, zoneNames } from '../../../../API/requests'
 import ButtonCombinationManual from '../../../../Puzzles/ButtonCombination/Manual/ButtonCombinationManual'
 import { AuthProp } from '../../../../utils/propTypes'
@@ -9,6 +9,8 @@ import NumberCombinationManual from '../../../../Puzzles/NumberCombination/Manua
 import ButtonSpeedManual from '../../../../Puzzles/ButtonSpeed/Manual/ButtonSpeedManual'
 
 export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo> } & AuthProp) {
+
+    console.log(props.gameInfo)
 
     const [ activePage, setActivePage ] = useState({ number: 0, zoneName: "ZONE HERE" }) // Internally Base 0
 
@@ -27,7 +29,7 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
             } else if (puzzle.type == "buttonSpeed") {
 
-                answerPages.push({ element: <ButtonSpeedManual key={puzzle.zoneName} layout={puzzle.buttonGridDimensions!} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
+                answerPages.push({ element: <ButtonSpeedManual key={puzzle.zoneName} layout={puzzle.buttonGridDimensions!} solution={puzzle.solution} totalFragments={puzzle.numberOfFragments!}/>, zoneName: puzzle.zoneName })
 
             }
             // Add more puzzles!
