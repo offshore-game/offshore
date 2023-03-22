@@ -1,6 +1,7 @@
 .background {
 
-    height: 100%;
+    /* Top bar is 10%, so account for that */
+    height: 90%;
     width: 100%;
     background-color: var(--blue-1);
 
@@ -8,18 +9,17 @@
 
 .container {
 
+    height: 100%;
+
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    height: 100%;
-    width: 100%;
+    flex-direction: column;
 
 }
 
 .pageBase {
-
+    
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -34,6 +34,8 @@
     border-width: 3px;
 
     margin: 2%;
+
+    overflow: scroll;
 
 }
 

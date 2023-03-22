@@ -29,7 +29,7 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
             } else if (puzzle.type == "buttonSpeed") {
 
-                answerPages.push({ element: <div>ok</div>/*<ButtonSpeedManual key={puzzle.zoneName} layout={puzzle.buttonGridDimensions!} solution={puzzle.solution} />*/, zoneName: puzzle.zoneName })
+                answerPages.push({ element: <ButtonSpeedManual key={puzzle.zoneName} layout={puzzle.buttonGridDimensions!} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
 
             }
             // Add more puzzles!
