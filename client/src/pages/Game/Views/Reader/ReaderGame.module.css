@@ -1,3 +1,11 @@
+.background {
+
+    height: 100%;
+    width: 100%;
+    background-color: var(--blue-1);
+
+}
+
 .container {
 
     display: flex;
@@ -6,8 +14,6 @@
     align-items: center;
 
     width: 100%;
-
-    background-color: var(--blue-1);
 
 }
 
@@ -18,7 +24,7 @@
     flex-direction: column;
     align-items: center;
 
-    height: 80%;
+    max-height: 40%;
     aspect-ratio: 4/5;
     background-color: white;
 
@@ -33,7 +39,7 @@
 .arrow {
 
     color: black;
-    font-size: 50px;
+    font-size: 300%;
 
 }
 .arrow:hover {
@@ -50,9 +56,12 @@
 
 .controls {
 
+    min-height: 0;
+
     display: flex;
     justify-content: center;
     align-items: center;
 
+    margin: 10px;
 
 }

@@ -53,38 +53,38 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
             <React.Fragment>
                 
-                <div>
+                <div className={styles.background}>
 
-                <div className={styles.container}>
-    
-                    <div className={styles.pageBase}>
-                        <div style={{ margin: "5%" }}>{ toVisualZoneName(activePage.zoneName as any)?.toUpperCase() }</div>
-                        { answerPages[activePage.number] ? answerPages[activePage.number].element : "" }
+                    <div className={styles.container}>
+        
+                        <div className={styles.pageBase}>
+                            <div style={{ margin: "5%" }}>{ toVisualZoneName(activePage.zoneName as any)?.toUpperCase() }</div>
+                            { answerPages[activePage.number] ? answerPages[activePage.number].element : "" }
+                        </div>
+
+                        <div className={styles.controls}>
+
+                            <RxTriangleLeft className={styles.arrow} onClick={() => {
+
+                                if (activePage.number - 1 >= 0) { // Check if it's within range
+                                    setActivePage({ number: activePage.number - 1, zoneName: answerPages[activePage.number - 1].zoneName })
+                                }
+                                
+
+                            }}/>
+                            { `${activePage.number + 1}/${answerPages.length}` }
+                            <RxTriangleRight className={styles.arrow} onClick={() => {
+
+                                if (activePage.number + 1 < answerPages.length) { // Check if it's within range
+                                    setActivePage({ number: activePage.number + 1, zoneName: answerPages[activePage.number + 1].zoneName })
+                                }
+                                
+
+                            }}/>
+
+                        </div>
+                    
                     </div>
-
-                    <div className={styles.controls}>
-
-                        <RxTriangleLeft className={styles.arrow} onClick={() => {
-
-                            if (activePage.number - 1 >= 0) { // Check if it's within range
-                                setActivePage({ number: activePage.number - 1, zoneName: answerPages[activePage.number - 1].zoneName })
-                            }
-                            
-
-                        }}/>
-                        { `${activePage.number + 1}/${answerPages.length}` }
-                        <RxTriangleRight className={styles.arrow} onClick={() => {
-
-                            if (activePage.number + 1 < answerPages.length) { // Check if it's within range
-                                setActivePage({ number: activePage.number + 1, zoneName: answerPages[activePage.number + 1].zoneName })
-                            }
-                            
-
-                        }}/>
-
-                    </div>
-                
-                </div>
 
                 </div>
 
@@ -98,7 +98,7 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     } else {
 
         return (
-            <div className={styles.container}/> // On load create the background at least
+            <div className={styles.background}/> // On load create the background at least
         )
 
     }
