@@ -1,7 +1,7 @@
 import GameLobby, { zoneNames } from "../classes/GameLobby/GameLobby"
 
 export type puzzleTypes = "numberCombination" | "buttonCombination" | "buttonSpeed" | "wireConnect" | "wireCut"
-export const puzzleTypeArray = ["numberCombination", "buttonCombination", "buttonSpeed", "wireConnect", "wireCut"] as puzzleTypes[]
+export const puzzleTypeArray = ["numberCombination", "buttonCombination", "buttonSpeed", /*"wireConnect", "wireCut"*/] as puzzleTypes[]
 
 export default class Puzzle {
     

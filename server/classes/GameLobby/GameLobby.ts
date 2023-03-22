@@ -150,8 +150,9 @@ export default class GameLobby {
 
 
         // Select a random type of puzzle
-        //const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
-        const randomlySelectedPuzzleType = "buttonSpeed" as any // for testing
+        console.log(unusedPuzzles)
+        const randomlySelectedPuzzleType = unusedPuzzles[randomNumber(0, unusedPuzzles.length - 1 /* 0-based index fix */)]
+        //const randomlySelectedPuzzleType = "buttonSpeed" as any // for testing
 
         // Select a random zone
         const randomlySelectedZone = unusedZones[randomNumber(0, unusedZones.length - 1 /*0-based index fix */)]
@@ -166,22 +167,22 @@ export default class GameLobby {
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 60, addTimeout ? 2 : 0, readerCount)
 
         } else if (randomlySelectedPuzzleType == "buttonCombination") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 60, addTimeout ? 2 : 0, readerCount)
 
         } else if (randomlySelectedPuzzleType == "buttonSpeed") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, 10, 3, 500, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, 10, 3, 60, addTimeout ? 2 : 0, readerCount)
 
         } else {
 
             // FEATURE: add more puzzle types!
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 500, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 60, addTimeout ? 2 : 0, readerCount)
 
         }
 
