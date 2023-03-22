@@ -17,7 +17,8 @@ export default class Puzzle {
         this.zoneName = zoneName
         this.type = type
         this.remainingTime = durationSec
-        this.expirationTimeout = setTimeout(() => {
+        setTimeout(() => {
+
 
             // Decrease the remaining time every second
             const interval = setInterval(() => {
@@ -27,15 +28,13 @@ export default class Puzzle {
             }, 1000)
             
 
-            setTimeout(() => {
+            this.expirationTimeout = setTimeout(() => {
 
                 // Destroy the decrease interval timer
                 clearInterval(interval)
                 
                 // Tell the game lobby that the puzzle expired
                 lobby.events.emitter.emit(lobby.events.names.expired, { puzzle: this })
-    
-                console.warn(`${this.zoneName} || puzzle expired!`)
     
             }, durationSec * 1000)
 
