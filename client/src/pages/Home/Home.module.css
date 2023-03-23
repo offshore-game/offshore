@@ -18,11 +18,13 @@
 
     background: repeating-linear-gradient(
         -45deg,
-        #606dbc,
-        #606dbc 10px,
-        #465298 10px,
-        #465298 20px
+        var(--blue-3),
+        var(--blue-3) 10px,
+        var(--blue-4) 10px,
+        var(--blue-4) 20px
     );
+
+    background-position: 50% 50%;
 
     animation: InfiniteStripe 1s linear infinite;
 
