@@ -1,6 +1,10 @@
-@keyframes InfiniteStripe {
-    0%{background-position:100% 50%}
-    100%{background-position:-33% 50%} /* instead of 0% 50% */
+@keyframes InfiniteStripe { 
+    0%{background-position:10% 0%}
+    50%{background-position:91% 100%}
+    100%{background-position:10% 0%}
+    /*0%{ opacity: 10% }
+    50%{ opacity: 100% }
+    100%{ opacity: 10% }*/
 }
 
 .container {
@@ -26,7 +30,7 @@
 
     background-position: 50% 50%;
 
-    animation: InfiniteStripe 1s linear infinite;
+    animation: InfiniteStripe 2s ease infinite;
 
 }
 
