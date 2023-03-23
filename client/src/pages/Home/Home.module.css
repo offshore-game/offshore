@@ -1,3 +1,8 @@
+@keyframes InfiniteStripe {
+    0%{background-position:100% 50%}
+    100%{background-position:-33% 50%} /* instead of 0% 50% */
+}
+
 .container {
 
     display: flex;
@@ -9,7 +14,17 @@
     width: 100%;
 
     /* https://css-tricks.com/stripes-css */
-    background-color: var(--blue-1);
+    /*background-color: var(--blue-1);*/
+
+    background: repeating-linear-gradient(
+        -45deg,
+        #606dbc,
+        #606dbc 10px,
+        #465298 10px,
+        #465298 20px
+    );
+
+    animation: InfiniteStripe 1s linear infinite;
 
 }
 
