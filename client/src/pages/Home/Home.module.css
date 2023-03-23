@@ -23,9 +23,9 @@
     background: repeating-linear-gradient(
         -45deg,
         var(--blue-3),
-        var(--blue-3) 10px,
-        var(--blue-4) 10px,
-        var(--blue-4) 20px
+        var(--blue-3) 20px,
+        var(--blue-4) 20px,
+        var(--blue-4) 40px
     );
 
     background-position: 50% 50%;
