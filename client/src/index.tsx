@@ -45,10 +45,10 @@ root.render(
         <BrowserRouter>
           <Routes>
             <Route path="/" element={ <Home requests={Connection} /> } />
-            <Route path="/join" element={ <Home requests={Connection} joinMenu={true}/> } />
-            <Route path ="/create" element={ <Home requests={Connection} createMenu={true}/> } />
+            <Route path="/join" element={ <Home requests={Connection} /> } />
+            <Route path ="/create" element={ <Home requests={Connection} /> } />
 
-            <Route path="/lobby/:id" element={ <Home requests={Connection} gameLobby={true}/> } />
+            <Route path="/lobby/:id" element={ <Home requests={Connection} /> } />
             <Route path="/game/:id" element={ <GameSwitchPoint requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}
             <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><ButtonSpeed zoneName="captainDeck" layout={ { rows: 4, columns: 4 } } timings={buttonSpeedPayload} requests={Connection}/></div> } />
           </Routes>
