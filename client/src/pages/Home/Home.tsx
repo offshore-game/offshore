@@ -30,7 +30,7 @@ export default function Home(props: AuthProp) {
 
     return (
         <div className={styles.container}>
-
+            OFFSHORE
             <div className={styles.centerContainer}>
 
                 <Button className={styles.create} text={"Create"} onClick={() => {
@@ -46,7 +46,7 @@ export default function Home(props: AuthProp) {
                 }}/>
 
             </div>
-
+            TSA ID: ????
         </div>
     )
 
