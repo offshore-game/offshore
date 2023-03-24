@@ -1,10 +1,5 @@
 @keyframes InfiniteStripe { 
-    0%{background-position:10% 0%}
-    50%{background-position:91% 100%}
-    100%{background-position:10% 0%}
-    /*0%{ opacity: 10% }
-    50%{ opacity: 100% }
-    100%{ opacity: 10% }*/
+    100% { background-position: 100% 100%; }
 }
 
 .container {
@@ -17,10 +12,7 @@
     height: 100%;
     width: 100%;
 
-    /* https://css-tricks.com/stripes-css */
-    /*background-color: var(--blue-1);*/
-
-    background: repeating-linear-gradient(
+    background-image: repeating-linear-gradient(
         -45deg,
         var(--blue-3),
         var(--blue-3) 20px,
@@ -28,9 +20,9 @@
         var(--blue-4) 40px
     );
 
-    background-position: 50% 50%;
+    background-size: 200% 200%;
 
-    animation: InfiniteStripe 2s ease infinite;
+    animation: InfiniteStripe 35s linear infinite;
 
 }
 
