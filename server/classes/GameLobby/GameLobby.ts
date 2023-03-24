@@ -162,21 +162,31 @@ export default class GameLobby {
         // Calculate how many fragments would be needed (FEATURE: change with difficulty multiplier)
         const readerCount = this.players.filter(player => player.role == "READER").length
 
+        /*
+            Sample arrow function:
+            const myFunc = () => {
+                
+            }
+        */
+
         // Make the puzzle using the random type
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
             generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 60, addTimeout ? 2 : 0, readerCount)
+            // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonCombination") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
             generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 60, addTimeout ? 2 : 0, readerCount)
+            // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonSpeed") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
             generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, 10, 3, 60, addTimeout ? 2 : 0, readerCount)
+            // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
 
         } else {
 
