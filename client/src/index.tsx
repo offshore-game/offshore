@@ -9,6 +9,7 @@ import ButtonSpeed from './Puzzles/ButtonSpeed/Puzzle/ButtonSpeed';
 import Create from './pages/Home/Create/Create';
 import Core from './pages/Home/Core/Core';
 import Lobby from './pages/Home/Lobby/Lobby';
+import Tutorial from './pages/Home/Tutorial/Tutorial';
 
 const buttonSpeedPayload = { // testing purposes only
 
@@ -49,6 +50,7 @@ root.render(
             <Route path="/" element={ <Core /> } />
             <Route path="/join" element={ <Home /> } />
             <Route path ="/create" element={ <Create requests={Connection} /> } />
+            <Route path ="/tutorial" element={ <Tutorial /> } />
 
             <Route path="/lobby/:id" element={ <Lobby requests={Connection} /> } />
             <Route path="/game/:id" element={ <GameSwitchPoint requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}

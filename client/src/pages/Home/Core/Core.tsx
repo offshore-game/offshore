@@ -17,7 +17,7 @@ export default function Core() {
             }}/>
 
             <Button className={styles.howToPlay} text={"How To Play"} onClick={() => {
-
+                return nav('/tutorial')
             }}/>
         </Home>
     )

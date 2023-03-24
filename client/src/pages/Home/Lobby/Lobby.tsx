@@ -13,6 +13,11 @@ export default function Lobby(props: AuthProp & LobbyProp) {
     const nav = useNavigate();
     const { id } = useParams(); // Rip the ID from the URL (wildcard defined in index.tsx)
 
+    // Prevent Accidental Reloads
+    window.onbeforeunload = (event) => {
+        return "Are you sure you want to reload?";
+    };
+
     useEffect(() => {
         
         const auth = async () => {
