@@ -7,12 +7,13 @@ import LobbyView from './LobbyView/LobbyView';
 
 import { ReactComponent as JoinMenuStack } from '../../assets/MainMenu/joinMenuStack.svg'
 import Button from '../../components/Button/Button';
+import Core from './Core/Core';
 
 type HomeProps = {
 
-    joinMenu?: boolean
-    createMenu?: boolean
-    gameLobby?: boolean
+    join?: boolean
+    create?: boolean
+    lobby?: boolean
 
 }
 
@@ -26,24 +27,15 @@ New Home Framework:
 */
 
 
-export default function Home(props: AuthProp) {
+export default function Home(props: { children?: any }) {
 
     return (
         <div className={styles.container}>
             OFFSHORE
             <div className={styles.centerContainer}>
 
-                <Button className={styles.create} text={"Create"} onClick={() => {
-
-                }}/>
-
-                <Button className={styles.join} text={"Join"} onClick={() => {
-
-                }}/>
-
-                <Button className={styles.howToPlay} text={"How To Play"} onClick={() => {
-
-                }}/>
+                {/* this is really just a template */}
+                { props.children }
 
             </div>
             TSA ID: ????
@@ -54,9 +46,9 @@ export default function Home(props: AuthProp) {
 
 function H(props: AuthProp & HomeProps) {
     const navigate = useNavigate();
-    const [joinMenuView, setJoinMenuView] = useState(props.joinMenu ? true : false);
-    const [createMenuView, setCreateMenuView] = useState(props.createMenu ? true : false);
-    const [gameLobbyView, setGameLobbyView] = useState(props.gameLobby ? true : false);
+    const [joinMenuView, setJoinMenuView] = useState(props.join ? true : false);
+    const [createMenuView, setCreateMenuView] = useState(props.create ? true : false);
+    const [gameLobbyView, setGameLobbyView] = useState(props.lobby ? true : false);
     const [otherPlayers, setOtherPlayers] = useState(undefined as any)
 
     useEffect(() => {

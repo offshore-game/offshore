@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -7,6 +6,9 @@ import Home from './pages/Home/Home'
 import Requests from './API/requests';
 import GameSwitchPoint from './pages/Game/Game';
 import ButtonSpeed from './Puzzles/ButtonSpeed/Puzzle/ButtonSpeed';
+import Create from './pages/Home/Create/Create';
+import Core from './pages/Home/Core/Core';
+import Lobby from './pages/Home/Lobby/Lobby';
 
 const buttonSpeedPayload = { // testing purposes only
 
@@ -44,11 +46,11 @@ root.render(
       <div id="sizingContent">
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={ <Home requests={Connection} /> } />
-            <Route path="/join" element={ <Home requests={Connection} /> } />
-            <Route path ="/create" element={ <Home requests={Connection} /> } />
+            <Route path="/" element={ <Core /> } />
+            <Route path="/join" element={ <Home /> } />
+            <Route path ="/create" element={ <Create requests={Connection} /> } />
 
-            <Route path="/lobby/:id" element={ <Home requests={Connection} /> } />
+            <Route path="/lobby/:id" element={ <Lobby requests={Connection} /> } />
             <Route path="/game/:id" element={ <GameSwitchPoint requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}
             <Route path="/test/" element={ <div style={{backgroundColor: "white", height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}><ButtonSpeed zoneName="captainDeck" layout={ { rows: 4, columns: 4 } } timings={buttonSpeedPayload} requests={Connection}/></div> } />
           </Routes>

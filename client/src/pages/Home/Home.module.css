@@ -1,6 +1,15 @@
 @keyframes InfiniteStripe { 
-    0% { background-position: 100% 100%; }
+    100% { background-position: 100% 100%; }
 }
+
+.button {
+
+    background-color: var(--brown-2);
+    height: 20%;
+    margin: 10px;
+
+}
+
 
 .container {
 
@@ -28,6 +37,8 @@
 
 .centerContainer {
 
+    position: relative;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -47,30 +58,20 @@
 
 }
 
-.button {
+.backButton {
 
-    background-color: var(--brown-2);
-    height: 20%;
-    margin: 10px;
+    position: absolute;
+    
+    left: 0;
+    top: 0;
 
-}
+    margin: 2%;
 
-.create {
-
-    composes: button;
-
-}
-
-.join {
-
-    composes: button;
-    background-color: green;
+    font-size: 150%;
 
 }
+.backButton:hover {
 
-.howToPlay {
-
-    composes: button;
-    background-color: gray;
+    cursor: pointer;
 
 }
