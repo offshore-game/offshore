@@ -1,11 +1,17 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthProp } from "../../../utils/propTypes";
 import Home from "../Home";
 
-export default function Lobby(props: AuthProp) {
+// This is passed in the navigate (state: {}) parameter from Join. From index this is undefined.
+type LobbyProp = {
+    otherPlayers?: string[]
+}
+
+export default function Lobby(props: AuthProp & LobbyProp) {
 
     const nav = useNavigate();
+    const { id } = useParams(); // Rip the ID from the URL (wildcard defined in index.tsx)
 
     useEffect(() => {
         
@@ -25,7 +31,7 @@ export default function Lobby(props: AuthProp) {
     return (
         <Home>
 
-            lobby here ok
+            { id }
 
         </Home>
     )
