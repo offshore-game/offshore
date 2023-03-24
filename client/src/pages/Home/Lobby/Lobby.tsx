@@ -10,6 +10,8 @@ type LobbyProp = {
 
 export default function Lobby(props: AuthProp & LobbyProp) {
 
+    console.log(props.otherPlayers)
+
     const nav = useNavigate();
     const { id } = useParams(); // Rip the ID from the URL (wildcard defined in index.tsx)
 
@@ -28,8 +30,7 @@ export default function Lobby(props: AuthProp & LobbyProp) {
         }
         auth()
 
-        // Insert data gathering info here
-        // Lobby ID + other players ( if from join )
+        // Insert Lobby Events Here
 
     }, [])
 
@@ -37,6 +38,7 @@ export default function Lobby(props: AuthProp & LobbyProp) {
         <Home>
 
             { id }
+            { props.otherPlayers }
 
         </Home>
     )

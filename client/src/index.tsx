@@ -10,6 +10,7 @@ import Create from './pages/Home/Create/Create';
 import Core from './pages/Home/Core/Core';
 import Lobby from './pages/Home/Lobby/Lobby';
 import Tutorial from './pages/Home/Tutorial/Tutorial';
+import Join from './pages/Home/Join/Join';
 
 const buttonSpeedPayload = { // testing purposes only
 
@@ -48,7 +49,7 @@ root.render(
         <BrowserRouter>
           <Routes>
             <Route path="/" element={ <Core /> } />
-            <Route path="/join" element={ <Home /> } />
+            <Route path="/join" element={ <Join requests={Connection} /> } />
             <Route path ="/create" element={ <Create requests={Connection} /> } />
             <Route path ="/tutorial" element={ <Tutorial /> } />
 
