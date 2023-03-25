@@ -23,10 +23,8 @@ export default function Join(props: AuthProp) {
 
                 if (result) {
                     
-                    console.log(result)
-
                     // Redirect user to lobby
-                    nav(`/lobby/${roomId.value}`, { replace: true, state: result })
+                    nav(`/lobby/${roomId.value}`, { replace: true, state: [...result, username.value] })
 
                 }
 
