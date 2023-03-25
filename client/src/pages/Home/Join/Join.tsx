@@ -11,23 +11,23 @@ export default function Join(props: AuthProp) {
     return (
         <Home>
 
-            <input type="text" id="usernameInput-Create" className={styles.textInput} placeholder="Username" />
-
+            <input type="text" id="roomId-Join" className={styles.textInput} placeholder="Room ID" />
+            <input type="text" id="usernameInput-Join" className={styles.textInput} placeholder="Username" />
+            
             <Button className={styles.button} text={"Join Game"} onClick={async () => {
             
-                const username = document.getElementById("usernameInput-Create") as HTMLTextAreaElement
+                const roomId = document.getElementById("roomId-Join") as HTMLTextAreaElement
+                const username = document.getElementById("usernameInput-Join") as HTMLTextAreaElement
                                 
-                const result = await props.requests.joinLobby(username.value, "need input here!!!!" /* BUG */).catch((err) => { throw err; })
+                const result = await props.requests.joinLobby(username.value, roomId.value).catch((err) => { throw err; })
 
                 if (result) {
                     
                     console.log(result)
 
                     // Redirect user to lobby
-                    nav(`/lobby/${result}`, { replace: true, state: result })
+                    nav(`/lobby/${roomId.value}`, { replace: true, state: result })
 
-                    // Mark user as owner to prompt settings and start game pathways
-                    localStorage.setItem("isOwner", "true")
                 }
 
             }}/>

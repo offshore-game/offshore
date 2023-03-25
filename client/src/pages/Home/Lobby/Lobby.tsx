@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AuthProp } from "../../../utils/propTypes";
 import Home from "../Home";
 
@@ -10,15 +10,18 @@ type LobbyProp = {
 
 export default function Lobby(props: AuthProp & LobbyProp) {
 
-    console.log(props.otherPlayers)
-
     const nav = useNavigate();
     const { id } = useParams(); // Rip the ID from the URL (wildcard defined in index.tsx)
+    const { state } = useLocation(); // Get the passed array of other players (if any)
+
+    const playerList: string[] = state ? state : []
+
+    console.log(state)
 
     // Prevent Accidental Reloads
-    window.onbeforeunload = (event) => {
+    /*window.onbeforeunload = (event) => {
         return "Are you sure you want to reload?";
-    };
+    };*/
 
     useEffect(() => {
         
@@ -38,7 +41,7 @@ export default function Lobby(props: AuthProp & LobbyProp) {
         <Home>
 
             { id }
-            { props.otherPlayers }
+            { playerList }
 
         </Home>
     )
