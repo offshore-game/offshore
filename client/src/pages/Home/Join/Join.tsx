@@ -1,3 +1,4 @@
+import { BiArrowBack } from 'react-icons/bi'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../../components/Button/Button'
 import { AuthProp } from '../../../utils/propTypes'
@@ -10,6 +11,12 @@ export default function Join(props: AuthProp) {
 
     return (
         <Home>
+
+            <BiArrowBack className={styles.backButton} onClick={() => {
+
+                nav(`/`, { replace: true }) 
+
+            }}/>
 
             <input type="text" id="roomId-Join" className={styles.textInput} placeholder="Room ID" />
             <input type="text" id="usernameInput-Join" className={styles.textInput} placeholder="Username" />
