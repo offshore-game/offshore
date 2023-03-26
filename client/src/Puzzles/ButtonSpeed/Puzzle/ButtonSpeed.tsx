@@ -73,6 +73,13 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
         // Listen for end game requests
         const endCallback = (event: any) => {
 
+            if (active) { // Prevent a double fire
+
+                // Send to the server the mistake
+                props.requests.sendAnswer(props.zoneName, "buttonSpeed", false)
+
+            }
+
             // Handle resetting the game
             setActive(false);
 
@@ -87,7 +94,7 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
         }
 
-    }, [])
+    }, [active])
 
 
     // Trigger Watch \\
@@ -190,7 +197,7 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
 
             <div className={styles.controlContainer}>
-                <Button className={styles.controlButton} text="Start" onClick={() => {
+                <Button className={active ? styles.disabledControlButton : styles.controlButton} text="Start" onClick={() => {
                     
                     // Unpressable while active
                     if (active) return;
