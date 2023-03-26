@@ -4,3 +4,41 @@
     width: 100%;
 
 }
+
+.container {
+
+    height: 100%;
+    width: 100%;
+
+}
+
+.failOverlay {
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
+
+}
+
+.failVisible {
+
+    composes: failOverlay;
+    visibility: visible;
+
+}
+
+.button {
+
+    height: 10%;
+    aspect-ratio: 3/1;
+
+}

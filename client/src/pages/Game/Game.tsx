@@ -274,7 +274,7 @@ export default function GameSwitchPoint(props: AuthProp) {
         // After 5 seconds, show the game
         setTimeout(() => { setStatus(statusType.inGame) }, 5000)
 
-        return (<Cutscene />)
+        return (<Cutscene type={"INTRO"} />)
 
     }
 
@@ -293,9 +293,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     // The game is at the failed ending cutscene; display it.
     if (status == statusType.failEnding) {
 
-        return (
-            <div style={{height: "100vh", width: "100vw", backgroundColor: "red"}}/>
-        )
+        return (<Cutscene type={"FAIL"} />)
 
     }
 
