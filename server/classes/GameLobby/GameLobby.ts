@@ -468,8 +468,8 @@ export default class GameLobby {
                 // Add a time bonus to all puzzles
                 for (const puzzle of this.puzzles.active) {
 
-                    // Add five seconds
-                    puzzle.addTimeBonus(5)
+                    // Add ten seconds
+                    puzzle.addTimeBonus(10)
 
                 }
 
