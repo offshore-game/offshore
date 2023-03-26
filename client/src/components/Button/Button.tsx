@@ -12,7 +12,7 @@ type ButtonProps = {
 export default function Button(props: ButtonProps) {
 
     return (
-        <div className={`${props.className ? props.className : ""} ${styles.button}`} onClick={props.onClick as any} style={props.style}>
+        <div className={`${styles.button} ${props.className ? props.className : ""}`} onClick={props.onClick as any} style={props.style}>
             {props.text}
         </div>
     )

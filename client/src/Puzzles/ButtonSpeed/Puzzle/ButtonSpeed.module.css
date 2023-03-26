@@ -58,3 +58,21 @@
     background-color: var(--brown-3);
 
 }
+.disabledControlButton {
+
+    composes: controlButton;
+    filter: brightness(60%);
+    box-shadow: 0px 2px black;
+
+}
+.disabledControlButton:hover {
+
+    filter: brightness(60%);
+    cursor: auto;
+
+}
+.disabledControlButton:active {
+
+    filter: brightness(60%);
+
+}
