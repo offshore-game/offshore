@@ -7,13 +7,14 @@ import gameStyles from '../../../Game.module.css';
 import pointPos from './Points.module.css';
 import stopwatch from '../../../../../assets/Game/Stopwatch.svg';
 import ButtonSpeed from "../../../../../Puzzles/ButtonSpeed/Puzzle/ButtonSpeed";
+import toVisualZoneName from "../../../../../utils/zoneNameConversion";
 
 export default function PointTarget(props: { className: string, puzzle: PuzzleInfo, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames }> } & AuthProp) {
 
     const [ remainingTime, setRemainingTime ] = useState(props.puzzle.remainingTime)
     const [ timerFunction, setTimerFunction ] = useState(undefined as any)
     const [ nextColor, setNextColor ] = useState('red' as ('black' | 'red'))
-    const target = useRef(undefined as any as HTMLDivElement)
+    const target = useRef(undefined as any as HTMLImageElement)
 
     // Expiry Timer
     useEffect(() => {
@@ -40,10 +41,10 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
             if (target.current) {
 
                 if (nextColor == 'red') {
-                    target.current.className = `${pointPos.redwatch} ${pointPos[props.className]}`
+                    target.current.className = pointPos.redwatch
                     setNextColor('black')
                 } else if (nextColor == 'black') {
-                    target.current.className = `${pointPos.stopwatch} ${pointPos[props.className]}`
+                    target.current.className = ""
                     setNextColor('red')
                 }
                 
@@ -56,7 +57,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
 
 
     return (
-        <div ref={target} className={`${pointPos.stopwatch} ${pointPos[props.className]}`} onClick={() => {
+        <div className={`${pointPos.stopwatch} ${pointPos[props.className]}`} onClick={() => {
 
             // Animate the "activePuzzle" div in
             const activePuzzleContainer = document.getElementById('activePuzzleContainer')
@@ -96,10 +97,11 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
 
         }}>
 
-            <img src={stopwatch}/>
+            <img ref={target} src={stopwatch}/>
             <div className={pointPos.timeText}>{ remainingTime }</div>
-            
 
+            <span className={pointPos.tooltip}>{toVisualZoneName(props.puzzle.zoneName)}</span>
+            
         </div>
     )
 

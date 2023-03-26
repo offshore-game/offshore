@@ -132,7 +132,38 @@
 
 .redwatch {
 
-    composes: stopwatch;
     filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(300deg);
+
+}
+
+.tooltip {
+
+    position: absolute;
+    top: calc(25% - 3px);
+    
+    min-width: 250%;
+    width: auto;
+
+    background-color: var(--brown-2);
+    color: white;
+
+    text-align: center;
+    font-weight: 600;
+    
+    border-radius: 8px;
+    border-color: black;
+    border-style: solid;
+
+    padding: 10%;
+    margin-left: 360%;
+
+    visibility: hidden;
+    z-index: 9;
+
+}
+
+.basePoint:hover .tooltip {
+
+    visibility: visible;
 
 }
