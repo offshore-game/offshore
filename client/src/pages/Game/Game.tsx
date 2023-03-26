@@ -10,6 +10,7 @@ import HealthBar from "../../components/HealthBar/HealthBar";
 import ReaderGame from "./Views/Reader/ReaderGame";
 import { BiCoinStack } from 'react-icons/bi'
 import { TbClock } from 'react-icons/tb'
+import Cutscene from "../../components/Cutscene/Cutscene";
 
 export enum statusType {
     inGame = 0, // Started Game
@@ -273,7 +274,7 @@ export default function GameSwitchPoint(props: AuthProp) {
         // After 5 seconds, show the game
         setTimeout(() => { setStatus(statusType.inGame) }, 5000)
 
-        return (<div/>)
+        return (<Cutscene />)
 
     }
 
