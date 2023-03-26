@@ -465,6 +465,14 @@ export default class GameLobby {
                 this.puzzles.solved.push(puzzle) // Saved as a solved puzzle
                 this.puzzles.active.splice(completedIndex, 1) // Delete from the active puzzle array
 
+                // Add a time bonus to all puzzles
+                for (const puzzle of this.puzzles.active) {
+
+                    // Add five seconds
+                    puzzle.addTimeBonus(5)
+
+                }
+
                 // Tell the clients the puzzles changed
                 this.emitToAllPlayers("puzzleChange", this.prepareGamePayloads())
 

@@ -16,6 +16,15 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
     const [ nextColor, setNextColor ] = useState('red' as ('black' | 'red'))
     const target = useRef(undefined as any as HTMLImageElement)
 
+
+    
+    // Listen for changes in the remainingTime when the time bonus is added \\
+    useEffect(() => {
+        console.log(`Prop changed for ${props.puzzle.zoneName}: ${props.puzzle.remainingTime}`)
+        setRemainingTime(props.puzzle.remainingTime)
+    }, [props.puzzle.remainingTime])
+
+
     // Expiry Timer
     useEffect(() => {
 
