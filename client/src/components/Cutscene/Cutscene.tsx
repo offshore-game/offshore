@@ -28,7 +28,7 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
 
     }, [])
 
-    if (props.type == "FAIL") {
+    if (props.type == "FAIL" || props.type == "INTRO") {
 
         return (
             <div className={styles.container}>
