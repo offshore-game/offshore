@@ -165,33 +165,64 @@ export default class GameLobby {
         /*
             Sample arrow function:
             const myFunc = () => {
-                
             }
         */
+            const dbCount = () => {
+                if (this.durationSec > 240){return 4;}
+                else if (this.durationSec > 180){return 5;}
+                else if (this.durationSec > 120){return 6;}
+                else if (this.durationSec > 60){return 7;}
+                else {return 8;}
+            }
+            const pCount = () => {
+                if (this.durationSec > 240){return 2;}
+                else if (this.durationSec > 180){return 3;}
+                else if (this.durationSec > 120){return 4;}
+                else if (this.durationSec > 60){return 5;}
+                else {return 6;}
+            }
+            
+            /**
+            * Cannot be more fragments than readers (use readerCount)
+            * Max number of readers is 5
+            * 300 seconds / 60 seconds per level = 5 
+            * 3 fragments max (increase from level 1 to 3), but most be <= number of readers
+            */
+            const fCount = () => {
+                if (this.durationSec > 240){return 1;}
+                else if (this.durationSec > 180){
+                    if (readerCount >= 2) {return 2;}
+                    else {return readerCount;}
+                }
+                else {
+                    if (readerCount >= 3) {return 3;}
+                    else {return readerCount;}
+                }
+            }
 
         // Make the puzzle using the random type
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, 4, 60, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonCombination") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 60, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonSpeed") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, 10, 3, 60, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
 
         } else {
 
             // FEATURE: add more puzzle types!
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, 4, 60, addTimeout ? 2 : 0, readerCount)
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
 
         }
 
