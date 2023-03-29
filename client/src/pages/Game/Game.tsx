@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { validateTokenEnums } from "../../API/types/enums";
 import { AuthProp } from "../../utils/propTypes";
@@ -37,6 +37,8 @@ export default function GameSwitchPoint(props: AuthProp) {
     
     const [ gameTimer, setGameTimer ] = useState(state ? state.lengthSec as number : 0)
     const [ gameTimerCountdown, setTimerFunction ] = useState(undefined as any)
+
+    const stageText = useRef(undefined as any as HTMLDivElement)
 
     const [ coins, setCoins ] = useState(0)
 
@@ -164,6 +166,10 @@ export default function GameSwitchPoint(props: AuthProp) {
 
             setTimerFunction(setInterval(() => {
                 setGameTimer(prevTime => prevTime - 1)
+
+                if (stageText.current) {
+                    stageText.current.className = (stageText.current.className == styles.centerInfo ? styles.redCenterInfo : styles.centerInfo) 
+                }
             }, 1000))
 
         } else {
@@ -237,7 +243,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     
                     <HealthBar percentage={100} requests={props.requests}/>
 
-                    <div className={styles.centerInfo}>
+                    <div ref={stageText} className={styles.centerInfo}>
 
                         Stage {getStageNumber()}
 
