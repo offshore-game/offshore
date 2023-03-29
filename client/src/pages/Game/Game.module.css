@@ -154,6 +154,15 @@
 
     color: white;
 
+    transition: color 1s linear;
+
+}
+
+.redCenterInfo {
+
+    composes: centerInfo;
+    color: red;
+
 }
 
 .rightInfo {
