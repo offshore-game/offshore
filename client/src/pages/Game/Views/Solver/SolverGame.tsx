@@ -5,6 +5,7 @@ import gameStyles from '../../Game.module.css'
 import styles from './SolverGame.module.css'
 import pointPos from './PointTarget/Points.module.css'
 import boat from '../../../../assets/Game/Boat.svg';
+import { ReactComponent as Background } from '../../../../assets/Game/SolverBackground.svg'
 import PointTarget from './PointTarget/PointTarget';
 import { ImCross } from 'react-icons/im'
 import toVisualZoneName from '../../../../utils/zoneNameConversion';
@@ -64,6 +65,8 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
         <React.Fragment>
         
             { /*puzzleTargetSamples*/ }
+            <Background style={{ position: "absolute", zIndex: "0" }}/>
+            
             <div className={styles.boatContainer}>
 
                 <img src={boat} style={{position: 'absolute'}}/>
@@ -85,6 +88,9 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
             </div>
 
+            <div> {/* Insert a scrolling water thing here */}
+
+            </div>
 
             <div id="activePuzzleContainer" className={gameStyles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
 
