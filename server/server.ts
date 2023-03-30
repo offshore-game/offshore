@@ -3,17 +3,31 @@ import { globalErrors } from './types/enums'
 import GameLobby, { zoneNames } from './classes/GameLobby/GameLobby'
 import Player from './classes/Player'
 import { puzzleTypes } from './puzzles/Puzzle'
-import randomNumber from './generators/randomNumber'
+import { createServer } from 'https'
 
 // https://socket.io/docs/v4/rooms/
 
+const httpsServer = createServer({
+    key: key,
+    cert: cert,
+}) // TO DO: https://socket.io/docs/v4/server-initialization/#with-an-https-server
 
-const io = new Server(8080, {
+const io = new Server(443/*8080*/, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: /*"http://localhost:3000"*/"https://offshore-75a35.web.app/"
     }
 })
 
+httpsServer.listen(443); // right port? or am i crazy
+
+// Deployment Config \\
+/*const server = http.createServer()
+    server.listen(80, "34.150.134.55")
+const io = new Server(server, {
+    cors: {
+        origin: "https://offshore-75a35.web.app/"
+    }
+})*/
 
 const lobbies = new Map<string, GameLobby>()
 
@@ -25,6 +39,8 @@ function destroyLobby(lobby: GameLobby) {
     lobbies.delete(lobby.id)
 
 }
+
+console.warn("Starting Offshore Game Server!")
 
 io.sockets.on("connection", function (socket) {
 
