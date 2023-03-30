@@ -41,7 +41,7 @@ export default class Requests {
     constructor() {
 
         // this.socket = io("http://localhost:8080") // For local testing purposes only
-        this.socket = io("https://34.150.134.55:443"); // Establish a connection
+        this.socket = io("https://api.offshoregame.app"); // Establish a connection
 
     }
 

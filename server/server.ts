@@ -4,29 +4,30 @@ import GameLobby, { zoneNames } from './classes/GameLobby/GameLobby'
 import Player from './classes/Player'
 import { puzzleTypes } from './puzzles/Puzzle'
 import { createServer } from 'https'
+import { readFileSync } from 'fs'
 
 // https://socket.io/docs/v4/rooms/
 
 const httpsServer = createServer({
-    key: key,
-    cert: cert,
-}) // TO DO: https://socket.io/docs/v4/server-initialization/#with-an-https-server
+    key: readFileSync('./keys/privkey.pem'),
+    cert: readFileSync('./keys/fullchain.pem'),
+})
+
+httpsServer.listen(443);
 
 const io = new Server(443/*8080*/, {
     cors: {
-        origin: /*"http://localhost:3000"*/"https://offshore-75a35.web.app/"
+        origin: /*"http://localhost:3000"*/"https://offshoregame.app"
     }
 })
 
-httpsServer.listen(443); // right port? or am i crazy
+// Dev Config \\
+/*const io = new Server(8080, {
 
-// Deployment Config \\
-/*const server = http.createServer()
-    server.listen(80, "34.150.134.55")
-const io = new Server(server, {
     cors: {
-        origin: "https://offshore-75a35.web.app/"
+        origin: "http://localhost:3000"
     }
+
 })*/
 
 const lobbies = new Map<string, GameLobby>()
