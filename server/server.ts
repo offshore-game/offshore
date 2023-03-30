@@ -15,7 +15,7 @@ const httpsServer = createServer({
 
 httpsServer.listen(443);
 
-const io = new Server(443/*8080*/, {
+const io = new Server(httpsServer/*8080*/, {
     cors: {
         origin: /*"http://localhost:3000"*/"https://offshoregame.app"
     }
