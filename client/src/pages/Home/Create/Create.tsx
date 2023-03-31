@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../../components/Button/Button";
 import { AuthProp } from "../../../utils/propTypes";
 import Home from "../Home";
+import baseStyles from '../Home.module.css'
 import styles from './Create.module.css'
 import { BiArrowBack } from 'react-icons/bi'
 
@@ -17,7 +18,7 @@ export default function Create(props: AuthProp) {
 
             }}/>
 
-            <input type="text" id="usernameInput-Create" className={styles.textInput} placeholder="Username" />
+            <input type="text" id="usernameInput-Create" className={baseStyles.textInput} placeholder="Username" />
 
             <Button className={styles.submitButton} text={"Create Game"} onClick={async () => {
                 

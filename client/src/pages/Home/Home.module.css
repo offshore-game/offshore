@@ -75,3 +75,28 @@
     cursor: pointer;
 
 }
+
+.textInput {
+
+    color: white;
+    background-color: var(--brown-3);
+    
+    height: 10%;
+    aspect-ratio: 5/1;
+
+    border-radius: 5px;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+
+    margin: 0.5%;
+
+    text-align: center;
+
+}
+::placeholder {
+
+    padding: 4px;
+    color: #F5DEB3;
+
+}
