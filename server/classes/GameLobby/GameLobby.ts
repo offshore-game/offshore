@@ -628,14 +628,17 @@ export default class GameLobby {
 
         if (success) {
 
-            const leaderboard = []
+            const leaderboard: { username: string, coins: number }[] = []
             for (const player of this.players){
 
-            this.io.in(this.id).emit("gameOver", { success: true, leaderboard: leaderboard })
+                leaderboard.push({
+                    username: player.username,
+                    coins: player.points,
+                })
 
-        
-          
-        }
+            }
+
+            this.io.in(this.id).emit("gameOver", { success: true, leaderboard: leaderboard })
 
         } else {
 

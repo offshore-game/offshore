@@ -1,0 +1,24 @@
+.container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: var(--brown-3);
+    width: 95%;
+    aspect-ratio: 15/1;
+
+    border-color: black;
+    border-radius: 10px;
+    border-style: solid;
+
+    margin: 0.5%;
+
+}
+
+.currentPlayerContainer {
+
+    composes: container;
+    background-color: gold;
+
+}
