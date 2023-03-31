@@ -19,7 +19,7 @@ export default function Create(props: AuthProp) {
 
             <input type="text" id="usernameInput-Create" className={styles.textInput} placeholder="Username" />
 
-            <Button className={styles.button} text={"Create Game"} onClick={async () => {
+            <Button className={styles.submitButton} text={"Create Game"} onClick={async () => {
                 
                 const username = document.getElementById("usernameInput-Create") as HTMLTextAreaElement
                                 

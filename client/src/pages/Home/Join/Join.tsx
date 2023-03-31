@@ -21,7 +21,7 @@ export default function Join(props: AuthProp) {
             <input type="text" id="roomId-Join" className={styles.textInput} placeholder="Room ID" />
             <input type="text" id="usernameInput-Join" className={styles.textInput} placeholder="Username" />
             
-            <Button className={styles.button} text={"Join Game"} onClick={async () => {
+            <Button className={styles.submitButton} text={"Join Game"} onClick={async () => {
             
                 const roomId = document.getElementById("roomId-Join") as HTMLTextAreaElement
                 const username = document.getElementById("usernameInput-Join") as HTMLTextAreaElement
