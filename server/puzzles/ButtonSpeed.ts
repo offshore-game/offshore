@@ -75,6 +75,9 @@ export default class ButtonSpeed extends Puzzle {
                 // Index is already chosen
                 if (poisonIndexes.find(index => index == randomIndex)) {
     
+                    // Don't waste processing power
+                    poisonIndexes.splice(randomIndex, 1)
+
                     // Recursive Function
                     randomIndex = selectUniqueIndex()
     
@@ -103,6 +106,9 @@ export default class ButtonSpeed extends Puzzle {
                 // Index is already chosen
                 if (buttonIndexes.includes(randomIndex) || poisonIndexes.includes(randomIndex)) {
     
+                    // Don't waste processing power
+                    buttonIndexes.splice(randomIndex, 1)
+
                     // Recursive Function
                     randomIndex = selectUniqueIndex()
     
