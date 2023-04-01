@@ -95,7 +95,7 @@ export default function GameSwitchPoint(props: AuthProp) {
             const activePuzzleContainer = document.getElementById('activePuzzleContainer')
             const shadow = document.getElementById('shadow')
 
-            if (activePuzzleContainer && shadow) {
+            if (activePuzzleContainer && shadow && activePuzzle.zoneName) {
 
                 // If ACTIVE puzzle is not found in the new puzzle array
                 if (newPuzzles.findIndex(puzzle => activePuzzle.zoneName == puzzle.zoneName) == -1) {
