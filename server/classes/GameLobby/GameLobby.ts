@@ -359,9 +359,7 @@ export default class GameLobby {
 
         // Decide a multiplier based on player count (max 10)
         const playerCount = this.players.length
-        console.log('pcount:', playerCount)
         const multiplier = Math.ceil(playerCount / 2) // dependent upon the number of solvers (bigger half of active players)
-        console.log('mult:', multiplier)
 
         const getSafePercent = (percentActive: number) => {
 
@@ -607,7 +605,6 @@ export default class GameLobby {
                 this.durationSec--
 
                 // Update the active percentage every tick
-                console.log(this.managePercentActive())
                 this.percentKeepActive = this.managePercentActive()
 
                 // Check if the health is 0
