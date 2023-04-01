@@ -1,4 +1,23 @@
+.background {
+
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+
+    z-index: 99;
+
+}
+
+.header {
+
+    transform: translateX(-10px);
+
+}
+
 .container {
+
+    position: absolute;
 
     height: 100%;
     width: 100%;
@@ -9,19 +28,15 @@
 
     flex-direction: column;
 
-    background-color: var(--brown-2);
+    z-index: 99;
 
 }
 
 .entries {
 
-    height: 100%;
-    width: 100%;
+    height: 50%;
+    width: 50%;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    flex-direction: column;
+    overflow-y: scroll;
 
 }
