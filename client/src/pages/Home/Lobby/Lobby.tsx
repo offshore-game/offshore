@@ -70,13 +70,18 @@ export default function Lobby(props: AuthProp & LobbyProp) {
 
             <div className={styles.container}>
 
-                <div className={styles.playerEntryContainer}>
-                    
-                    SAILORS
+                <div className={styles.playerList}>
 
-                    { playerList.map(username => <PlayerEntry key={username} username={username} isPlayer={username == currentUsername}/>) }
+                    <span className={styles.playerListHeader}>SAILORS</span>
+
+                    <div className={styles.playerEntryContainer}>
+                        
+                        { playerList.map(username => <PlayerEntry key={username} username={username} isPlayer={username == currentUsername}/>) }
+
+                    </div>
 
                 </div>
+
 
                 <div className={styles.controlButtonContainer}>
 
