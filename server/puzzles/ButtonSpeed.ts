@@ -59,7 +59,7 @@ export default class ButtonSpeed extends Puzzle {
         this.standardCount = standardCount
         this.poisonCount = poisonCount
 
-        this.gameDuration = 20 // 20 Seconds of Buttons
+        this.gameDuration = 10 // 10 Seconds of Buttons
         this.timeToHit = 2 // 2 Seconds to hit a button
 
         const totalButtonCount = dimensions.rows * dimensions.columns
@@ -75,6 +75,9 @@ export default class ButtonSpeed extends Puzzle {
                 // Index is already chosen
                 if (poisonIndexes.find(index => index == randomIndex)) {
     
+                    // Don't waste processing power
+                    poisonIndexes.splice(randomIndex, 1)
+
                     // Recursive Function
                     randomIndex = selectUniqueIndex()
     
@@ -103,6 +106,9 @@ export default class ButtonSpeed extends Puzzle {
                 // Index is already chosen
                 if (buttonIndexes.includes(randomIndex) || poisonIndexes.includes(randomIndex)) {
     
+                    // Don't waste processing power
+                    buttonIndexes.splice(randomIndex, 1)
+
                     // Recursive Function
                     randomIndex = selectUniqueIndex()
     

@@ -13,7 +13,7 @@
 
 }
 
-.playerEntryContainer {
+.playerList {
 
     display: flex;
     justify-content: center;
@@ -22,6 +22,28 @@
 
     height: 100%;
     width: 60%;
+
+}
+
+.playerEntryContainer {
+
+    position: relative;
+
+    height: 100%;
+    width: 95%;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+}
+
+.playerListHeader {
+
+    /* Account for sidebar */
+    transform: translateX(-10px);
+
+    margin: 2%;
+    font-weight: 600;
 
 }
 

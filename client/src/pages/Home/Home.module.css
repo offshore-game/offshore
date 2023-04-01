@@ -75,3 +75,52 @@
     cursor: pointer;
 
 }
+
+.textInput {
+
+    color: white;
+    background-color: var(--brown-3);
+    
+    height: 10%;
+    aspect-ratio: 5/1;
+
+    border-radius: 5px;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+
+    margin: 0.5%;
+
+    text-align: center;
+
+}
+::placeholder {
+
+    padding: 4px;
+    color: #F5DEB3;
+
+}
+
+/* Show Error Messages as Popups */
+.errorContainer {
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    margin: 2%;
+    padding: 2%;
+
+    background-color: #BB3F3F;
+    border-radius: 10px;
+
+    transition: bottom 1s cubic-bezier(.41, 1.6, .41, 1);
+
+}
+
+.hiddenErrorContainer {
+
+    composes: errorContainer;
+    bottom: -100vh;
+
+}

@@ -4,9 +4,9 @@
     justify-content: center;
     align-items: center;
 
-    background-color: var(--blue-3);
+    background-color: var(--brown-3);
     width: 95%;
-    aspect-ratio: 10/1;
+    aspect-ratio: 15/1;
 
     border-color: black;
     border-radius: 10px;

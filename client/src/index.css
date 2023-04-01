@@ -16,6 +16,30 @@
 
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--brown-1);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--brown-5);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brown-3);
+  border-radius: 10px;
+}
+
 #sizingContainer {
   height: 100vh;
   width: 100vw;

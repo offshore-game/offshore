@@ -185,7 +185,7 @@
     justify-content: flex-start;
     align-items: center;
 
-    height: 50%;
+    height: 70%;
     width: 100%;
 
     min-width: 75px;
@@ -201,7 +201,7 @@
 .coinIcon {
 
     color: gold;
-    height: 100%;
+    height: 80%;
     width: 25%;
 
     margin-left: 5%;
@@ -212,7 +212,7 @@
 .clockIcon {
 
     color: black;
-    height: 100%;
+    height: 80%;
     width: 25%;
 
     margin-left: 5%;

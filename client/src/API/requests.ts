@@ -1,5 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { validateTokenEnums } from "./types/enums";
+import homeStyles from '../pages/Home/Home.module.css'
 
 export type zoneNames = "frontMast" | "backMast" | "controlRoom" | "engineRoom" | "captainDeck" | "secondaryDeck" | "crewmateDeck" | "emergencyDeck" | "operationCenter" | "entertainmentRoom"
 type puzzleTypes = "numberCombination" | "buttonCombination" | "buttonSpeed" | "wireConnect" | "wireCut"
@@ -45,6 +46,23 @@ export default class Requests {
 
     }
 
+    async displayError(errorMessage: string) {
+
+        const sleep = async (ms: number) => {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Display the error to the user if an exception was thrown (home only)
+        const errorContainer = document.getElementById("gameErrorContainer")!
+        errorContainer.innerHTML = errorMessage
+
+
+        errorContainer.className = homeStyles.errorContainer
+        await sleep(2000)
+        errorContainer.className = homeStyles.hiddenErrorContainer
+
+    }
+
     // Attempt to reauthenticate into a lobby incase of a reload.
     async rejoinLobby() {
         return new Promise((res, rej) => {
@@ -76,8 +94,8 @@ export default class Requests {
     // Attempt to join a lobby on request.
     async joinLobby(username: string, roomCode: string): Promise<string[]> {
         return new Promise((res, rej) => {
-
-            this.socket.emit("joinLobby", { username: username, roomCode: roomCode }, (data: { token: string, otherPlayers: string[]}) => {
+            console.log('joning')
+            this.socket.emit("joinLobby", { username: username, roomCode: roomCode }, async (data: { token: string, otherPlayers: string[]}) => {
 
                 if (data.token) {
 
@@ -90,7 +108,19 @@ export default class Requests {
 
                 } else {
 
-                    return rej(false); // Error occured
+                    rej(false); // Error occured
+                    if (data as any == "MAXPLAYERS") {
+                        await this.displayError('The lobby is at the maximum amount of players.')
+                    } else if (data as any == "INVALIDLOBBY") {
+                        await this.displayError('This lobby does not exist!')
+                    } else if (!data) {
+                        await this.displayError('This username is already taken!')
+                    } else if (data as any == "INVALIDNAME") {
+                        await this.displayError('This username is not valid.')
+                    } else if (data as any == "DUPLICATENAME") {
+                        await this.displayError('This username is already taken!')
+                    }
+                    
 
                 }
 
@@ -119,7 +149,7 @@ export default class Requests {
     async createLobby(username: string): Promise<string> {
         return new Promise((res, rej) => {
 
-            this.socket.emit("createLobby", { username: username }, (result: { username: string, token: string, roomCode: string }) => {
+            this.socket.emit("createLobby", { username: username }, async (result: { username: string, token: string, roomCode: string }) => {
 
                 if (result) {
 
@@ -131,7 +161,8 @@ export default class Requests {
 
                 } else {
 
-                    return rej(false); // Error occured
+                    rej(false); // Error occured
+                    await this.displayError('Please enter a valid username!')
 
                 }
 

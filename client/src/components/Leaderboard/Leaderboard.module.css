@@ -1,0 +1,42 @@
+.background {
+
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+
+    z-index: 99;
+
+}
+
+.header {
+
+    transform: translateX(-10px);
+
+}
+
+.container {
+
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+
+    z-index: 99;
+
+}
+
+.entries {
+
+    height: 50%;
+    width: 50%;
+
+    overflow-y: scroll;
+
+}

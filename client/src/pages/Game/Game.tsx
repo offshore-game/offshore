@@ -11,6 +11,7 @@ import ReaderGame from "./Views/Reader/ReaderGame";
 import { BiCoinStack } from 'react-icons/bi'
 import { TbClock } from 'react-icons/tb'
 import Cutscene from "../../components/Cutscene/Cutscene";
+import Leaderboard from "../../components/Leaderboard/Leaderboard";
 
 export enum statusType {
     inGame = 0, // Started Game
@@ -41,6 +42,8 @@ export default function GameSwitchPoint(props: AuthProp) {
     const stageText = useRef(undefined as any as HTMLDivElement)
 
     const [ coins, setCoins ] = useState(0)
+
+    const [ leaderboard, setLeaderboard ] = useState([] as { username: string, coins: number }[])
 
     // Authorize
     useEffect(() => {
@@ -92,7 +95,7 @@ export default function GameSwitchPoint(props: AuthProp) {
             const activePuzzleContainer = document.getElementById('activePuzzleContainer')
             const shadow = document.getElementById('shadow')
 
-            if (activePuzzleContainer && shadow) {
+            if (activePuzzleContainer && shadow && activePuzzle.zoneName) {
 
                 // If ACTIVE puzzle is not found in the new puzzle array
                 if (newPuzzles.findIndex(puzzle => activePuzzle.zoneName == puzzle.zoneName) == -1) {
@@ -142,8 +145,9 @@ export default function GameSwitchPoint(props: AuthProp) {
         }
         props.requests.socket.on("pointsChanged", pointsChangedFunction)
         
-        const gameOverFunction = (payload: { success: boolean, leaderboard: any[] }) => {
+        const gameOverFunction = (payload: { success: boolean, leaderboard: { username: string, coins: number }[] | undefined }) => {
 
+            setLeaderboard(payload.leaderboard!)
             setTimeout(() => { setStatus(payload.success ? statusType.successEnding : statusType.failEnding) }, 2000)
 
         }
@@ -300,6 +304,13 @@ export default function GameSwitchPoint(props: AuthProp) {
     if (status == statusType.failEnding) {
 
         return (<Cutscene type={"FAIL"} />)
+
+    }
+
+    // Show the leaderboard
+    if (status == statusType.leaderboard) {
+
+        return ( <Leaderboard leaderboard={leaderboard} /> )
 
     }
 

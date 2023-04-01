@@ -82,7 +82,7 @@ io.sockets.on("connection", function (socket) {
         const player = await lobby.addPlayer(data.username, socket, true).catch((err) => { 
             destroyLobby(lobby) // Destroy the lobby; bad player.
             console.debug(`Deleted lobby with ID ${lobby.id}`)
-            return callback(err);
+            return callback(false);
         })
 
 
@@ -100,7 +100,7 @@ io.sockets.on("connection", function (socket) {
             if (lobby.players.length >= 10) {
 
                 // Don't allow the player to join if we've reached max capacity
-                return callback(false);
+                return callback("MAXPLAYERS");
 
             }
 
@@ -110,7 +110,7 @@ io.sockets.on("connection", function (socket) {
                 otherPlayers.push(player.username)
             }
 
-            const player = await lobby.addPlayer(data.username, socket).catch((err) => { return callback(err) })
+            const player = await lobby.addPlayer(data.username, socket).catch((err) => { return callback(err) /* Will return one of many error strings */ })
             
             if (!player) return callback(false); // Return a boolean indicating a failure.
             
@@ -118,6 +118,10 @@ io.sockets.on("connection", function (socket) {
             io.in(data.roomCode).emit("playerJoin", player.username)
 
             return callback({ token: player.token, otherPlayers: otherPlayers} ); // Return the payload
+        } else {
+
+            return callback("INVALIDLOBBY")
+
         }
 
     })

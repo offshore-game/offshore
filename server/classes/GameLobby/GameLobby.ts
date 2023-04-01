@@ -350,15 +350,52 @@ export default class GameLobby {
 
     }
 
-    async addPlayer(username: string, socket: Socket, isOwner?: boolean): Promise<Player> {
-        return new Promise(async (res, rej) => {
+    managePercentActive(): number {
 
-            // Duplicate name check first
-            for (const player of this.players) {
+        /*
+        1) Check player count
+        2) Check time
+        */
+
+        // Decide a multiplier based on player count (max 10)
+        const playerCount = this.players.length
+        const multiplier = Math.ceil(playerCount / 2) // dependent upon the number of solvers (bigger half of active players)
+
+        const getSafePercent = (percentActive: number) => {
+
+            const result = percentActive * multiplier
+            if (result > 1) {
+
+                return 1;
+
+            } if (result < 0.3) {
                 
-                if (player.username == username) return rej(false);
+                return 0.3;
+                
+            } else {
+
+                return result;
 
             }
+
+        }
+
+        if (this.durationSec > 240){
+            return this.percentKeepActive = getSafePercent(0.3)
+        } else if (this.durationSec > 180) {
+            return this.percentKeepActive = getSafePercent(0.4)
+        } else if (this.durationSec > 120) {
+            return this.percentKeepActive = getSafePercent(0.5)
+        } else if (this.durationSec > 60) {
+            return this.percentKeepActive = getSafePercent(0.6)
+        } else {
+            return this.percentKeepActive = getSafePercent(0.7)
+        }
+
+    }
+
+    async addPlayer(username: string, socket: Socket, isOwner?: boolean): Promise<Player> {
+        return new Promise(async (res, rej) => {
 
             // Clean up usernames with hanging spaces
             const usernameArray = username.split('');
@@ -406,7 +443,12 @@ export default class GameLobby {
 
             const finalUsername = tempArray.join('')
                 // Reject blank usernames
-                if (finalUsername.length == 0) rej(false);
+                if (finalUsername.length == 0) rej("INVALIDNAME");
+
+                // Reject duplicate names
+                for (const player of this.players) {
+                    if (player.username == finalUsername) return rej("DUPLICATENAME");
+                }
             
             const player = new Player(finalUsername, socket, isOwner!)
 
@@ -562,6 +604,9 @@ export default class GameLobby {
                 // -1 Second from the game time
                 this.durationSec--
 
+                // Update the active percentage every tick
+                this.percentKeepActive = this.managePercentActive()
+
                 // Check if the health is 0
                 if (this.healthPoints <= 0) {
 
@@ -628,14 +673,17 @@ export default class GameLobby {
 
         if (success) {
 
-            const leaderboard = []
+            const leaderboard: { username: string, coins: number }[] = []
             for (const player of this.players){
 
-            this.io.in(this.id).emit("gameOver", { success: true, leaderboard: leaderboard })
+                leaderboard.push({
+                    username: player.username,
+                    coins: player.points,
+                })
 
-        
-          
-        }
+            }
+
+            this.io.in(this.id).emit("gameOver", { success: true, leaderboard: leaderboard })
 
         } else {
 
