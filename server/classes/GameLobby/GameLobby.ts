@@ -350,6 +350,52 @@ export default class GameLobby {
 
     }
 
+    managePercentActive(): number {
+
+        /*
+        1) Check player count
+        2) Check time
+        */
+
+        // Decide a multiplier based on player count (max 10)
+        const playerCount = this.players.length
+        console.log('pcount:', playerCount)
+        const multiplier = Math.ceil(playerCount / 2) // dependent upon the number of solvers (bigger half of active players)
+        console.log('mult:', multiplier)
+
+        const getSafePercent = (percentActive: number) => {
+
+            const result = percentActive * multiplier
+            if (result > 1) {
+
+                return 1;
+
+            } if (result < 0.3) {
+                
+                return 0.3;
+                
+            } else {
+
+                return result;
+
+            }
+
+        }
+
+        if (this.durationSec > 240){
+            return this.percentKeepActive = getSafePercent(0.3)
+        } else if (this.durationSec > 180) {
+            return this.percentKeepActive = getSafePercent(0.4)
+        } else if (this.durationSec > 120) {
+            return this.percentKeepActive = getSafePercent(0.5)
+        } else if (this.durationSec > 60) {
+            return this.percentKeepActive = getSafePercent(0.6)
+        } else {
+            return this.percentKeepActive = getSafePercent(0.7)
+        }
+
+    }
+
     async addPlayer(username: string, socket: Socket, isOwner?: boolean): Promise<Player> {
         return new Promise(async (res, rej) => {
 
@@ -561,6 +607,10 @@ export default class GameLobby {
 
                 // -1 Second from the game time
                 this.durationSec--
+
+                // Update the active percentage every tick
+                console.log(this.managePercentActive())
+                this.percentKeepActive = this.managePercentActive()
 
                 // Check if the health is 0
                 if (this.healthPoints <= 0) {
