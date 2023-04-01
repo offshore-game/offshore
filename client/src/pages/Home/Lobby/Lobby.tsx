@@ -20,9 +20,9 @@ export default function Lobby(props: AuthProp & LobbyProp) {
 
     const [ playerList, setPlayerList ] = useState(state ? state as string[] : [])
     
-    const isOwner = localStorage.getItem("isOwner") == "true"
-    const currentUsername = localStorage.getItem("username")
-    const roomCode = localStorage.getItem("roomCode")
+    const isOwner = sessionStorage.getItem("isOwner") == "true"
+    const currentUsername = sessionStorage.getItem("username")
+    const roomCode = sessionStorage.getItem("roomCode")
 
     // Prevent Accidental Reloads
     /*window.onbeforeunload = (event) => {
@@ -41,7 +41,7 @@ export default function Lobby(props: AuthProp & LobbyProp) {
 
         // Register Lobby Events \\
         props.requests.socket.on("lobbyClose", () => {
-            localStorage.clear()
+            sessionStorage.clear()
             nav(`/`, { replace: true })
             nav(0) // Reload the page to wipe the socket
             return true;
@@ -105,7 +105,7 @@ export default function Lobby(props: AuthProp & LobbyProp) {
                         // their socket was reset and they are trying to leave. This was a tested bug.
                         props.requests.leaveLobby().catch((err) => {})
 
-                        localStorage.clear() // Clear all variables in storage
+                        sessionStorage.clear() // Clear all variables in storage
                         nav(`/`, { replace: true }) // Go back home
                         nav(0) // Reload the page to wipe the socket and establish a new connection.
                         return true;

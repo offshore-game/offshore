@@ -32,7 +32,7 @@ export default function Create(props: AuthProp) {
                     nav(`/lobby/${result}`, { replace: true, state: [ username.value ] })
 
                     // Mark user as owner to prompt settings and start game pathways
-                    localStorage.setItem("isOwner", "true")
+                    sessionStorage.setItem("isOwner", "true")
                 }
 
             }}/>

@@ -6,7 +6,7 @@ import React from 'react'
 
 export default function Leaderboard(props: { leaderboard: { username: string, coins: number }[] }) {
 
-    const currentUsername = localStorage.getItem("username")
+    const currentUsername = sessionStorage.getItem("username")
 
     return (
         <React.Fragment>
