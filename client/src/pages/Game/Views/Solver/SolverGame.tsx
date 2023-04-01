@@ -13,10 +13,24 @@ import toVisualZoneName from '../../../../utils/zoneNameConversion';
 
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
 
+    const [ sounds, setSounds ] = useState({} as { [key: string]: HTMLAudioElement })
+
+    // Asset Pre-Loader \\
+    useEffect(() => {
+
+        // Success Sound
+        setSounds(sounds => { return {
+            ...sounds, "success": new Audio("/Sounds/success.mp3")
+        }})
+
+        // FEATURE: Add more sounds
+
+    }, [])
+
     // Event Listeners for Solver Game Events \\
     useEffect(() => {
 
-        const resultFunction = (event: any) => {
+        const resultFunction = async (event: any) => {
 
             const zoneName = event.detail.zoneName as zoneNames
             const correct = event.detail.result as boolean
@@ -27,6 +41,9 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                 // Answered Correctly
                 if (correct) {
+                    // Play a little sound effect
+                    await sounds["success"].play()
+
                     overlay.className = styles.correctAnswerOverlay
                 }
 
