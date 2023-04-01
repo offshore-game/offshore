@@ -399,13 +399,6 @@ export default class GameLobby {
     async addPlayer(username: string, socket: Socket, isOwner?: boolean): Promise<Player> {
         return new Promise(async (res, rej) => {
 
-            // Duplicate name check first
-            for (const player of this.players) {
-                
-                if (player.username == username) return rej(false);
-
-            }
-
             // Clean up usernames with hanging spaces
             const usernameArray = username.split('');
             let tempArray = [] as string[]
@@ -452,7 +445,12 @@ export default class GameLobby {
 
             const finalUsername = tempArray.join('')
                 // Reject blank usernames
-                if (finalUsername.length == 0) rej(false);
+                if (finalUsername.length == 0) rej("INVALIDNAME");
+
+                // Reject duplicate names
+                for (const player of this.players) {
+                    if (player.username == finalUsername) return rej("DUPLICATENAME");
+                }
             
             const player = new Player(finalUsername, socket, isOwner!)
 

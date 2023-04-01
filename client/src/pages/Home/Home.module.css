@@ -100,3 +100,27 @@
     color: #F5DEB3;
 
 }
+
+/* Show Error Messages as Popups */
+.errorContainer {
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    margin: 2%;
+    padding: 2%;
+
+    background-color: #BB3F3F;
+    border-radius: 10px;
+
+    transition: bottom 1s cubic-bezier(.41, 1.6, .41, 1);
+
+}
+
+.hiddenErrorContainer {
+
+    composes: errorContainer;
+    bottom: -100vh;
+
+}
