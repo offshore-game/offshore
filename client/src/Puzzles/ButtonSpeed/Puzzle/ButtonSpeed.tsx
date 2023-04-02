@@ -4,6 +4,7 @@ import Button from '../../../components/Button/Button'
 import { AuthProp } from '../../../utils/propTypes'
 import styles from './ButtonSpeed.module.css'
 import SpeedButton from './SpeedButton'
+import buttonTypes from './ButtonTypes.module.css'
 
 export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows: number, columns: number }, timings: PuzzleInfo["buttonGridTimings"] } & AuthProp) {
 
@@ -182,6 +183,12 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
                 // Reactivate the Start button after 2 seconds
                 document.getElementById("btnSpeed-controlButton")!.className = styles.controlButton
+
+                // Forcibly get the buttons back to inactive (bug fix)
+                const invalid = Array.from(document.getElementsByClassName(buttonTypes.invalid))
+                invalid.forEach(button => {
+                    button.className = buttonTypes.inactive
+                })
 
             }, 2000)
             timeouts.current.push(deactivateTimeout)

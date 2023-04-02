@@ -37,6 +37,8 @@ export default function ButtonSpeedManual(props: { layout: { rows: number, colum
             <div className={styles.instructions}>
 
                 <span>Avoid <span style={{ fontWeight: 700 }}>!!</span></span>
+                <span>Don't close the puzzle while doing it!</span>
+                <br/>
                 <span>Fragment 1 of {props.totalFragments}</span>
 
             </div>
