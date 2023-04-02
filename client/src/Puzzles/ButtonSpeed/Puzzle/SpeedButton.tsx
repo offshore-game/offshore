@@ -153,7 +153,7 @@ export default function SpeedButton(props: { index: number, zoneName: zoneNames,
     }, [])
 
     return (
-        <div id={`speedBtn${props.index}`} ref={button} className={props.inactive ? buttonTypes.inactive : buttonTypes.button} onMouseDown={() => { clickDownSound.play() }} onMouseUp={() => { clickUpSound.play() }} onClick={async () => {
+        <div id={`speedBtn${props.index}`} ref={button} className={props.inactive ? buttonTypes.inactive : buttonTypes.button} onMouseDown={() => { if (!props.inactive) clickDownSound.play() }} onMouseUp={() => { if (!props.inactive) clickUpSound.play() }} onClick={async () => {
             
             if (props.inactive) return; // inactive button
 
