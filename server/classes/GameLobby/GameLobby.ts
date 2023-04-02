@@ -458,12 +458,14 @@ export default class GameLobby {
 
             const finalUsername = tempArray.join('')
                 // Reject blank usernames
-                if (finalUsername.length == 0) rej("INVALIDNAME");
+                if (finalUsername.length == 0) return rej("INVALIDNAME");
 
                 // Reject duplicate names
+                let pass = true
                 for (const player of this.players) {
-                    if (player.username == finalUsername) return rej("DUPLICATENAME");
+                    if (player.username == finalUsername) { pass = false; return rej("DUPLICATENAME"); }
                 }
+                    if (!pass) return false;
             
             const player = new Player(finalUsername, socket, isOwner!)
 
