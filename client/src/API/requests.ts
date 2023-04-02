@@ -67,8 +67,8 @@ export default class Requests {
     async rejoinLobby() {
         return new Promise((res, rej) => {
 
-            const token = localStorage.getItem("token")!
-            const roomCode = localStorage.getItem("roomCode")
+            const token = sessionStorage.getItem("token")!
+            const roomCode = sessionStorage.getItem("roomCode")
 
             this.socket.emit("rejoinLobby", { token: token, roomCode: roomCode }, (result: boolean) => {
 
@@ -78,8 +78,8 @@ export default class Requests {
 
                 } else {
 
-                    localStorage.setItem("token", "") // Wipe the old invalid token
-                    localStorage.setItem("roomCode", "") // Wipe the old room code
+                    sessionStorage.setItem("token", "") // Wipe the old invalid token
+                    sessionStorage.setItem("roomCode", "") // Wipe the old room code
 
                     return rej(false); // Error occured
 
@@ -99,10 +99,10 @@ export default class Requests {
 
                 if (data.token) {
 
-                    localStorage.setItem("token", data.token)
-                    localStorage.setItem("roomCode", roomCode)
-                    localStorage.setItem("username", username)
-                    localStorage.setItem("isOwner", "false") // Make sure the client doesn't get confused
+                    sessionStorage.setItem("token", data.token)
+                    sessionStorage.setItem("roomCode", roomCode)
+                    sessionStorage.setItem("username", username)
+                    sessionStorage.setItem("isOwner", "false") // Make sure the client doesn't get confused
                     
                     return res(data.otherPlayers); // Success
 
@@ -133,8 +133,8 @@ export default class Requests {
     async leaveLobby() {
         return new Promise((res, rej) => {
             
-            const token = localStorage.getItem("token")
-            const roomCode = localStorage.getItem("roomCode")
+            const token = sessionStorage.getItem("token")
+            const roomCode = sessionStorage.getItem("roomCode")
 
             this.socket.emit("leaveLobby", { token: token!, roomCode: roomCode! }, (result: boolean) => {
 
@@ -153,9 +153,9 @@ export default class Requests {
 
                 if (result) {
 
-                    localStorage.setItem("token", result.token)
-                    localStorage.setItem("roomCode", result.roomCode)
-                    localStorage.setItem("username", result.username) // This is the username the server corrected, if any corrections were made.
+                    sessionStorage.setItem("token", result.token)
+                    sessionStorage.setItem("roomCode", result.roomCode)
+                    sessionStorage.setItem("username", result.username) // This is the username the server corrected, if any corrections were made.
 
                     return res(result.roomCode); // Success
 
@@ -187,11 +187,12 @@ export default class Requests {
 
         return new Promise((res, rej) => {
 
-            const token = localStorage.getItem("token")
-            const roomCode = localStorage.getItem("roomCode")
+            const token = sessionStorage.getItem("token")
+            const roomCode = sessionStorage.getItem("roomCode")
 
             this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: false | gameInfo) => {
 
+                if (!result) this.displayError("At least 2 players are needed to start the game!")
                 return res(result) // Resolve with false OR the payload of puzzles.
 
             })
@@ -204,8 +205,8 @@ export default class Requests {
 
         return new Promise((res, rej) => {
 
-            const token = localStorage.getItem("token")
-            const roomCode = localStorage.getItem("roomCode")
+            const token = sessionStorage.getItem("token")
+            const roomCode = sessionStorage.getItem("roomCode")
 
             this.socket.emit("answerPuzzle", { token: token!, roomCode: roomCode!, zoneName: zoneName, puzzleType: puzzleType, answer: answer }, (result: boolean) => {
 

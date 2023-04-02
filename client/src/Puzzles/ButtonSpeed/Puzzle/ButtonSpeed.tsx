@@ -4,6 +4,7 @@ import Button from '../../../components/Button/Button'
 import { AuthProp } from '../../../utils/propTypes'
 import styles from './ButtonSpeed.module.css'
 import SpeedButton from './SpeedButton'
+import buttonTypes from './ButtonTypes.module.css'
 
 export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows: number, columns: number }, timings: PuzzleInfo["buttonGridTimings"] } & AuthProp) {
 
@@ -16,7 +17,7 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
     const timeouts = useRef([] as any[])
 
-    const buttonGrid = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
+    const buttonGrid = useRef(undefined as any as HTMLDivElement)
 
     /*
     
@@ -115,6 +116,9 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
         // Game was told to start
         if (active) {
 
+            // Deactivate the Start button
+            document.getElementById("btnSpeed-controlButton")!.className = styles.disabledControlButton
+
             // Add the buttons
             const totalCount = props.layout.rows * props.layout.columns
         
@@ -177,6 +181,15 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
                 
                 setButtonsInfo(tempInfo) // Display the state
 
+                // Reactivate the Start button after 2 seconds
+                document.getElementById("btnSpeed-controlButton")!.className = styles.controlButton
+
+                // Forcibly get the buttons back to inactive (bug fix)
+                const invalid = Array.from(document.getElementsByClassName(buttonTypes.invalid))
+                invalid.forEach(button => {
+                    button.className = buttonTypes.inactive
+                })
+
             }, 2000)
             timeouts.current.push(deactivateTimeout)
 
@@ -197,7 +210,7 @@ export default function ButtonSpeed(props: { zoneName: zoneNames, layout: { rows
 
 
             <div className={styles.controlContainer}>
-                <Button className={active ? styles.disabledControlButton : styles.controlButton} text="Start" onClick={() => {
+                <Button id={"btnSpeed-controlButton"} className={styles.controlButton} text="Start" onClick={() => {
                     
                     // Unpressable while active
                     if (active) return;

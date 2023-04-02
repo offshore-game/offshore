@@ -50,7 +50,7 @@ export default function GameSwitchPoint(props: AuthProp) {
 
         const auth = async () => {
 
-            const token = localStorage.getItem("token")
+            const token = sessionStorage.getItem("token")
             const result = await props.requests.validateToken(token!, id!)
             
             if (result == validateTokenEnums.VALID) { // Everything looks good
@@ -62,14 +62,14 @@ export default function GameSwitchPoint(props: AuthProp) {
     
             } else if (result == validateTokenEnums.TOKEN_INVALID) { // User doesn't have authorization for this.
                 
-                localStorage.setItem("token", "")
-                localStorage.setItem("roomCode", "")
+                sessionStorage.setItem("token", "")
+                sessionStorage.setItem("roomCode", "")
                 return navigate("/", { replace: true }) // Redirect home.
     
             } else if (result == validateTokenEnums.ROOM_INVALID) { // Room doesn't exist anymore.
                 
-                localStorage.setItem("token", "")
-                localStorage.setItem("roomCode", "")
+                sessionStorage.setItem("token", "")
+                sessionStorage.setItem("roomCode", "")
                 return navigate("/", { replace: true }) // Redirect home.
     
             }
@@ -147,7 +147,8 @@ export default function GameSwitchPoint(props: AuthProp) {
         
         const gameOverFunction = (payload: { success: boolean, leaderboard: { username: string, coins: number }[] | undefined }) => {
 
-            setLeaderboard(payload.leaderboard!)
+            if (payload.success) setLeaderboard(payload.leaderboard!);
+            
             setTimeout(() => { setStatus(payload.success ? statusType.successEnding : statusType.failEnding) }, 2000)
 
         }

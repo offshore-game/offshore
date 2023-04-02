@@ -3,14 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../Button/Button';
 import styles from './Cutscene.module.css';
 import { BiVolumeMute, BiVolumeFull } from 'react-icons/bi';
+import { BsHouseDoorFill } from 'react-icons/bs';
 
 export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
 
     const nav = useNavigate()
 
     const video = useRef(null as any as HTMLVideoElement)
-    const overlay = useRef(null as any as HTMLDivElement)
     const muteButton = useRef(null as any as HTMLDivElement)
+
+    const overlay = useRef(null as any as HTMLDivElement)
+    const button = useRef(null as any as HTMLDivElement)
+    const header = useRef(null as any as HTMLDivElement)
 
     const [ mute, setMute ] = useState({ isMuted: true, muteElem: <BiVolumeMute style={{ height: "100%", width: "100%" }}/> })
 
@@ -30,7 +34,17 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
 
             // Wait 5 seconds before showing interactive overlay
             setTimeout(() => {
+                muteButton.current.className = styles.hiddenMuteIcon
+
                 overlay.current.className = styles.failVisible
+
+                header.current.className = styles.header
+                setTimeout(() => {
+                    
+                    button.current.className = styles.btnContainer
+
+                }, 1000);
+
             }, 4000)
  
         }
@@ -73,14 +87,20 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
 
                 <div ref={overlay} className={styles.failOverlay}>
                 
-                    GAME OVER
-                    <Button className={styles.button} text="Home" onClick={() => {
+                    <span ref={header} className={styles.hiddenHeader}>Game Over</span>
 
-                        // Navigate Home
-                        nav('/', { replace: true })
-                        nav(0)
+                    <span ref={button} className={styles.hiddenBtnContainer}>
 
-                    }}/>
+                        <Button className={styles.button} text={<BsHouseDoorFill />} onClick={() => {
+
+                            // Navigate Home
+                            nav('/', { replace: true })
+                            nav(0)
+
+                        }}/>
+
+                    </span>
+
                 
                 </div>
 

@@ -32,7 +32,7 @@ root.render(
 
             <Route path="/lobby/:id" element={ <Lobby requests={Connection} /> } />
             <Route path="/game/:id" element={ <GameSwitchPoint requests={Connection} /> } /> {/* Game.tsx needs to be slightly redone to support the new framework. */}
-            <Route path="/test/" element={ <Leaderboard leaderboard={[{ username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, ]}/> } />
+            <Route path="/test/" element={ <Leaderboard leaderboard={[{ username: "a", coins: 200 }, { username: "b", coins: 300 }, { username: "a", coins: 400 }, { username: "a", coins: 500 }, { username: "a", coins: 600 }, { username: "a", coins: 700 }, { username: "a", coins: 800 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, ]}/> } />
           </Routes>
         </BrowserRouter>
       </div>

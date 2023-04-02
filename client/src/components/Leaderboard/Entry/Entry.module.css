@@ -1,10 +1,14 @@
 .container {
 
+    /*display: grid;
+    grid-template-columns: repeat(2, 50%);*/
     display: flex;
     justify-content: center;
     align-items: center;
 
-    background-color: var(--brown-3);
+    background-color: #5E2C04;
+    color: white;
+
     width: 95%;
     aspect-ratio: 15/1;
 
@@ -19,6 +23,15 @@
 .currentPlayerContainer {
 
     composes: container;
-    background-color: gold;
+    background-color: var(--brown-5);
+
+}
+
+.coinIcon {
+
+    color: white;
+    font-size: 125%;
+    
+    margin-left: 1%;
 
 }

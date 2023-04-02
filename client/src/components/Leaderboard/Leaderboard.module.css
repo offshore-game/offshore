@@ -11,7 +11,12 @@
 
 .header {
 
+    font-family: Sail, cursive;
     transform: translateX(-10px);
+
+    font-weight: 700;
+    font-size: 250%;
+    color: var(--brown-1);
 
 }
 
