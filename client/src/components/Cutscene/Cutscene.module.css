@@ -25,21 +25,60 @@
 
     height: 100%;
     width: 100%;
-    visibility: hidden;
+
+    filter: opacity(0%);
+    
+    transition: filter 0.5s ease;
 
 }
 
 .failVisible {
 
     composes: failOverlay;
-    visibility: visible;
+    filter: opacity(100%);
+
+}
+
+.header {
+
+    font-family: Sail, cursive;
+
+    font-weight: 700;
+    font-size: 250%;
+    color: var(--brown-1);
+
+    filter: opacity(100%);
+
+}
+
+.hiddenHeader {
+
+    composes: header;
+    filter: opacity(0%);
 
 }
 
 .button {
 
-    height: 10%;
+    height: 100%;
+    width: 100%;
+
+}
+
+.hiddenBtnContainer {
+
+    filter: opacity(0%);
+    transition: filter 1s ease;
+
+}
+
+.btnContainer {
+
+    height: 5%;
     aspect-ratio: 3/1;
+
+    filter: opacity(100%);
+    transition: filter 1s ease;
 
 }
 

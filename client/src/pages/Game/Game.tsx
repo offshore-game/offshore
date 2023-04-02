@@ -147,7 +147,8 @@ export default function GameSwitchPoint(props: AuthProp) {
         
         const gameOverFunction = (payload: { success: boolean, leaderboard: { username: string, coins: number }[] | undefined }) => {
 
-            setLeaderboard(payload.leaderboard!)
+            if (payload.success) setLeaderboard(payload.leaderboard!);
+            
             setTimeout(() => { setStatus(payload.success ? statusType.successEnding : statusType.failEnding) }, 2000)
 
         }
