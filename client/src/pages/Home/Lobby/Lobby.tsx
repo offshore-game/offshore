@@ -72,7 +72,7 @@ export default function Lobby(props: AuthProp & LobbyProp) {
 
                 <div className={styles.playerList}>
 
-                    <span className={styles.playerListHeader}>SAILORS</span>
+                    <span className={styles.playerListHeader}>SAILORS ({playerList.length} / 10)</span>
 
                     <div className={styles.playerEntryContainer}>
                         

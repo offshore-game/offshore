@@ -191,6 +191,7 @@ export default class Requests {
 
             this.socket.emit("startGame", { token: token!, roomCode: roomCode! }, (result: false | gameInfo) => {
 
+                if (!result) this.displayError("At least 2 players are needed to start the game!")
                 return res(result) // Resolve with false OR the payload of puzzles.
 
             })
