@@ -204,19 +204,19 @@ export default class GameLobby {
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, readerCount)//fCount())
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonCombination") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, readerCount)//fCount())
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonSpeed") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 60, addTimeout ? 2 : 0, readerCount)//fCount())
+            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
 
         } else {
@@ -315,7 +315,6 @@ export default class GameLobby {
                         toPush.numberOfFragments = numberOfFragments
                     }
 
-                    console.log(`selected fragment for ${player.username}:`, selectedFragment)
                 }
 
                 // Puzzle-specific additions
