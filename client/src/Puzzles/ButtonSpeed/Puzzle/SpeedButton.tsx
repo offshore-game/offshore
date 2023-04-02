@@ -12,6 +12,10 @@ export default function SpeedButton(props: { index: number, zoneName: zoneNames,
     const button = useRef(undefined as any) as React.MutableRefObject<HTMLDivElement>
     const [ isPoison, setIsPoison ] = useState(false)
 
+    const [ clickUpSound, setClickUpSound ] = useState(undefined as any as HTMLAudioElement)
+    const [ clickDownSound, setClickDownSound ] = useState(undefined as any as HTMLAudioElement)
+    const [ lightUpSound, setLightUpSound ] = useState(undefined as any as HTMLAudioElement)
+
     const resetGame = async (poison?: boolean) => {
         // signal to the main component to reset the buttons
         document.dispatchEvent(props.endGameEvent)
@@ -47,6 +51,7 @@ export default function SpeedButton(props: { index: number, zoneName: zoneNames,
 
                 // Change color time
                 button.current.className = buttonTypes.active
+                lightUpSound.play()
 
                 const expiration = setTimeout(() => {
 
@@ -81,6 +86,7 @@ export default function SpeedButton(props: { index: number, zoneName: zoneNames,
 
                 // Change color time
                 button.current.className = buttonTypes.active
+                lightUpSound.play()
 
                 // Change state to poison
                 setIsPoison(true)
@@ -131,6 +137,13 @@ export default function SpeedButton(props: { index: number, zoneName: zoneNames,
 
         document.addEventListener('onBtnSpeedReset', resetCallback)
 
+        // Load the click sounds
+        setClickUpSound(new Audio('/Sounds/mouse up.mp3'))
+        setClickDownSound(new Audio('/Sounds/mouse down.mp3'))
+
+        // Load the "light up" sound
+        setLightUpSound(new Audio('/Sounds/game ball tap.mp3'))
+
         return () => {
 
             document.removeEventListener('onBtnSpeedReset', resetCallback)
@@ -140,7 +153,7 @@ export default function SpeedButton(props: { index: number, zoneName: zoneNames,
     }, [])
 
     return (
-        <div id={`speedBtn${props.index}`} ref={button} className={props.inactive ? buttonTypes.inactive : buttonTypes.button} onClick={async () => {
+        <div id={`speedBtn${props.index}`} ref={button} className={props.inactive ? buttonTypes.inactive : buttonTypes.button} onMouseDown={() => { clickDownSound.play() }} onMouseUp={() => { clickUpSound.play() }} onClick={async () => {
             
             if (props.inactive) return; // inactive button
 
