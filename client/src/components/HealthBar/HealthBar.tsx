@@ -7,10 +7,22 @@ export default function HealthBar(props: { percentage: number } & AuthProp) {
 
     const [ health, setHealth ] = useState(props.percentage)
 
+    const [ errorSound, setErrorSound ] = useState(undefined as any as HTMLAudioElement)
+    useEffect(() => {
+
+        // Load the error sound
+        setErrorSound(new Audio('/Sounds/game show wrong answer buzz.mp3'))
+
+    }, [])
+
+
     useEffect(() => {
         
         props.requests.socket.on("healthChange", (payload: { health: number }) => {
             
+            // Play an error sound to everyone
+            errorSound.play()
+
             setHealth(health < 0 ? 0 : payload.health)
 
         })
