@@ -15,7 +15,7 @@ export default function Leaderboard(props: { leaderboard: { username: string, co
 
             <div className={styles.container}>
 
-                <span className={styles.header}>LEADERBOARD</span>
+                <span className={styles.header}>Leaderboard</span>
                 <div className={styles.entries}>
 
                     { props.leaderboard.map(player => <Entry username={player.username} coins={player.coins} isPlayer={ currentUsername == player.username }/>) }
