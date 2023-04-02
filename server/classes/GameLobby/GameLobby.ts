@@ -306,6 +306,11 @@ export default class GameLobby {
                         findUnusedFragment.assignedSocket = player.socketId
 
                         selectedFragment = findUnusedFragment
+                    } else {
+
+                        // Select a random fragment to show if there are none left over
+                        selectedFragment = puzzle.fragmentedSolutions[randomNumber(0, puzzle.fragmentedSolutions.length - 1)]
+
                     }
 
                     toPush.solution = selectedFragment
