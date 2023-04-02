@@ -63,7 +63,7 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
         }
 
-    }, [ answerPages ])
+    }, [ props.gameInfo ])
 
 
     if (answerPages.length > 0) {  // Bug Fix
