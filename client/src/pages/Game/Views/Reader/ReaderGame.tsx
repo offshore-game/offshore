@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { gameInfo, zoneNames } from '../../../../API/requests'
 import ButtonCombinationManual from '../../../../Puzzles/ButtonCombination/Manual/ButtonCombinationManual'
 import { AuthProp } from '../../../../utils/propTypes'
@@ -38,16 +38,35 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     }
 
 
-    if (answerPages.length > 0) {  // Bug Fix
+    useEffect(() => {
 
-        // Check if the activePage still exists
-        const result = props.gameInfo.puzzles.find(puzzle => puzzle.zoneName == activePage.zoneName)
-        if (!result) { // Does not exist anymore
+        if (answerPages.length > 0) {  // Bug Fix
+            
+            // Check if the activePage still exists
+            const result = props.gameInfo.puzzles.find(puzzle => puzzle.zoneName == activePage.zoneName)
+            if (!result) { // Does not exist anymore
 
-            // Reset to the first page
-            setActivePage({ number: 0, zoneName: answerPages[0].zoneName})
+                // Reset to the first page
+                setActivePage({ number: 0, zoneName: answerPages[0].zoneName})
+
+            } else {
+
+                // Make sure the manual remains on the current page after puzzle gens
+                const index = answerPages.findIndex(page => page.zoneName == activePage.zoneName)
+                if (index != -1) {
+
+                    setActivePage({ number: index, zoneName: activePage.zoneName })
+
+                }
+
+            }
 
         }
+
+    }, [ answerPages ])
+
+
+    if (answerPages.length > 0) {  // Bug Fix
 
         return (
 
@@ -58,10 +77,6 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                     <div className={styles.container}>
         
-                        <div className={styles.boat}>
-
-                        </div>
-                        
                         <div className={styles.pageBase}>
                             <div style={{ margin: "5%" }}>{ toVisualZoneName(activePage.zoneName as any)?.toUpperCase() }</div>
                             { answerPages[activePage.number] ? answerPages[activePage.number].element : "" }
