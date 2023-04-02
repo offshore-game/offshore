@@ -159,7 +159,7 @@ export default class GameLobby {
 
         let generatedPuzzle: Puzzles
 
-        // Calculate how many fragments would be needed (FEATURE: change with difficulty multiplier)
+        // Calculate how many fragments would be needed
         const readerCount = this.players.filter(player => player.role == "READER").length
 
         /*
@@ -204,19 +204,19 @@ export default class GameLobby {
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, readerCount)//fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonCombination") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, readerCount)//fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonSpeed") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 60, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 60, addTimeout ? 2 : 0, readerCount)//fCount())
             // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
 
         } else {
@@ -291,11 +291,20 @@ export default class GameLobby {
 
                     let selectedFragment
                     
+                    // Find if the player already has an assigned fragment for this puzzle
                     const findAlreadyAssigned = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == player.socketId)[0]
-                    const findUnusedFragment = selectedFragment = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == undefined)[0]
+
+                    // Find a fragment that is not already assigned
+                    const findUnusedFragment = puzzle.fragmentedSolutions.filter(fragment => fragment.assignedSocket == undefined)[0]
                     if (findAlreadyAssigned) {
+
                         selectedFragment = findAlreadyAssigned
+
                     } else if (findUnusedFragment) {
+                        
+                        // Assign the fragment to this player
+                        findUnusedFragment.assignedSocket = player.socketId
+
                         selectedFragment = findUnusedFragment
                     }
 
@@ -305,6 +314,8 @@ export default class GameLobby {
                         const numberOfFragments = puzzle.fragmentedSolutions.length
                         toPush.numberOfFragments = numberOfFragments
                     }
+
+                    console.log(`selected fragment for ${player.username}:`, selectedFragment)
                 }
 
                 // Puzzle-specific additions

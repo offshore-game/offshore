@@ -21,11 +21,11 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
             if (puzzle.type == "buttonCombination") {
                 
-                answerPages.push({ element: <ButtonCombinationManual key={puzzle.zoneName} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
+                answerPages.push({ element: <ButtonCombinationManual key={puzzle.zoneName} solution={puzzle.solution} buttonCount={puzzle.buttonCount!} />, zoneName: puzzle.zoneName })
 
             } else if (puzzle.type == "numberCombination") {
 
-                answerPages.push({ element: <NumberCombinationManual key={puzzle.zoneName} solution={puzzle.solution} />, zoneName: puzzle.zoneName })
+                answerPages.push({ element: <NumberCombinationManual key={puzzle.zoneName} solution={puzzle.solution} digitCount={puzzle.numberCount!} />, zoneName: puzzle.zoneName })
 
             } else if (puzzle.type == "buttonSpeed") {
 
@@ -55,8 +55,13 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
                 
                 <div className={styles.background}>
 
+
                     <div className={styles.container}>
         
+                        <div className={styles.boat}>
+
+                        </div>
+                        
                         <div className={styles.pageBase}>
                             <div style={{ margin: "5%" }}>{ toVisualZoneName(activePage.zoneName as any)?.toUpperCase() }</div>
                             { answerPages[activePage.number] ? answerPages[activePage.number].element : "" }
