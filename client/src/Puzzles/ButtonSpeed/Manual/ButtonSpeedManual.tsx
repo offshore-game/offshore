@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './ButtonSpeedManual.module.css'
 
 type solutionType = { fragments: number[] }
@@ -16,21 +16,21 @@ export default function ButtonSpeedManual(props: { layout: { rows: number, colum
 
         for (let i = 0; i < (props.layout.rows * props.layout.columns); i++) { // WARNING: Internally base 0
 
-            setButtonElems(entries => [...entries, <div className={styles.buttonWrapper}><div key={i} className={styles.button}>{props.solution.fragments.includes(i) ? "!!" : "" }</div></div>])
+            setButtonElems(entries => [...entries, <div key={i} className={styles.button}>{props.solution.fragments.includes(i) ? "!!" : "" }</div>])
             
         }
         
     }, [])
 
-    return (
+    /*return (
 
         <div className={styles.container}>
-
+            
             <div className={styles.buttonContainer}>
                 <div className={styles.buttonGrid}>
-                            
-                    { buttonElems }
                     
+                    { buttonElems }
+
                 </div>
             </div>
 
@@ -46,6 +46,32 @@ export default function ButtonSpeedManual(props: { layout: { rows: number, colum
 
 
         </div>
+
+    )*/
+
+    return (
+        <React.Fragment>
+            <div>
+                
+                <div className={styles.buttonContainer}>
+                    <div className={styles.buttonGrid}>
+                        
+                        { buttonElems }
+
+                    </div>
+                </div>
+                
+            </div>
+
+            <div className={styles.instructions}>
+
+                <span>Avoid <span style={{ fontWeight: 700 }}>!!</span></span>
+                <span>Don't close the puzzle while doing it!</span>
+                <br/>
+                <span>Fragment 1 of {props.totalFragments}</span>
+
+            </div>
+        </React.Fragment>
 
     )
 

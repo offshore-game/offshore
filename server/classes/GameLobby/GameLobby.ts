@@ -56,8 +56,8 @@ export default class GameLobby {
         // Set the io to make requests from within the lobby
         this.io = io
 
-        this.healthPoints = 100
-        this.durationSec = 300
+        this.healthPoints = 1000000
+        this.durationSec = 30000000
         this.percentKeepActive = 0.3 // 30%
 
     }
@@ -216,7 +216,7 @@ export default class GameLobby {
         } else if (randomlySelectedPuzzleType == "buttonSpeed") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 60, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 60000, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
 
         } else {
