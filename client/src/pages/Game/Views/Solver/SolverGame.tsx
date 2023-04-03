@@ -171,13 +171,23 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                     setVisibleCapList(visibleCapList ? false : true)
 
-                }}><u style={{ fontSize: "150%" }}>Captain List</u> { visibleCapList ? <GoTriangleUp /> : <GoTriangleDown /> } </div>
+                }}>
 
-                <div className={styles.captainList} style={{ visibility: visibleCapList ? "visible" : "hidden" }}>
-                    <span style={{ width: "100%", whiteSpace: "nowrap" }}>Ask these players for answers!</span>
-                    <br/>
-                    { props.gameInfo.readerList.map(readerName => <div style={{ color: "white" }}>{readerName}</div>) }
+                    <u style={{ fontSize: "105%", whiteSpace: "nowrap", display: "flex", alignItems: "center" }}>
+                        
+                        Captain List { visibleCapList ? <GoTriangleUp style={{ margin: "2%" }}/> : <GoTriangleDown style={{ padding: "2%" }}/> }
+                    
+                    </u>
+
                 </div>
+
+                <div style={{ visibility: visibleCapList ? "visible" : "hidden" }} className={styles.captainList}>
+                    <span style={{ whiteSpace: "nowrap", fontSize: "80%", color: "white" }}><u>Ask these players for <b>answers</b>!</u></span>
+                    <br/>
+                    { props.gameInfo.readerList.map(readerName => <b>{readerName}</b>) }
+                </div>
+
+
 
             </div>
 

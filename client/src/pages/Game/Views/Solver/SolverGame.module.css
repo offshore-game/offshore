@@ -118,6 +118,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 
     width: 100%;
 
@@ -125,7 +126,7 @@
     color: white;
 
     border-radius: 10px;
-    padding: 2%;
+    padding: 4%;
 
     transition: filter 0.2s ease;
 }
@@ -142,11 +143,11 @@
     align-items: center;
     flex-direction: column;
 
+    width: 100%;
+
     background-color: var(--blue-2);
 
     border-radius: 10px;
-    padding: 2%;
-
-    visibility: hidden;
+    padding: 4%;
 
 }
