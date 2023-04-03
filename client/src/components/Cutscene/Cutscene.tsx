@@ -56,7 +56,7 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
         return (
             <div className={styles.container}>
 
-                <video autoPlay={true} muted={true} ref={video} className={styles.video} src='/Cutscenes/Fail.mp4' onEnded={() => {
+                <video autoPlay={true} muted={true} ref={video} className={styles.video} src={`/Cutscenes/Fail.mp4?a=${new Date().getTime() /* Bypass browser cache; it breaks sometimes */}`} onEnded={() => {
                     
                     console.log('cutscene ended')
         
