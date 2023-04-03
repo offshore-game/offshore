@@ -17,6 +17,7 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
     const header = useRef(null as any as HTMLDivElement)
 
     const [ mute, setMute ] = useState({ isMuted: true, muteElem: <BiVolumeMute style={{ height: "100%", width: "100%" }}/> })
+    const [ time, setTime ] = useState(new Date().getTime())
 
     useEffect(() => {
 
@@ -56,7 +57,7 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
         return (
             <div className={styles.container}>
 
-                <video autoPlay={true} muted={true} ref={video} className={styles.video} src={`/Cutscenes/Fail.mp4?a=${new Date().getTime() /* Bypass browser cache; it breaks sometimes */}`} onEnded={() => {
+                <video autoPlay={true} muted={true} ref={video} className={styles.video} src={`/Cutscenes/Fail.mp4?a=${time /* Bypass browser cache; it breaks sometimes */}`} onEnded={() => {
                     
                     console.log('cutscene ended')
         
