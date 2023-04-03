@@ -39,13 +39,38 @@
 
 }
 
+.arrowButton {
+
+    padding: 10%;
+    margin: 0;
+
+}
+
+.inactiveArrowButton {
+
+    composes: arrowButton;
+    filter: brightness(45%);
+    transform: translateY(4px);
+    box-shadow: 0px 2px black;
+    pointer-events: none;
+
+}
+
 .arrow {
 
     color: black;
     font-size: 300%;
 
 }
-.arrow:hover {
+
+.pageCount {
+
+    margin: 10%;
+    font-size: 130%;
+    font-weight: 700;
+
+}
+/*.arrow:hover {
 
     color: white;
     transition: 0.1s;
@@ -55,7 +80,7 @@
 
     filter: brightness(85%);
 
-}
+}*/
 
 .controls {
 

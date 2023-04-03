@@ -7,10 +7,21 @@ import styles from './ReaderGame.module.css'
 import { RxTriangleLeft, RxTriangleRight } from 'react-icons/rx'
 import NumberCombinationManual from '../../../../Puzzles/NumberCombination/Manual/NumberCombinationManual'
 import ButtonSpeedManual from '../../../../Puzzles/ButtonSpeed/Manual/ButtonSpeedManual'
+import Button from '../../../../components/Button/Button'
+
+const sleep = async (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const randomNumber = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo> } & AuthProp) {
 
     console.log(props.gameInfo)
+
+    const [ sounds, setSounds ] = useState({} as { [key: string]: HTMLAudioElement })
 
     const [ activePage, setActivePage ] = useState({ number: 0, zoneName: "ZONE HERE" }) // Internally Base 0
 
@@ -65,6 +76,49 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
     }, [ props.gameInfo ])
 
+    // Asset Loader \\
+    useEffect(() => {
+
+        // Passively Play Seagull Sounds
+        const seagullSounds = {
+            "seagull_1": new Audio("/Sounds/seagull 1.mp3"),
+            "seagull_2": new Audio("/Sounds/seagull 2.mp3"),
+            "seagull_3": new Audio("/Sounds/seagull 3.mp3"),
+        }
+        setSounds(sounds => { return { ...sounds, ...seagullSounds }})
+        let kill = false
+        let sound: any
+        async function playSeagullSound() {
+
+            const randomCooldown = randomNumber(4, 8)
+            await sleep(randomCooldown * 1000)
+
+            if (!kill) {
+
+                const randomSound = randomNumber(0, 3)
+                console.log(randomSound)
+                sound = (seagullSounds as any)[`seagull_${randomSound}`] // Play the sound
+                    sound.play()
+                await sleep((sound.duration + 1) * 1000 )
+                playSeagullSound()
+
+            }
+
+        }
+        playSeagullSound()
+
+
+        return () => {
+
+            // Stop the seagull sounds
+            kill = true
+            if (sound) sound.pause()
+            sound = undefined
+
+        }
+
+    }, [])
+
 
     if (answerPages.length > 0) {  // Bug Fix
 
@@ -84,22 +138,18 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                         <div className={styles.controls}>
 
-                            <RxTriangleLeft className={styles.arrow} onClick={() => {
-
+                            <Button className={(activePage.number - 1 >= 0) ? styles.arrowButton : styles.inactiveArrowButton} text={ <RxTriangleLeft className={styles.arrow} /> } onClick={() => {
                                 if (activePage.number - 1 >= 0) { // Check if it's within range
                                     setActivePage({ number: activePage.number - 1, zoneName: answerPages[activePage.number - 1].zoneName })
                                 }
-                                
-
                             }}/>
-                            { `${activePage.number + 1}/${answerPages.length}` }
-                            <RxTriangleRight className={styles.arrow} onClick={() => {
+                            
+                            <span className={styles.pageCount}>{ `${activePage.number + 1}/${answerPages.length}` }</span>
 
+                            <Button className={(activePage.number + 1 < answerPages.length) ? styles.arrowButton : styles.inactiveArrowButton} text={ <RxTriangleRight className={styles.arrow} /> } onClick={() => {
                                 if (activePage.number + 1 < answerPages.length) { // Check if it's within range
                                     setActivePage({ number: activePage.number + 1, zoneName: answerPages[activePage.number + 1].zoneName })
                                 }
-                                
-
                             }}/>
 
                         </div>
