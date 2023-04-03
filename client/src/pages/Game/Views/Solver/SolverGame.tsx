@@ -49,7 +49,7 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
             if (!kill) {
 
-                const randomSound = randomNumber(0, 3)
+                const randomSound = randomNumber(1, 3)
                 console.log(randomSound)
                 sound = (seagullSounds as any)[`seagull_${randomSound}`] // Play the sound
                     sound.play()

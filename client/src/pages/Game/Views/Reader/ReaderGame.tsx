@@ -79,6 +79,16 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     // Asset Loader \\
     useEffect(() => {
 
+        // Load Page Turn Sounds
+        const page1 = new Audio("/Sounds/page turn 1.mp3")
+            page1.volume = 0.8
+        const page2 = new Audio("/Sounds/page turn 2.mp3")
+            page2.volume = 0.8
+        setSounds(sounds => { return { ...sounds, 
+            "page_1": page1,
+            "page_2": page2
+        }})
+
         // Passively Play Seagull Sounds
         const seagullSounds = {
             "seagull_1": new Audio("/Sounds/seagull 1.mp3"),
@@ -95,7 +105,7 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
             if (!kill) {
 
-                const randomSound = randomNumber(0, 3)
+                const randomSound = randomNumber(1, 3)
                 console.log(randomSound)
                 sound = (seagullSounds as any)[`seagull_${randomSound}`] // Play the sound
                     sound.play()
@@ -140,7 +150,11 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                             <Button className={(activePage.number - 1 >= 0) ? styles.arrowButton : styles.inactiveArrowButton} text={ <RxTriangleLeft className={styles.arrow} /> } onClick={() => {
                                 if (activePage.number - 1 >= 0) { // Check if it's within range
+
+                                    // Play random page sound effect
+                                    sounds[`page_${randomNumber(1, 2)}`].play()
                                     setActivePage({ number: activePage.number - 1, zoneName: answerPages[activePage.number - 1].zoneName })
+
                                 }
                             }}/>
                             
@@ -148,7 +162,11 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                             <Button className={(activePage.number + 1 < answerPages.length) ? styles.arrowButton : styles.inactiveArrowButton} text={ <RxTriangleRight className={styles.arrow} /> } onClick={() => {
                                 if (activePage.number + 1 < answerPages.length) { // Check if it's within range
+                                    
+                                    // Play random page sound effect
+                                    sounds[`page_${randomNumber(1, 2)}`].play()
                                     setActivePage({ number: activePage.number + 1, zoneName: answerPages[activePage.number + 1].zoneName })
+
                                 }
                             }}/>
 
