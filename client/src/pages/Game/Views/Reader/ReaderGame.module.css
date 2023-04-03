@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
 .background {
 
     /* Top bar is 10%, so account for that */
@@ -36,6 +38,8 @@
     margin: 2%;
 
     overflow: scroll;
+
+    font-family: "Special Elite";
 
 }
 
