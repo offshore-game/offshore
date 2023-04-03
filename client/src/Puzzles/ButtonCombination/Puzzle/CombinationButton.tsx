@@ -7,6 +7,19 @@ export default function CombinationButton(props: { index: number, combinationPay
 
     const [ clickable, setClickable ] = useState(true)
 
+    const [ clickUpSound, setClickUpSound ] = useState(undefined as any as HTMLAudioElement)
+    const [ clickDownSound, setClickDownSound ] = useState(undefined as any as HTMLAudioElement)
+
+    // Asset Loader \\
+    useEffect(() => {
+
+        // Load the click sounds
+        setClickUpSound(new Audio('/Sounds/mouse up.mp3'))
+        setClickDownSound(new Audio('/Sounds/mouse down.mp3'))
+
+    }, [])
+
+    // Button Handler \\
     useEffect(() => {
 
         const find = Object.entries(props.combinationPayload).find(entry => entry[1] == props.index)
@@ -26,7 +39,7 @@ export default function CombinationButton(props: { index: number, combinationPay
     })
 
     return (
-        <div key={props.index} className={clickable ? styles.button : styles.inactiveButton} onClick={() => {
+        <div key={props.index} className={clickable ? styles.button : styles.inactiveButton} onMouseDown={() => { if (clickable) clickDownSound.play() }} onMouseUp={() => { if (clickable) clickUpSound.play() }} onClick={() => {
 
             if (!clickable) return;
 
