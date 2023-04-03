@@ -11,6 +11,14 @@ import PointTarget from './PointTarget/PointTarget';
 import { ImCross } from 'react-icons/im';
 import toVisualZoneName from '../../../../utils/zoneNameConversion';
 
+const sleep = async (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const randomNumber = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
 
     const [ sounds, setSounds ] = useState({} as { [key: string]: HTMLAudioElement })
@@ -25,7 +33,46 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
         // FEATURE: Add more sounds
 
+        // Passively Play Seagull Sounds
+        const seagullSounds = {
+            "seagull_1": new Audio("/Sounds/seagull 1.mp3"),
+            "seagull_2": new Audio("/Sounds/seagull 2.mp3"),
+            "seagull_3": new Audio("/Sounds/seagull 3.mp3"),
+        }
+        setSounds(sounds => { return { ...sounds, ...seagullSounds }})
+        let kill = false
+        let sound: any
+        async function playSeagullSound() {
+
+            const randomCooldown = randomNumber(4, 8)
+            await sleep(randomCooldown * 1000)
+
+            if (!kill) {
+
+                const randomSound = randomNumber(0, 3)
+                console.log(randomSound)
+                sound = (seagullSounds as any)[`seagull_${randomSound}`] // Play the sound
+                    sound.play()
+                await sleep((sound.duration + 1) * 1000 )
+                playSeagullSound()
+
+            }
+
+        }
+        playSeagullSound()
+
+
+        return () => {
+
+            // Stop the seagull sounds
+            kill = true
+            if (sound) sound.pause()
+            sound = undefined
+
+        }
+
     }, [])
+
 
     // Event Listeners for Solver Game Events \\
     useEffect(() => {
@@ -49,6 +96,7 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                 // Answered Incorrectly
                 if (!correct) {
+                    // Sound effect is played when the healthbar changes instead
                     overlay.className = styles.incorrectAnswerOverlay
                 }
 
