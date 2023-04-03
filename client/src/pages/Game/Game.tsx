@@ -82,7 +82,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     // Universal Game Events \\
     useEffect(() => {
     
-        const puzzleChangeFunction = (payload: { lengthSec: number, puzzles: PuzzleInfo[] }) => {
+        const puzzleChangeFunction = (payload: { lengthSec: number, readerList: string[], puzzles: PuzzleInfo[] }) => {
 
             /*
                 1) Check if the active puzzle was changed

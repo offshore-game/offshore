@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { gameInfo, zoneNames } from '../../../../API/requests';
 import { AuthProp } from '../../../../utils/propTypes';
 import gameStyles from '../../Game.module.css'
@@ -9,6 +9,7 @@ import { ReactComponent as Water } from '../../../../assets/Game/Water.svg';
 import { ReactComponent as Background } from '../../../../assets/Game/SolverBackground.svg';
 import PointTarget from './PointTarget/PointTarget';
 import { ImCross } from 'react-icons/im';
+import { GoTriangleDown, GoTriangleUp } from 'react-icons/go';
 import toVisualZoneName from '../../../../utils/zoneNameConversion';
 
 const sleep = async (ms: number) => {
@@ -22,6 +23,7 @@ const randomNumber = (min: number, max: number) => {
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
 
     const [ sounds, setSounds ] = useState({} as { [key: string]: HTMLAudioElement })
+    const [ visibleCapList, setVisibleCapList ] = useState(false)
 
     // Asset Pre-Loader \\
     useEffect(() => {
@@ -161,6 +163,24 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
                 <Water />
 
             </div>
+
+
+            <div className={styles.captainContainer}>
+
+                <div className={styles.captainsHeader} onClick={() => {
+
+                    setVisibleCapList(visibleCapList ? false : true)
+
+                }}><u style={{ fontSize: "150%" }}>Captain List</u> { visibleCapList ? <GoTriangleUp /> : <GoTriangleDown /> } </div>
+
+                <div className={styles.captainList} style={{ visibility: visibleCapList ? "visible" : "hidden" }}>
+                    <span style={{ width: "100%", whiteSpace: "nowrap" }}>Ask these players for answers!</span>
+                    <br/>
+                    { props.gameInfo.readerList.map(readerName => <div style={{ color: "white" }}>{readerName}</div>) }
+                </div>
+
+            </div>
+
 
             <div id="activePuzzleContainer" className={gameStyles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
 

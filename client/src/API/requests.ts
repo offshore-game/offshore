@@ -32,7 +32,8 @@ export type PuzzleInfo = {
 export type gameInfo = {
     lengthSec: number,
     puzzles: PuzzleInfo[],
-    role?: "READER" | "SOLVER"
+    role?: "READER" | "SOLVER",
+    readerList: string[],
 }
 
 export default class Requests {

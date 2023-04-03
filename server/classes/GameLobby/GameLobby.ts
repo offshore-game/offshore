@@ -266,7 +266,7 @@ export default class GameLobby {
 
     }
 
-    prepareGamePayloads(): { socketId: string, payload: { lengthSec: number, puzzles: puzzleArrayPayload } }[] {
+    prepareGamePayloads(): { socketId: string, payload: { lengthSec: number, readerList: string[], puzzles: puzzleArrayPayload } }[] {
         
         let payloads = []
         for (const player of this.players) {
@@ -351,10 +351,16 @@ export default class GameLobby {
     
             }
 
+            const readerList = []
+            for (const player of this.players.filter(player => player.role == "READER")) {
+                readerList.push(player.username)
+            }
+
             payloads.push({
                 socketId: player.socketId,
                 payload: {
                     lengthSec: 300,
+                    readerList: readerList,
                     puzzles: puzzleInfo,
                 },
             })
@@ -513,7 +519,7 @@ export default class GameLobby {
 
                 this.startGame()
 
-            }, 5000)
+            }, 5000 /* FEATURE: Start Cutscene Time */)
 
         }
 
@@ -523,11 +529,6 @@ export default class GameLobby {
 
         // Run the Cutscene
         this.state = "CUTSCENE"
-
-        /*
-            FEATURE: A timeout is needed for each "stage" the lobby
-            can go through within the five minutes.
-        */
 
         /*
             We need to generate puzzles, but prevent them from overlapping
