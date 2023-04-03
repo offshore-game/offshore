@@ -19,7 +19,7 @@ export default function Join(props: AuthProp) {
 
             }}/>
 
-            <input type="text" id="roomId-Join" className={baseStyles.textInput} placeholder="Room ID" onInput={(event) => {
+            <input type="text" id="roomId-Join" className={baseStyles.textInput} placeholder="Room Code" onInput={(event) => {
                 event.currentTarget.value = event.currentTarget.value.toUpperCase()
             }}/>
             <input type="text" id="usernameInput-Join" className={baseStyles.textInput} placeholder="Username" />

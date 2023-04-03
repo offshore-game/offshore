@@ -66,7 +66,7 @@ export default function Lobby(props: AuthProp & LobbyProp) {
     return (
         <Home>
 
-            ROOM CODE: { id }
+            <u>ROOM CODE: <b>{ id }</b></u>
 
             <div className={styles.container}>
 

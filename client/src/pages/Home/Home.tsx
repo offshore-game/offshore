@@ -28,7 +28,7 @@ export default function Home(props: { children?: any }) {
                     { props.children }
 
                 </div>
-                TSA ID: Team #2088-1
+                <span>TSA ID: <b>Team #2088-1</b></span>
             </div>
 
             <div id={"gameErrorContainer"} className={styles.hiddenErrorContainer}>Oops! Looks like an error occured.</div>
