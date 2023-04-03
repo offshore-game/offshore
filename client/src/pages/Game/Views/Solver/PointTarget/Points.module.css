@@ -112,7 +112,7 @@
 
 }
 
-.stopwatch {
+.stopwatchContainer {
 
     display: flex;
     justify-content: center;
@@ -127,11 +127,18 @@
 
     font-size: 80%;
 
-    aspect-ratio: auto;
 }
 
-.redwatch {
+.stopwatchImg {
 
+    height: 100%;
+    aspect-ratio: 1/1;
+
+}
+
+.redStopwatchImg {
+
+    composes: stopwatchImg;
     filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(300deg);
 
 }
