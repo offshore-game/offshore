@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './Home.module.css'
+import { ReactComponent as Logo } from '../../assets/logo.svg'
 
 /*
 
@@ -14,9 +15,13 @@ export default function Home(props: { children?: any }) {
 
     return (
         <React.Fragment>
-
+            
             <div className={styles.container}>
-                OFFSHORE
+                
+                <div className={styles.logo}>
+                    <Logo />
+                </div>
+
                 <div className={styles.centerContainer}>
 
                     {/* this is really just a template */}
