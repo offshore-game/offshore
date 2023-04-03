@@ -50,10 +50,10 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
             if (target.current) {
 
                 if (nextColor == 'red') {
-                    target.current.className = pointPos.redwatch
+                    target.current.className = pointPos.redStopwatchImg
                     setNextColor('black')
                 } else if (nextColor == 'black') {
-                    target.current.className = ""
+                    target.current.className = pointPos.stopwatchImg
                     setNextColor('red')
                 }
                 
@@ -66,7 +66,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
 
 
     return (
-        <div className={`${pointPos.stopwatch} ${pointPos[props.className]}`} onClick={() => {
+        <div className={`${pointPos.stopwatchContainer} ${pointPos[props.className]}`} onClick={() => {
 
             // Animate the "activePuzzle" div in
             const activePuzzleContainer = document.getElementById('activePuzzleContainer')
@@ -106,7 +106,7 @@ export default function PointTarget(props: { className: string, puzzle: PuzzleIn
 
         }}>
 
-            <img ref={target} src={stopwatch}/>
+            <img ref={target} src={stopwatch} className={pointPos.stopwatchImg}/>
             <div className={pointPos.timeText}>{ remainingTime }</div>
 
             <span className={pointPos.tooltip}>{toVisualZoneName(props.puzzle.zoneName)}</span>
