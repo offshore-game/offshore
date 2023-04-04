@@ -1,8 +1,13 @@
 @value button from '../Home.module.css';
 
-.container {
+.raftsContainer {
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: row;
+
+    width: 100%;
 
 }
 
@@ -19,6 +24,12 @@
     text-align: center;
 
     width: 25%;
+
+}
+
+.plankWrapper {
+
+    
 
 }
 
