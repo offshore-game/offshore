@@ -56,8 +56,8 @@ export default class GameLobby {
         // Set the io to make requests from within the lobby
         this.io = io
 
-        this.healthPoints = 1000000
-        this.durationSec = 30000000
+        this.healthPoints = 100
+        this.durationSec = 300
         this.percentKeepActive = 0.3 // 30%
 
     }
