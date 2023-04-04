@@ -1,5 +1,15 @@
 @value button from '../Home.module.css';
 
+.container {
+
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+
+}
+
 .raftsContainer {
 
     display: flex;
@@ -16,6 +26,8 @@
     width: 100%;
     aspect-ratio: 1/1;
 
+    pointer-events: none;
+
 }
 
 .raftWrapper {
@@ -23,13 +35,15 @@
     position: relative;
     text-align: center;
 
-    width: 25%;
+    width: 30%;
+
+    margin: 4%;
 
 }
+.raftWrapper:hover {
 
-.plankWrapper {
-
-
+    cursor: pointer;
+    filter: brightness(80%);
 
 }
 
@@ -45,5 +59,7 @@
     font-size: 125%;
 
     white-space: nowrap;
+
+    font-weight: 700;
 
 }

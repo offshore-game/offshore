@@ -17,9 +17,7 @@ export default function Home(props: { children?: any, className?: string }) {
         <React.Fragment>
             
             <div className={styles.container}>
-                <div className={styles.logo}>
-                    <Logo />
-                </div>
+                <img className={styles.logo} src={"/logo new.png"}/>
 
                 <div className={`${styles.centerContainer} ${props.className}`}>
 

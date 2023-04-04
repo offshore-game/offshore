@@ -28,19 +28,31 @@ export default function Main() {
         <Home className={styles.container}>
             
             <div className={styles.raftsContainer}>
-                <div className={styles.raftWrapper}>
-                    <RedRaft className={styles.raft}/>
+                <div className={styles.raftWrapper} onClick={() => {
+
+                    return nav('/join')
+
+                }}>
+                    <RedRaft className={styles.raft} style={{ rotate: "310deg" }}/>
                     <span className={styles.text}>Join</span>
                 </div>
 
-                <div className={styles.raftWrapper}>
+                <div className={styles.raftWrapper} onClick={() => {
+
+                    return nav('/create')
+
+                }}>
                     <BlueRaft className={styles.raft}/>
                     <span className={styles.text}>Create</span>
                 </div>
 
             </div>
             
-            <div className={styles.raftWrapper}>
+            <div className={styles.raftWrapper} style={{ width: "35%" }} onClick={() => {
+
+                return nav('/tutorial')
+
+            }}>
                 <Plank />
                 <span className={styles.text}>How to Play</span>
             </div>
