@@ -60,7 +60,7 @@ export default class ButtonSpeed extends Puzzle {
         this.poisonCount = poisonCount
 
         this.gameDuration = 10 // 10 Seconds of Buttons
-        this.timeToHit = 2 // 2 Seconds to hit a button
+        this.timeToHit = 4 // 4 Seconds to hit a button
 
         const totalButtonCount = dimensions.rows * dimensions.columns
 
