@@ -1,0 +1,36 @@
+@value button from '../Home.module.css';
+
+.container {
+
+    flex-direction: row;
+
+}
+
+.raft {
+
+    width: 100%;
+    aspect-ratio: 1/1;
+
+}
+
+.raftWrapper {
+
+    position: relative;
+    text-align: center;
+
+    width: 25%;
+
+}
+
+.text {
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+
+    transform: translate(-50%, -55%);
+
+    font-size: 125%;
+
+}

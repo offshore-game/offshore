@@ -11,7 +11,7 @@ New Home Framework:
 
 */
 
-export default function Home(props: { children?: any }) {
+export default function Home(props: { children?: any, className?: string }) {
 
     return (
         <React.Fragment>
@@ -21,7 +21,7 @@ export default function Home(props: { children?: any }) {
                     <Logo />
                 </div>
 
-                <div className={styles.centerContainer}>
+                <div className={`${styles.centerContainer} ${props.className}`}>
 
                     {/* this is really just a template */}
                     { props.children }

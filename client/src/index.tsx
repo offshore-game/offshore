@@ -7,7 +7,7 @@ import Requests from './API/requests';
 import GameSwitchPoint from './pages/Game/Game';
 import ButtonSpeed from './Puzzles/ButtonSpeed/Puzzle/ButtonSpeed';
 import Create from './pages/Home/Create/Create';
-import Core from './pages/Home/Core/Core';
+import Core from './pages/Home/Main/Main';
 import Lobby from './pages/Home/Lobby/Lobby';
 import Tutorial from './pages/Home/Tutorial/Tutorial';
 import Join from './pages/Home/Join/Join';
