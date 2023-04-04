@@ -53,7 +53,7 @@ export default function Main() {
                 return nav('/tutorial')
 
             }}>
-                <Plank />
+                <Plank className={styles.plank}/>
                 <span className={styles.text}>How to Play</span>
             </div>
 
