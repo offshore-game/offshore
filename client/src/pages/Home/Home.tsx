@@ -17,7 +17,6 @@ export default function Home(props: { children?: any }) {
         <React.Fragment>
             
             <div className={styles.container}>
-                
                 <div className={styles.logo}>
                     <Logo />
                 </div>
