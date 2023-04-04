@@ -2,6 +2,17 @@
     100% { background-position: 100% 100%; }
 }
 
+.logo {
+
+    z-index: 99;
+
+    aspect-ratio: auto;
+    width: 20%;
+
+    margin: -3%;
+
+}
+
 .button {
 
     background-color: var(--brown-2);
@@ -113,8 +124,11 @@
     padding: 2%;
 
     background-color: #BB3F3F;
+    box-shadow: -4px 6px  black;
     border-radius: 10px;
 
+    font-weight: 600;
+    
     transition: bottom 1s cubic-bezier(.41, 1.6, .41, 1);
 
 }

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
 .background {
 
     /* Top bar is 10%, so account for that */
@@ -20,11 +22,6 @@
 
 .pageBase {
     
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    
     height: 100%;
     aspect-ratio: 4/5;
     background-color: white;
@@ -37,6 +34,25 @@
 
     overflow: scroll;
 
+    font-family: "Special Elite";
+
+}
+
+.arrowButton {
+
+    padding: 10%;
+    margin: 0;
+
+}
+
+.inactiveArrowButton {
+
+    composes: arrowButton;
+    filter: brightness(45%);
+    transform: translateY(4px);
+    box-shadow: 0px 2px black;
+    pointer-events: none;
+
 }
 
 .arrow {
@@ -45,7 +61,15 @@
     font-size: 300%;
 
 }
-.arrow:hover {
+
+.pageCount {
+
+    margin: 10%;
+    font-size: 130%;
+    font-weight: 700;
+
+}
+/*.arrow:hover {
 
     color: white;
     transition: 0.1s;
@@ -55,7 +79,7 @@
 
     filter: brightness(85%);
 
-}
+}*/
 
 .controls {
 

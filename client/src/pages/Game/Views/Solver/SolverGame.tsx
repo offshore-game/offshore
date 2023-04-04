@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { gameInfo, zoneNames } from '../../../../API/requests';
 import { AuthProp } from '../../../../utils/propTypes';
 import gameStyles from '../../Game.module.css'
@@ -9,11 +9,21 @@ import { ReactComponent as Water } from '../../../../assets/Game/Water.svg';
 import { ReactComponent as Background } from '../../../../assets/Game/SolverBackground.svg';
 import PointTarget from './PointTarget/PointTarget';
 import { ImCross } from 'react-icons/im';
+import { GoTriangleDown, GoTriangleUp } from 'react-icons/go';
 import toVisualZoneName from '../../../../utils/zoneNameConversion';
+
+const sleep = async (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const randomNumber = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: React.Dispatch<gameInfo>, activePuzzle: { element: JSX.Element, zoneName: zoneNames | undefined }, setActivePuzzle: React.Dispatch<{ element: JSX.Element, zoneName: zoneNames | undefined }> } & AuthProp) {
 
     const [ sounds, setSounds ] = useState({} as { [key: string]: HTMLAudioElement })
+    const [ visibleCapList, setVisibleCapList ] = useState(false)
 
     // Asset Pre-Loader \\
     useEffect(() => {
@@ -23,9 +33,55 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
             ...sounds, "success": new Audio("/Sounds/success.mp3")
         }})
 
+        // Click Sounds
+        setSounds(sounds => { return {
+            ...sounds,
+            "mouseUp": new Audio("/Sounds/mouse up.mp3"),
+            "mouseDown": new Audio("/Sounds/mouse down.mp3"),
+        }})
+
         // FEATURE: Add more sounds
 
+        // Passively Play Seagull Sounds
+        const seagullSounds = {
+            "seagull_1": new Audio("/Sounds/seagull 1.mp3"),
+            "seagull_2": new Audio("/Sounds/seagull 2.mp3"),
+            "seagull_3": new Audio("/Sounds/seagull 3.mp3"),
+        }
+        setSounds(sounds => { return { ...sounds, ...seagullSounds }})
+        let kill = false
+        let sound: any
+        async function playSeagullSound() {
+
+            const randomCooldown = randomNumber(4, 8)
+            await sleep(randomCooldown * 1000)
+
+            if (!kill) {
+
+                const randomSound = randomNumber(1, 3)
+                console.log(randomSound)
+                sound = (seagullSounds as any)[`seagull_${randomSound}`] // Play the sound
+                    sound.play()
+                await sleep((sound.duration + 1) * 1000 )
+                playSeagullSound()
+
+            }
+
+        }
+        playSeagullSound()
+
+
+        return () => {
+
+            // Stop the seagull sounds
+            kill = true
+            if (sound) sound.pause()
+            sound = undefined
+
+        }
+
     }, [])
+
 
     // Event Listeners for Solver Game Events \\
     useEffect(() => {
@@ -49,6 +105,7 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
                 // Answered Incorrectly
                 if (!correct) {
+                    // Sound effect is played when the healthbar changes instead
                     overlay.className = styles.incorrectAnswerOverlay
                 }
 
@@ -74,7 +131,7 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     for (const puzzle of props.gameInfo.puzzles) {
         // Bug Fix https://reactjs.org/docs/lists-and-keys.html
         // It's very possible this may be still bugged in rare circumstances, it would need to be tested.
-        puzzleTargets.push(<PointTarget key={`${puzzle.zoneName}`} className={`${puzzle.zoneName}Point`} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
+        puzzleTargets.push(<PointTarget key={`${puzzle.zoneName}`} className={`${puzzle.zoneName}Point`} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} sounds={{ mouseUp: sounds["mouseUp"], mouseDown: sounds["mouseDown"] }} requests={props.requests}/>)
         //puzzleTargetSamples.push(<PuzzleTarget key={`${puzzle.zoneName}`} active={true} puzzle={puzzle} setActivePuzzle={props.setActivePuzzle} requests={props.requests}/>)
     }
 
@@ -113,6 +170,34 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
                 <Water />
 
             </div>
+
+
+            <div className={styles.captainContainer}>
+
+                <div className={styles.captainsHeader} onMouseDown={() => { sounds["mouseDown"].play() }} onMouseUp={() => { sounds["mouseUp"].play() }} onClick={() => {
+
+                    setVisibleCapList(visibleCapList ? false : true)
+
+                }}>
+
+                    <u style={{ fontSize: "105%", whiteSpace: "nowrap", display: "flex", alignItems: "center" }}>
+                        
+                        Captain List { visibleCapList ? <GoTriangleUp style={{ margin: "2%" }}/> : <GoTriangleDown style={{ padding: "2%" }}/> }
+                    
+                    </u>
+
+                </div>
+
+                <div style={{ visibility: visibleCapList ? "visible" : "hidden" }} className={styles.captainList}>
+                    <span style={{ whiteSpace: "nowrap", fontSize: "80%", color: "white" }}><u>Ask these players for <b>answers</b>!</u></span>
+                    <br/>
+                    { props.gameInfo.readerList.map(readerName => <b>{readerName}</b>) }
+                </div>
+
+
+
+            </div>
+
 
             <div id="activePuzzleContainer" className={gameStyles.hiddenPuzzle /* hiddenPuzzle, activePuzzle */}>
 

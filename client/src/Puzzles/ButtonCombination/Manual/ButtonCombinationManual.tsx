@@ -29,7 +29,14 @@ export default function ButtonCombinationManual(props: { buttonCount: number, so
                 
             </div>
 
-            Click the buttons in this order...
+            <div style={{ textAlign: "center", margin: "2%"  }}>
+                <br/>
+                <u style={{ fontSize: "80%" }}>Give these instructions to the crewmates:</u>
+                <br/>
+                Press the buttons on screen in this order...
+                <br/>
+                Press submit when you're done!
+            </div>
 
         </div>
 

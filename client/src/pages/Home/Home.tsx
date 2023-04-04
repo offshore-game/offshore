@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './Home.module.css'
+import { ReactComponent as Logo } from '../../assets/logo.svg'
 
 /*
 
@@ -14,16 +15,20 @@ export default function Home(props: { children?: any }) {
 
     return (
         <React.Fragment>
-
+            
             <div className={styles.container}>
-                OFFSHORE
+                
+                <div className={styles.logo}>
+                    <Logo />
+                </div>
+
                 <div className={styles.centerContainer}>
 
                     {/* this is really just a template */}
                     { props.children }
 
                 </div>
-                TSA ID: Team #2088-1
+                <span>TSA ID: <b>Team #2088-1</b></span>
             </div>
 
             <div id={"gameErrorContainer"} className={styles.hiddenErrorContainer}>Oops! Looks like an error occured.</div>

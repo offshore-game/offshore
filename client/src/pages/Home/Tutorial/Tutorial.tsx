@@ -45,7 +45,7 @@ export default function Tutorial() {
                     <br/>
                     <br/>
 
-                    <b><u>CAPTAINS (Players who instruct for puzzle solutions)</u></b>
+                    <b><u>CAPTAINS (Players who provide puzzle solutions)</u></b>
                     <br/>
                     As a captain aboard the boat, it is your duty to keep the ship from sinking at sea. 
 
