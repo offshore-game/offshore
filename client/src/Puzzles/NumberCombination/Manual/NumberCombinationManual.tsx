@@ -29,7 +29,12 @@ export default function NumberCombinationManual(props: { digitCount: number, sol
                 
             </div>
 
-            Enter this combination...
+            <div style={{ textAlign: "center", margin: "2%" }}>
+                <br/>
+                <u style={{ fontSize: "80%" }}>Give these instructions to the crewmates:</u>
+                <br/>
+                Use the on-screen arrows to enter this combination...
+            </div>
 
         </div>
     )

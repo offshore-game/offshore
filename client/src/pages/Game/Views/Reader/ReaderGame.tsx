@@ -142,7 +142,7 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
                     <div className={styles.container}>
         
                         <div className={styles.pageBase}>
-                            <div style={{ margin: "5%" }}>{ toVisualZoneName(activePage.zoneName as any)?.toUpperCase() }</div>
+                            <div style={{ margin: "5%", textAlign: "center" }}>{ toVisualZoneName(activePage.zoneName as any)?.toUpperCase() }</div>
                             { answerPages[activePage.number] ? answerPages[activePage.number].element : "" }
                         </div>
 

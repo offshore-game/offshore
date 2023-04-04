@@ -1,5 +1,13 @@
 @import '../gridDimensionVars.css';
 
+.container {
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+}
+
 .buttonContainer {
     
     height: 15ch;
@@ -33,6 +41,8 @@
 
     margin: 2%;
 
+    color: red;
+
     border-radius: 50px;
     border-color: black;
     border-width: 2px;
@@ -47,10 +57,6 @@
 .instructions {
 
     margin: 5%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    text-align: center;
 
 }
