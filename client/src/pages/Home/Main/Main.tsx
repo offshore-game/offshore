@@ -40,9 +40,9 @@ export default function Main() {
 
             </div>
             
-            <div className={styles.plankWrapper}>
+            <div className={styles.raftWrapper}>
                 <Plank />
-                <span>How to Play</span>
+                <span className={styles.text}>How to Play</span>
             </div>
 
         </Home>

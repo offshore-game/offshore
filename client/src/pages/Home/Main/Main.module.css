@@ -29,7 +29,7 @@
 
 .plankWrapper {
 
-    
+
 
 }
 
@@ -43,5 +43,7 @@
     transform: translate(-50%, -55%);
 
     font-size: 125%;
+
+    white-space: nowrap;
 
 }
