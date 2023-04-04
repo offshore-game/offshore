@@ -45,3 +45,13 @@
     overflow-y: scroll;
 
 }
+
+.homeButton {
+
+    height: 5%;
+    aspect-ratio: 3/1;
+
+    margin: 2%;
+    background-color: var(--blue-2);
+    
+}
