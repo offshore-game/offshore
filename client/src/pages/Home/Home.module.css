@@ -9,12 +9,26 @@
     
 }
 
+@keyframes MovingLogo {
+
+    0% { transform: translate(0%) }
+    25% { transform: translate(-10%) }
+    50% { transform: translate(0%) }
+    75% { transform: translate(10%) }
+    100% { transform: translate(0%) }
+
+}
+
 .logo {
 
     z-index: 99;
 
     aspect-ratio: auto;
-    width: 25%;
+    width: 28%;
+
+    margin: -1%;
+
+    /*animation: MovingLogo 25s infinite linear;*/
 
 }
 
@@ -102,7 +116,7 @@
 .textInput {
 
     color: white;
-    background-color: var(--brown-3);
+    background-color: var(--blue-2);
     
     height: 10%;
     aspect-ratio: 5/1;
@@ -120,7 +134,7 @@
 ::placeholder {
 
     padding: 4px;
-    color: #F5DEB3;
+    color: var(--blue-5);
 
 }
 
