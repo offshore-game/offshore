@@ -10,7 +10,7 @@ import { BiArrowBack } from 'react-icons/bi'
 export default function Create(props: AuthProp) {
     const nav = useNavigate()
     return (
-        <Home>
+        <Home className={styles.container}>
 
             <BiArrowBack className={styles.backButton} onClick={() => {
 

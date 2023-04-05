@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
-import Button from "../../../components/Button/Button";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Home from "../Home";
 import styles from './Main.module.css'
 import { ReactComponent as RedRaft } from '../../../assets/Home/Red Raft.svg';
