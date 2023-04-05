@@ -22,11 +22,13 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL", leade
 
     useEffect(() => {
 
-        if (!overlay.current) return;
-        
-        // Reload (bug fix)
-        overlay.current.className = styles.failOverlay
+        if (overlay.current) {
 
+            // Reload (bug fix)
+            overlay.current.className = styles.failOverlay
+
+        }
+        
         // Fade in the mute icon
         setTimeout(() => {
 
@@ -99,9 +101,13 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL", leade
         // Show the leaderboard
         overlayElem = (
             <div ref={overlay} className={styles.failOverlay} style={{ position: "absolute", left: "0", top: "0", height: "100%", width: "100%" }}><Leaderboard leaderboard={props.leaderboard!} /></div>
-
         )
 
+        filepath = "/Cutscenes/Success.mp4"
+
+    } else if (props.type == "INTRO") {
+
+        // CHANGE TO INTRO CUTSCENE PATH
         filepath = "/Cutscenes/Success.mp4"
 
     }
