@@ -1,8 +1,6 @@
 import Entry from './Entry/Entry'
 import styles from './Leaderboard.module.css'
-import { ReactComponent as SolverBackground} from '../../assets/Game/SolverBackground.svg'
-import { ReactComponent as Water} from '../../assets/Game/Water.svg'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '../Button/Button'
 import { useNavigate } from 'react-router-dom'
 import { BsHouseDoorFill } from 'react-icons/bs'
@@ -30,29 +28,25 @@ export default function Leaderboard(props: { leaderboard: { username: string, co
     }, [])
 
     return (
-        <React.Fragment>
-            <SolverBackground className={styles.background}/>
-            <Water className={styles.background}/>
 
-            <div className={styles.container}>
+        <div className={styles.container}>
 
-                <span className={styles.header}>Leaderboard</span>
-                <div className={styles.entries}>
+            <span className={styles.header}>Leaderboard</span>
+            <div className={styles.entries}>
 
-                    { sortedLeaderboard.map(player => <Entry username={player.username} coins={player.coins} isPlayer={ currentUsername == player.username }/>) }
+                { sortedLeaderboard.map(player => <Entry username={player.username} coins={player.coins} isPlayer={ currentUsername == player.username }/>) }
 
-                </div>
-
-                <Button className={styles.homeButton} text={<BsHouseDoorFill />} onClick={() => {
-
-                    // Navigate Home
-                    nav('/', { replace: true })
-                    nav(0)
-
-                }}/>
-                
             </div>
-        </React.Fragment>
+
+            <Button className={styles.homeButton} text={<BsHouseDoorFill />} onClick={() => {
+
+                // Navigate Home
+                nav('/', { replace: true })
+                nav(0)
+
+            }}/>
+            
+        </div>
 
     )
 

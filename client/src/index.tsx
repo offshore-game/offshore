@@ -10,6 +10,7 @@ import Lobby from './pages/Home/Lobby/Lobby';
 import Tutorial from './pages/Home/Tutorial/Tutorial';
 import Join from './pages/Home/Join/Join';
 import Leaderboard from './components/Leaderboard/Leaderboard';
+import Cutscene from './components/Cutscene/Cutscene';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,7 +31,7 @@ root.render(
 
             <Route path="/lobby/:id" element={ <Lobby requests={Connection} /> } />
             <Route path="/game/:id" element={ <GameSwitchPoint requests={Connection} /> } />
-            <Route path="/test/" element={ <Leaderboard leaderboard={[{ username: "a", coins: 200 }, { username: "b", coins: 300 }, { username: "a", coins: 400 }, { username: "a", coins: 500 }, { username: "a", coins: 600 }, { username: "a", coins: 700 }, { username: "a", coins: 800 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, ]}/> } />
+            <Route path="/test/" element={ <Cutscene type={"PASS"} leaderboard={[{ username: "a", coins: 200 }, { username: "b", coins: 300 }, { username: "a", coins: 400 }, { username: "a", coins: 500 }, { username: "a", coins: 600 }, { username: "a", coins: 700 }, { username: "a", coins: 800 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, { username: "a", coins: 200 }, ]}/> } />
           </Routes>
         </BrowserRouter>
       </div>

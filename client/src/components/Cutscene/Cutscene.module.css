@@ -7,6 +7,8 @@
 
 .container {
 
+    position: relative;
+
     height: 100%;
     width: 100%;
 
@@ -26,10 +28,14 @@
     height: 100%;
     width: 100%;
 
+    z-index: 99999999;
+
     filter: opacity(0%);
     
     transition: filter 0.5s ease;
 
+    pointer-events: none;
+    
 }
 
 .failVisible {
