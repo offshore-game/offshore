@@ -28,14 +28,12 @@
     height: 100%;
     width: 100%;
 
-    z-index: 99999999;
+    z-index: 9999;
 
     filter: opacity(0%);
     
     transition: filter 0.5s ease;
 
-    pointer-events: none;
-    
 }
 
 .failVisible {
@@ -98,7 +96,7 @@
 
 
 
-    z-index: 9999;
+    z-index: 9999999;
 
     height: 5%;
     aspect-ratio: 1/1;
