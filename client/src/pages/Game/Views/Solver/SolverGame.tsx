@@ -7,6 +7,7 @@ import pointPos from './PointTarget/Points.module.css'
 import boat from '../../../../assets/Game/Boat.svg';
 import { ReactComponent as Water } from '../../../../assets/Game/Water.svg';
 import { ReactComponent as Background } from '../../../../assets/Game/SolverBackground.svg';
+import { ReactComponent as Clouds } from '../../../../assets/Game/Clouds Array.svg';
 import PointTarget from './PointTarget/PointTarget';
 import { ImCross } from 'react-icons/im';
 import { GoTriangleDown, GoTriangleUp } from 'react-icons/go';
@@ -139,9 +140,15 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
     return (
         <React.Fragment>
         
-            { /*puzzleTargetSamples*/ }
             <Background style={{ position: "absolute", zIndex: "0" }}/>
             
+            <div className={styles.cloudScrollContainer}>
+
+                <Clouds />
+
+            </div>
+
+
             <div className={styles.boatContainer}>
 
                 <img src={boat} style={{position: 'absolute'}}/>
@@ -170,7 +177,6 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
                 <Water />
 
             </div>
-
 
             <div className={styles.captainContainer}>
 
