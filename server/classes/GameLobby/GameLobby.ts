@@ -204,25 +204,38 @@ export default class GameLobby {
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 90, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonCombination") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 90, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonSpeed") {
 
-            // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 90, addTimeout ? 2 : 0, fCount())
-            // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
+            // Little Restriction
+            const allPuzzles = [...this.puzzles.active, ...this.puzzles.awaiting]
+            const buttonSpeedPuzzleCount = allPuzzles.filter(puzzle => puzzle.type == "buttonSpeed").length
+
+            // No more than three button speed puzzles at a time
+            if (buttonSpeedPuzzleCount >= 3) {
+
+                // Make a button combo puzzle instead
+                generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
+
+            } else {
+
+                generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 75, addTimeout ? 2 : 0, fCount())
+                // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
+    
+            }
 
         } else {
 
             // FEATURE: add more puzzle types!
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 90, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
 
         }
 
