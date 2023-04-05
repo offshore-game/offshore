@@ -149,7 +149,7 @@ export default class ButtonSpeed extends Puzzle {
 
         const makeTiming = (groupArray: buttonSpeedPayload["timings"], buttonIndex: number): number => {
 
-            function checkIsValid(timestamp: number) {
+            const checkIsValid = (timestamp: number) => {
 
                 // (1) Check how many times this button is to light up
                 const allTimings = allTimingsSeconds()
