@@ -31,6 +31,9 @@ export default function Entry(props: { username: string, coins: number, isPlayer
 
         if (displayedCoins >= props.coins) {
 
+            // Bug Fix
+            setDisplayedCoins(props.coins)
+
             clearInterval(countUpTimer)
             setCountUpTimer(undefined)
 
