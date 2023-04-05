@@ -147,45 +147,58 @@ export default class ButtonSpeed extends Puzzle {
             return allTimings;
         }
 
-        const makeTiming = (groupArray: buttonSpeedPayload["timings"], buttonIndex: number): number | false => {
+        const makeTiming = (groupArray: buttonSpeedPayload["timings"], buttonIndex: number): number => {
 
-            // Choose a timestamp
-            const timestamp = randomNumber(0, this.gameDuration - (this.timeToHit + 1)) // The roof has to have a limit so the button is pressable within the time allotted
+            function checkIsValid(timestamp: number) {
 
-            let pass: number | false = timestamp
-
-            // (1) Check how many times this button is to light up
-            const allTimings = allTimingsSeconds()
-            const thisTiming = allTimings.filter(timing => timing == timestamp)
-            if (thisTiming.length + 1 > lightCount) {
-                pass = false
-            }
-
-
-            // (2) Check for an overlapping timings on this button
-            const duplicateTiming = groupArray[buttonIndex].find(timing => timing == timestamp)
-            if (duplicateTiming) {
-                pass = false
-            }
-
-            // (3) Check for spacing (minimum timeToHit + 1 apart)
-            for (const timing of groupArray[buttonIndex]) {
-
-                // Not enough distance between the timestamp and existing timings
-                if (Math.abs(timestamp - timing) < this.timeToHit + 1) {
-                    pass = false
-                    return;
+                // (1) Check how many times this button is to light up
+                const allTimings = allTimingsSeconds()
+                const thisTiming = allTimings.filter(timing => timing == timestamp)
+                if (thisTiming.length + 1 > lightCount) {
+                    return false
                 }
 
+
+                // (2) Check for an overlapping timings on this button
+                const duplicateTiming = groupArray[buttonIndex].find(timing => timing == timestamp)
+                if (duplicateTiming) {
+                    return false
+                }
+
+                // (3) Check for spacing (minimum timeToHit + 1 apart)
+                for (const timing of groupArray[buttonIndex]) {
+
+                    // Not enough distance between the timestamp and existing timings
+                    if (Math.abs(timestamp - timing) < this.timeToHit + 1) {
+                        return false
+                    }
+
+                }
+
+                // (4) Check how many concurrent buttons are active at that time
+                if (thisTiming.length + 1 /* if we add another one */ > concurrentCount) {
+                    // Can't let this happen
+                    return false
+                }
+
+                // Pass if nothing fails
+                return true
+
             }
 
-            // (4) Check how many concurrent buttons are active at that time
-            if (thisTiming.length + 1 /* if we add another one */ > concurrentCount) {
-                // Can't let this happen
-                pass = false
+            const validTimestamps = []
+            for (let i = 1; i <= this.gameDuration - (this.timeToHit + 1); i++) {
+                const valid = checkIsValid(i)
+                if (valid) {
+                    validTimestamps.push(i);
+                } else {
+                    continue;
+                }
             }
 
-            return pass
+        
+            // Choose a timestamp
+            return validTimestamps[randomNumber(0, validTimestamps.length - 1 /* 0-based index */) /* The roof has to have a limit so the button is pressable within the time allotted */ ] 
 
         }
 
@@ -195,43 +208,13 @@ export default class ButtonSpeed extends Puzzle {
 
         // Generate Timings for Poison Buttons
         for (const index of poisonIndexes) {
-
-            const timing = (): number => {
-
-                const pass = makeTiming(this.poisonTimings, index)
-                if (!pass) {
-                    return timing() // Recursive
-                }
-
-                if (pass) {
-                    return pass
-                }
-
-            }
-
-            this.poisonTimings[index].push(timing())
-
+            this.poisonTimings[index].push(makeTiming(this.poisonTimings, index))
         }
 
 
         // Generate Timings for Standard Buttons
         for (const index of buttonIndexes) {
-
-            const timing = (): number => {
-
-                const pass = makeTiming(this.timings, index)
-                if (!pass) {
-                    return timing() // Recursive
-                }
-
-                if (pass) {
-                    return pass
-                }
-
-            }
-
-            this.timings[index].push(timing())
-
+            this.timings[index].push(makeTiming(this.timings, index))
         }
 
 
