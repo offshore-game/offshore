@@ -315,10 +315,7 @@ export default class GameLobby {
 
                     toPush.solution = selectedFragment
 
-                    if (puzzle.type == "buttonSpeed" && player.role == "READER"){
-                        const numberOfFragments = puzzle.fragmentedSolutions.length
-                        toPush.numberOfFragments = numberOfFragments
-                    }
+                    toPush.numberOfFragments = puzzle.fragmentedSolutions.length
 
                 }
 

@@ -32,15 +32,15 @@ export default function ReaderGame(props: { gameInfo: gameInfo, setGameInfo: Rea
 
             if (puzzle.type == "buttonCombination") {
                 
-                answerPages.push({ element: <ButtonCombinationManual key={puzzle.zoneName} solution={puzzle.solution} buttonCount={puzzle.buttonCount!} />, zoneName: puzzle.zoneName })
+                answerPages.push({ element: <ButtonCombinationManual key={puzzle.zoneName} solution={puzzle.solution} buttonCount={puzzle.buttonCount!} totalFragments={puzzle.numberOfFragments!} />, zoneName: puzzle.zoneName })
 
             } else if (puzzle.type == "numberCombination") {
 
-                answerPages.push({ element: <NumberCombinationManual key={puzzle.zoneName} solution={puzzle.solution} digitCount={puzzle.numberCount!} />, zoneName: puzzle.zoneName })
+                answerPages.push({ element: <NumberCombinationManual key={puzzle.zoneName} solution={puzzle.solution} digitCount={puzzle.numberCount!} totalFragments={puzzle.numberOfFragments!} />, zoneName: puzzle.zoneName })
 
             } else if (puzzle.type == "buttonSpeed") {
 
-                answerPages.push({ element: <ButtonSpeedManual key={puzzle.zoneName} layout={puzzle.buttonGridDimensions!} solution={puzzle.solution} totalFragments={puzzle.numberOfFragments!}/>, zoneName: puzzle.zoneName })
+                answerPages.push({ element: <ButtonSpeedManual key={puzzle.zoneName} layout={puzzle.buttonGridDimensions!} solution={puzzle.solution} totalFragments={puzzle.numberOfFragments!} />, zoneName: puzzle.zoneName })
 
             }
             // Add more puzzles!
