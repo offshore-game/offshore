@@ -291,7 +291,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     // The game is at the good ending cutscene; display it.
     if (status == statusType.successEnding) {
 
-        return (<Cutscene type={"PASS"} />)
+        return (<Cutscene type={"PASS"} leaderboard={ leaderboard } />)
 
     }
 
