@@ -5,7 +5,8 @@ import { AuthProp } from "../../../utils/propTypes";
 import Home from "../Home";
 import PlayerEntry from "./PlayerEntry/PlayerEntry";
 import styles from './Lobby.module.css';
-import Button from "../../../components/Button/Button";
+import { ReactComponent as RedRaft } from '../../../assets/Home/Red Raft.svg';
+import { ReactComponent as BlueRaft } from '../../../assets/Home/Blue Raft.svg';
 
 // This is passed in the navigate (state: {}) parameter from Join. From index this is undefined.
 type LobbyProp = {
@@ -85,7 +86,7 @@ export default function Lobby(props: AuthProp & LobbyProp) {
 
                 <div className={styles.controlButtonContainer}>
 
-                    { isOwner ? <Button className={styles.startButton} text={"Start Game"} onClick={async () => {
+                    { isOwner ? <div className={styles.raftWrapper} onClick={async () => {
 
                         // Request to the server to start the game.
                         const result = await props.requests.startGame()
@@ -94,12 +95,15 @@ export default function Lobby(props: AuthProp & LobbyProp) {
 
                             nav(`/game/${roomCode}`, { replace: true, state: result }) // Navigate to the game page
                             return true;
-
+                        
                         }
 
-                    }}/> : "" }
+                    }}>
+                        <BlueRaft className={styles.raft} />
+                        <span className={styles.text}>Start</span>
+                    </div> : "" }
 
-                    <Button className={styles.leaveButton} text={"Leave"} onClick={() => {
+                    <div className={styles.raftWrapper} onClick={async () => {
 
                         // We don't check for the callback value of "result" because we don't want to hang the client if
                         // their socket was reset and they are trying to leave. This was a tested bug.
@@ -110,7 +114,10 @@ export default function Lobby(props: AuthProp & LobbyProp) {
                         nav(0) // Reload the page to wipe the socket and establish a new connection.
                         return true;
 
-                    }}/>
+                    }}>
+                        <RedRaft className={styles.raft} style={{ rotate: "310deg" }}/>
+                        <span className={styles.text}>Leave</span>
+                    </div>
 
                 </div>
 
