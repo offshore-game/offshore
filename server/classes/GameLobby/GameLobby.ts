@@ -204,25 +204,38 @@ export default class GameLobby {
         if (randomlySelectedPuzzleType == "numberCombination") {
 
             // FEATURE: Digit Count and Duration are Arbitrary for now
-            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 90, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new NumberCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonCombination") {
 
             // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 90, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
             // Change: digitCount, fragmentCount
 
         } else if (randomlySelectedPuzzleType == "buttonSpeed") {
 
-            // FEATURE: Button Count and Duration are Arbitrary for now
-            generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.2*dbCount()), pCount(), 90, addTimeout ? 2 : 0, fCount())
-            // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
+            // Little Restriction
+            const allPuzzles = [...this.puzzles.active, ...this.puzzles.awaiting]
+            const buttonSpeedPuzzleCount = allPuzzles.filter(puzzle => puzzle.type == "buttonSpeed").length
+
+            // No more than three button speed puzzles at a time
+            if (buttonSpeedPuzzleCount >= 3) {
+
+                // Make a button combo puzzle instead
+                generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
+
+            } else {
+
+                generatedPuzzle = new ButtonSpeed(this, randomlySelectedZone, { rows: 4, columns: 4 }, Math.floor(1.5*dbCount()), pCount(), 75, addTimeout ? 2 : 0, fCount())
+                // Change: digitCount, fragmentCount, poisonCount, standardCount (balancing issue?), rows/columns
+    
+            }
 
         } else {
 
             // FEATURE: add more puzzle types!
-            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 90, addTimeout ? 2 : 0, fCount())
+            generatedPuzzle = new ButtonCombination(this, randomlySelectedZone, dbCount(), 60, addTimeout ? 2 : 0, fCount())
 
         }
 
@@ -315,10 +328,7 @@ export default class GameLobby {
 
                     toPush.solution = selectedFragment
 
-                    if (puzzle.type == "buttonSpeed" && player.role == "READER"){
-                        const numberOfFragments = puzzle.fragmentedSolutions.length
-                        toPush.numberOfFragments = numberOfFragments
-                    }
+                    toPush.numberOfFragments = puzzle.fragmentedSolutions.length
 
                 }
 
@@ -509,22 +519,6 @@ export default class GameLobby {
 
     }
 
-    cutscene(type: "START" | "END") {
-
-        this.state = "CUTSCENE"
-
-        if (type == "START") {
-
-            setTimeout(() => {
-
-                this.startGame()
-
-            }, 5000 /* FEATURE: Start Cutscene Time */)
-
-        }
-
-    }
-
     async startGame(): Promise<false | { lengthSec: number, puzzles: puzzleArrayPayload }> {
 
         // Run the Cutscene
@@ -675,8 +669,8 @@ export default class GameLobby {
             // Set the game time
             this.durationSec = 300 // 300 Seconds = 5 Minutes
 
-            // Set the state after 5 seconds
-            setTimeout(() => { console.log("game started"); this.state = "INGAME" }, 5000)
+            // Set the state after 21 seconds
+            setTimeout(() => { console.log("game started"); this.state = "INGAME" }, (21 * 1000))
 
             const ruleset = this.prepareGamePayloads()[0].payload // less content; im also lazy to just do this properly so this works :p
 

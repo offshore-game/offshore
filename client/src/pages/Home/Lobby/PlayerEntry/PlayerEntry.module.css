@@ -4,13 +4,11 @@
     justify-content: center;
     align-items: center;
 
-    background-color: var(--blue-3);
+    background: url("../../../../assets/Home/Plank Long.svg");
+    background-size: 100% 100%;
+    
     width: 95%;
     aspect-ratio: 10/1;
-
-    border-color: black;
-    border-radius: 10px;
-    border-style: solid;
 
     margin: 0.5%;
 
@@ -19,6 +17,8 @@
 .currentPlayerContainer {
 
     composes: container;
-    background-color: gold;
+
+
+    filter: sepia(100%) saturate(300%) brightness(100%) hue-rotate(360deg);
 
 }

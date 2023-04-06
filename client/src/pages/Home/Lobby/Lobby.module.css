@@ -59,15 +59,50 @@
 
 }
 
-.startButton {
+.raft {
 
-    background-color: var(--brown-2);
-    margin: 2%;
+    width: 100%;
+    aspect-ratio: 1/1;
+
+    pointer-events: none;
 
 }
-.leaveButton {
 
-    background-color: #BB3F3F;
-    margin: 2%;
+.raftWrapper {
+
+    position: relative;
+    text-align: center;
+
+    width: 50%;
+
+    margin: 4%;
+
+    transition: filter 0.3s ease;
+
+}
+.raftWrapper:hover {
+
+    cursor: pointer;
+    filter: brightness(80%);
+
+}
+.raftWrapper:active {
+
+    filter: brightness(65%);
+
+}
+.text {
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+
+    transform: translate(-50%, -55%);
+
+    white-space: nowrap;
+
+    font-weight: 700;
+    font-size: 120%;
 
 }

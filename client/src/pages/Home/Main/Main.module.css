@@ -1,0 +1,69 @@
+.container {
+
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+
+}
+
+.raftsContainer {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    width: 100%;
+
+}
+
+.raft {
+
+    width: 100%;
+    aspect-ratio: 1/1;
+
+    pointer-events: none;
+
+}
+
+.raftWrapper {
+
+    position: relative;
+    text-align: center;
+
+    width: 30%;
+
+    margin: 4%;
+
+    transition: filter 0.3s ease;
+
+}
+.raftWrapper:hover {
+
+    cursor: pointer;
+    filter: brightness(80%);
+
+}
+.raftWrapper:active {
+
+    filter: brightness(65%);
+
+}
+
+.text {
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+
+    transform: translate(-50%, -55%);
+
+    white-space: nowrap;
+
+    font-weight: 700;
+    font-size: 140%;
+
+}

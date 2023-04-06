@@ -13,17 +13,26 @@ export default function Entry(props: { username: string, coins: number, isPlayer
 
     useEffect(() => {
 
-        setCountUpTimer(setInterval(() => {
+        // Wait 6 seconds
 
-            setDisplayedCoins(value => value + 1)
+        setTimeout(() => {
 
-        }, 10))
+            setCountUpTimer(setInterval(() => {
+
+                setDisplayedCoins(value => value + 1)
+    
+            }, 10))
+
+        }, 6000)
 
     }, [])
 
     useEffect(() => {
 
         if (displayedCoins >= props.coins) {
+
+            // Bug Fix
+            setDisplayedCoins(props.coins)
 
             clearInterval(countUpTimer)
             setCountUpTimer(undefined)

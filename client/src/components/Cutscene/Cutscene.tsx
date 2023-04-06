@@ -4,8 +4,9 @@ import Button from '../Button/Button';
 import styles from './Cutscene.module.css';
 import { BiVolumeMute, BiVolumeFull } from 'react-icons/bi';
 import { BsHouseDoorFill } from 'react-icons/bs';
+import Leaderboard from '../Leaderboard/Leaderboard';
 
-export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
+export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL", leaderboard?: { username: string, coins: number }[] }) {
 
     const nav = useNavigate()
 
@@ -21,9 +22,13 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
 
     useEffect(() => {
 
-        // Reload (bug fix)
-        overlay.current.className = styles.failOverlay
+        if (overlay.current) {
 
+            // Reload (bug fix)
+            overlay.current.className = styles.failOverlay
+
+        }
+        
         // Fade in the mute icon
         setTimeout(() => {
 
@@ -50,66 +55,108 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL" }) {
  
         }
 
+        if (props.type == "PASS") {
+
+            // Wait 6 seconds before showing the leaderboard overlay
+            setTimeout(() => {
+
+                muteButton.current.className = styles.hiddenMuteIcon
+                overlay.current.className = styles.failVisible
+
+            }, 6000)
+
+        }
+
     }, [])
 
-    if (props.type == "FAIL" || props.type == "INTRO") {
+    let overlayElem = <div />
+    let filepath = ""
 
-        return (
-            <div className={styles.container}>
+    if (props.type == "FAIL") {
 
-                <video autoPlay={true} muted={true} ref={video} className={styles.video} src={`/Cutscenes/Fail.mp4?a=${time /* Bypass browser cache; it breaks sometimes */}`} onEnded={() => {
-                    
-                    console.log('cutscene ended')
-        
+        // Show the fail overlay
+        overlayElem = (<div ref={overlay} className={styles.failOverlay}>
+            
+            <span ref={header} className={styles.hiddenHeader}>Game Over</span>
+
+            <span ref={button} className={styles.hiddenBtnContainer}>
+
+                <Button className={styles.button} text={<BsHouseDoorFill />} onClick={() => {
+
+                    // Navigate Home
+                    nav('/', { replace: true })
+                    nav(0)
+
                 }}/>
-                
-                <div ref={muteButton} className={styles.hiddenMuteIcon} onClick={() => {
 
-                    // Switch the element and change the state
-                    if (mute.isMuted) {
+            </span>
 
-                        // Unmute
-                        video.current.muted = false
-                        setMute({ isMuted: false, muteElem: <BiVolumeFull style={{ height: "100%", width: "100%" }}/> })
+        </div>)
 
-                    } else {
+        filepath = "/Cutscenes/Fail.mp4"
 
-                        // Mute
-                        video.current.muted = true
-                        setMute({ isMuted: true, muteElem: <BiVolumeMute style={{ height: "100%", width: "100%" }}/> })
 
-                    }
+    } else if (props.type == "PASS") {
 
-                }}>
-
-                    { mute.muteElem }
-
-                </div>
-
-                <div ref={overlay} className={styles.failOverlay}>
-                
-                    <span ref={header} className={styles.hiddenHeader}>Game Over</span>
-
-                    <span ref={button} className={styles.hiddenBtnContainer}>
-
-                        <Button className={styles.button} text={<BsHouseDoorFill />} onClick={() => {
-
-                            // Navigate Home
-                            nav('/', { replace: true })
-                            nav(0)
-
-                        }}/>
-
-                    </span>
-
-                
-                </div>
-
-            </div>
+        // Show the leaderboard
+        overlayElem = (
+            <div ref={overlay} className={styles.failOverlay} style={{ position: "absolute", left: "0", top: "0", height: "100%", width: "100%" }}><Leaderboard leaderboard={props.leaderboard!} /></div>
         )
+
+        filepath = "/Cutscenes/Success.mp4"
+
+    } else if (props.type == "INTRO") {
+
+        // CHANGE TO INTRO CUTSCENE PATH
+        filepath = "/Cutscenes/Intro.mp4"
 
     }
 
-    return (<div/>) // Error Suppression
+    return (
+        <div className={styles.container}>
+
+            <video autoPlay={true} muted={true} ref={video} className={styles.video} src={`${filepath}?a=${time /* Bypass browser cache; it breaks sometimes */}`} onEnded={() => {
+                
+                console.log('cutscene ended')
+    
+            }}/>
+            
+            <div ref={muteButton} className={styles.hiddenMuteIcon} onClick={() => {
+
+                // Switch the element and change the state
+                if (mute.isMuted) {
+
+                    // Unmute
+                    video.current.muted = false
+                    setMute({ isMuted: false, muteElem: <BiVolumeFull style={{ height: "100%", width: "100%" }}/> })
+
+                } else {
+
+                    // Mute
+                    video.current.muted = true
+                    setMute({ isMuted: true, muteElem: <BiVolumeMute style={{ height: "100%", width: "100%" }}/> })
+
+                }
+
+            }}>
+
+                { mute.muteElem }
+
+            </div>
+
+            { overlayElem }
+
+
+
+        </div>
+    )
+
+    /*if (props.type == "FAIL" || props.type == "INTRO") {
+
+
+
+    }
+
+    return (<div/>) // Error Suppression*/
 
 }

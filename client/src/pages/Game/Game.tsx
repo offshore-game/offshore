@@ -18,7 +18,6 @@ export enum statusType {
     startCutscene = 1, // Cutscene
     successEnding = 2,
     failEnding = 3,
-    leaderboard = 4,
 }
 
 // To act as a switch point for different components related to the game.
@@ -282,8 +281,8 @@ export default function GameSwitchPoint(props: AuthProp) {
     // The game is at the start cutscene
     if (status == statusType.startCutscene) {
 
-        // After 5 seconds, show the game
-        setTimeout(() => { setStatus(statusType.inGame) }, 5000)
+        // After 21 seconds, show the game
+        setTimeout(() => { setStatus(statusType.inGame) }, (21 * 1000))
 
         return (<Cutscene type={"INTRO"} />)
 
@@ -292,12 +291,7 @@ export default function GameSwitchPoint(props: AuthProp) {
     // The game is at the good ending cutscene; display it.
     if (status == statusType.successEnding) {
 
-        // After 5 seconds, show the leaderboard
-        setTimeout(() => { setStatus(statusType.leaderboard) }, 5000)
-
-        return (
-            <div style={{height: "100vh", width: "100vw", backgroundColor: "green"}}/>
-        )
+        return (<Cutscene type={"PASS"} leaderboard={ leaderboard } />)
 
     }
 
@@ -305,13 +299,6 @@ export default function GameSwitchPoint(props: AuthProp) {
     if (status == statusType.failEnding) {
 
         return (<Cutscene type={"FAIL"} />)
-
-    }
-
-    // Show the leaderboard
-    if (status == statusType.leaderboard) {
-
-        return ( <Leaderboard leaderboard={leaderboard} /> )
 
     }
 

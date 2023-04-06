@@ -1,10 +1,16 @@
 @value button from '../Home.module.css';
 @value backButton from '../Home.module.css';
 
+.container {
+
+}
+
 .submitButton {
 
     composes: button;
     height: 10%;
     aspect-ratio: 4/1;
+
+    background-color: var(--blue-2);
 
 }

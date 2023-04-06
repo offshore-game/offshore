@@ -10,6 +10,9 @@ export default function NumberCombinationPuzzle(props: { count: number, zoneName
     const [numberElems, setNumberElems] = useState([] as any[])
 
     useEffect(() => {
+
+        const ratchet = new Audio("/Sounds/ratchet.mp3")
+
         setNumberElems([]) // Prevent a duplication bug on component reset.
 
         for (let i = 0; i < props.count; i++) {
@@ -23,6 +26,9 @@ export default function NumberCombinationPuzzle(props: { count: number, zoneName
                         const numVal = Number(element.innerHTML)
                         if (numVal < 9) {
                             element.innerHTML = `${numVal + 1}`
+
+                            // Play a ratcheting sound
+                            ratchet.play()
                         }
 
                     }}/>
@@ -36,6 +42,9 @@ export default function NumberCombinationPuzzle(props: { count: number, zoneName
                         const numVal = Number(element.innerHTML)
                         if (numVal > 0) {
                             element.innerHTML = `${numVal - 1}`
+
+                            // Play a ratcheting sound
+                            ratchet.play()
                         }
                         
 

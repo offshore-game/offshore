@@ -3,7 +3,7 @@ import styles from './NumberCombinationManual.module.css'
 
 type solutionType = { fragments: { digitIndex: string, digitValue: number }[] }
 
-export default function NumberCombinationManual(props: { digitCount: number, solution: solutionType }) {
+export default function NumberCombinationManual(props: { digitCount: number, solution: solutionType, totalFragments: number }) {
 
     const [ numberElems, setNumberElems ] = useState([] as any[])
 
@@ -34,6 +34,11 @@ export default function NumberCombinationManual(props: { digitCount: number, sol
                 <u style={{ fontSize: "80%" }}>Give these instructions to the crewmates:</u>
                 <br/>
                 Use the on-screen arrows to enter this combination...
+                <br/>
+                {props.totalFragments > 1 ? "(Pro-Tip: The other captains hold the manuals for the numbers you don't know about!)" : "" }
+                <br/>
+                <br/>
+                <u>Instructions Fragment 1 of <b>{props.totalFragments}</b></u>
             </div>
 
         </div>
