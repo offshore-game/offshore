@@ -197,7 +197,7 @@ export default function SolverGame(props: { gameInfo: gameInfo, setGameInfo: Rea
                 <div style={{ visibility: visibleCapList ? "visible" : "hidden" }} className={styles.captainList}>
                     <span style={{ whiteSpace: "nowrap", fontSize: "80%", color: "white" }}><u>Ask these players for <b>answers</b>!</u></span>
                     <br/>
-                    { props.gameInfo.readerList.map(readerName => <b>{readerName}</b>) }
+                    { props.gameInfo?.readerList?.map(readerName => <b>{readerName}</b>) ?? "" }
                 </div>
 
 
