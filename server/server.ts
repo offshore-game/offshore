@@ -257,9 +257,12 @@ io.sockets.on("connection", function (socket) {
         const lobby = lobbies.get(data.roomCode)
 
         if (lobby) {
+            
+            const player = lobby.players.find(player => player.socketId == socket.id)
+                if (!player) return callback(false);
 
             // Make sure the player is actually allowed to answer puzzles (has to be a SOLVER)
-            if (lobby.players.find(player => player.socketId == socket.id).role != "SOLVER") return callback(false);
+            if (player.role != "SOLVER") return callback(false);
 
             
             const puzzleIndex = lobby.puzzles.active.findIndex(puzzle => puzzle.zoneName == data.zoneName)
