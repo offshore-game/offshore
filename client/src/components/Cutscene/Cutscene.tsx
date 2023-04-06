@@ -108,7 +108,7 @@ export default function Cutscene(props: { type: "INTRO" | "PASS" | "FAIL", leade
     } else if (props.type == "INTRO") {
 
         // CHANGE TO INTRO CUTSCENE PATH
-        filepath = "/Cutscenes/Success.mp4"
+        filepath = "/Cutscenes/Intro.mp4"
 
     }
 

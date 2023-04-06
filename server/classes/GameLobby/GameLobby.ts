@@ -519,22 +519,6 @@ export default class GameLobby {
 
     }
 
-    cutscene(type: "START" | "END") {
-
-        this.state = "CUTSCENE"
-
-        if (type == "START") {
-
-            setTimeout(() => {
-
-                this.startGame()
-
-            }, 5000 /* FEATURE: Start Cutscene Time */)
-
-        }
-
-    }
-
     async startGame(): Promise<false | { lengthSec: number, puzzles: puzzleArrayPayload }> {
 
         // Run the Cutscene
@@ -685,8 +669,8 @@ export default class GameLobby {
             // Set the game time
             this.durationSec = 300 // 300 Seconds = 5 Minutes
 
-            // Set the state after 5 seconds
-            setTimeout(() => { console.log("game started"); this.state = "INGAME" }, 5000)
+            // Set the state after 21 seconds
+            setTimeout(() => { console.log("game started"); this.state = "INGAME" }, (21 * 1000))
 
             const ruleset = this.prepareGamePayloads()[0].payload // less content; im also lazy to just do this properly so this works :p
 

@@ -281,8 +281,8 @@ export default function GameSwitchPoint(props: AuthProp) {
     // The game is at the start cutscene
     if (status == statusType.startCutscene) {
 
-        // After 5 seconds, show the game
-        setTimeout(() => { setStatus(statusType.inGame) }, 5000)
+        // After 21 seconds, show the game
+        setTimeout(() => { setStatus(statusType.inGame) }, (21 * 1000))
 
         return (<Cutscene type={"INTRO"} />)
 
