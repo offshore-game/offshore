@@ -35,6 +35,7 @@ export default function ButtonCombinationManual(props: { buttonCount: number, so
                 <br/>
                 Press the buttons on screen in this order...
                 <br/>
+                <br/>
                 Press submit when you're done!
                 <br/>
                 {props.totalFragments > 1 ? "(Pro-Tip: The other captains hold the manuals for the numbers you don't know about!)" : "" }
